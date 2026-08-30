@@ -16,13 +16,21 @@
 - **Built-in first**: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
 - **Minimal packages**: Only add packages that provide clear, measurable value
 - **Single-file config**: Everything in `init.el`, no modular splitting
-- **Testable**: Every feature has an automated test (99 tests, TAP format)
+- **Testable**: Every feature has an automated test (106 tests, TAP format)
 - **Documented**: Keybinding reference in WORKFLOWS.md, technical spec in SPEC.md
 - **Session-tracked**: Scrum-style changelog in SESSION.md
 
 ---
 
-## 3. File Structure
+## 3. Development Workflow
+
+- **Commit after every step**: After completing each task or feature, commit the changes immediately with a descriptive message
+- **Test before commit**: Run `./run_tests.sh` to verify all tests pass before committing
+- **Update SESSION.md**: Log completed work in the scrum-style changelog before committing
+
+---
+
+## 4. File Structure
 
 ```
 emacs_from_scratch/
@@ -39,7 +47,7 @@ emacs_from_scratch/
 
 ---
 
-## 4. Architecture
+## 5. Architecture
 
 14 numbered sections in `init.el`:
 
@@ -62,7 +70,7 @@ emacs_from_scratch/
 
 ---
 
-## 5. Usability & Workflow
+## 6. Usability & Workflow
 
 ### 5.1 Complete Keybinding Reference
 
@@ -202,7 +210,7 @@ emacs_from_scratch/
 
 ---
 
-## 6. Packages
+## 7. Packages
 
 | Package | Source | Section | Purpose | Load Strategy |
 |---------|--------|---------|---------|---------------|
@@ -222,12 +230,12 @@ emacs_from_scratch/
 
 ---
 
-## 7. Testing
+## 8. Testing
 
 - **Format**: TAP (Test Anything Protocol)
 - **Runner**: `./run_tests.sh` or `emacs --batch -l test_init.el`
 - **Exit Code**: 0 = pass, 1 = fail
-- **Total Tests**: 99
+- **Total Tests**: 106
 
 ### Coverage by Section
 
@@ -250,7 +258,7 @@ emacs_from_scratch/
 
 ---
 
-## 8. Dependencies
+## 9. Dependencies
 
 ### System Packages (apt)
 
@@ -283,13 +291,13 @@ emacs_from_scratch/
 
 ---
 
-## 9. Session Log
+## 10. Session Log
 
 See `SESSION.md` for the scrum-style changelog tracking all sessions.
 
 ---
 
-## 10. Planned Features
+## 11. Planned Features
 
 ### Phase 2 — Quick Wins ✅
 - delete-selection-mode — text replacement behaves like standard IDEs
@@ -312,7 +320,7 @@ See `SESSION.md` for the scrum-style changelog tracking all sessions.
 
 ---
 
-## 11. Known Issues
+## 12. Known Issues
 
 | Issue | Detail | Fix |
 |-------|--------|-----|
