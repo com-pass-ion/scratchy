@@ -1,0 +1,15 @@
+# Emacs auto-save and backup files
+#init.el#
+*~
+*.elc
+\#*\#
+.\#*
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+
+# OS files
+.DS_Store
+Thumbs.db

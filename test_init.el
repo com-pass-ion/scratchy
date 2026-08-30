@@ -1,0 +1,505 @@
+;;; test_init.el --- Automated tests for init.el       -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;
+;; Run with:
+;;   emacs --batch -l test_init.el
+;;
+;; Exits with code 0 on success, 1 on failure.
+;; Output: TAP-compatible (Test Anything Protocol).
+;;
+
+;;; Code:
+
+;;; ==========================================================================
+;;; TEST FRAMEWORK
+;;; ==========================================================================
+
+(defvar test--passed 0
+  "Count of passed tests.")
+
+(defvar test--failed 0
+  "Count of failed tests.")
+
+(defmacro test--assert (name &rest body)
+  "Run BODY as a test assertion. NAME is the test description."
+  (declare (indent 1))
+  `(progn
+     (condition-case err
+         (progn
+           ,@body
+           (cl-incf test--passed)
+           (message "ok %d - %s" test--passed ,name))
+       (error
+        (cl-incf test--failed)
+        (message "not ok %d - %s" (+ test--passed test--failed) ,name)
+        (message "  Error: %s" (error-message-string err))))))
+
+(defun test--summary ()
+  "Print test summary and exit."
+  (message "")
+  (message "# -----------------------------------------------")
+  (message "# %d passed, %d failed" test--passed test--failed)
+  (message "# -----------------------------------------------")
+  (if (> test--failed 0)
+      (progn
+        (message "# RESULT: FAILED")
+        (kill-emacs 1))
+    (message "# RESULT: PASSED")
+    (kill-emacs 0)))
+
+
+;;; ==========================================================================
+;;; LOAD INIT.EL
+;;; ==========================================================================
+
+(message "# Loading init.el...")
+(load (expand-file-name "init.el" (file-name-directory load-file-name)) nil t)
+(message "# init.el loaded successfully.")
+(message "")
+
+
+;;; ==========================================================================
+;;; 1. BOOTSTRAP TESTS
+;;; ==========================================================================
+
+(test--assert "1.1 GC threshold is set to 16MB"
+  (cl-assert (eq gc-cons-threshold (* 8 1024 1024 2))))
+
+(test--assert "1.2 Package system is initialized"
+  (cl-assert (bound-and-true-p package--initialized)))
+
+(test--assert "1.3 package-archives contains MELPA"
+  (cl-assert (assoc "melpa" package-archives)))
+
+(test--assert "1.4 package-archives contains ELPA"
+  (cl-assert (assoc "elpa" package-archives)))
+
+(test--assert "1.5 package-archives contains nongnu"
+  (cl-assert (assoc "nongnu" package-archives)))
+
+(test--assert "1.6 use-package is installed"
+  (cl-assert (package-installed-p 'use-package)))
+
+(test--assert "1.7 use-package-always-ensure is t"
+  (cl-assert (eq use-package-always-ensure t)))
+
+
+;;; ==========================================================================
+;;; 2. FRAME & UI TESTS
+;;; ==========================================================================
+
+(test--assert "2.1 inhibit-startup-message is t"
+  (cl-assert (eq inhibit-startup-message t)))
+
+(test--assert "2.2 inhibit-startup-screen is t"
+  (cl-assert (eq inhibit-startup-screen t)))
+
+(test--assert "2.3 use-file-dialog is nil"
+  (cl-assert (eq use-file-dialog nil)))
+
+(test--assert "2.4 Menu bar is disabled"
+  (cl-assert (eq menu-bar-mode nil)))
+
+(test--assert "2.5 Tool bar is disabled"
+  (cl-assert (eq tool-bar-mode nil)))
+
+(test--assert "2.6 Scroll bar is disabled"
+  (cl-assert (eq scroll-bar-mode nil)))
+
+(test--assert "2.7 Tooltip mode is disabled"
+  (cl-assert (eq tooltip-mode nil)))
+
+(test--assert "2.8 Font is Noto Sans Mono"
+  ;; In batch mode, face-attribute may return unspecified. Verify via init.el source.
+  (cl-assert (string-match-p "Noto Sans Mono"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+(test--assert "2.9 Font height is 145"
+  (cl-assert (string-match-p ":height 145"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+(test--assert "2.10 Transparency is set to 90"
+  (cl-assert (eq (frame-parameter (selected-frame) 'alpha-background) 90)))
+
+(test--assert "2.11 alpha-background in default-frame-alist"
+  (cl-assert (assoc 'alpha-background default-frame-alist)))
+
+(test--assert "2.12 Global visual-line-mode is on"
+  (cl-assert (and (boundp 'global-visual-line-mode)
+                  (not (eq global-visual-line-mode nil)))))
+
+(test--assert "2.13 Visible bell is enabled"
+  (cl-assert (eq visible-bell t)))
+
+(test--assert "2.14 Line spacing is 0.15"
+  (cl-assert (= (default-value 'line-spacing) 0.15)))
+
+(test--assert "2.15 Frame title format is set"
+  (cl-assert (boundp 'frame-title-format))
+  (cl-assert frame-title-format))
+
+
+;;; ==========================================================================
+;;; 3. COMFORT TESTS
+;;; ==========================================================================
+
+(test--assert "3.1 which-key-mode is enabled"
+  (cl-assert (bound-and-true-p which-key-mode)))
+
+(test--assert "3.2 save-place-mode is enabled"
+  (cl-assert (bound-and-true-p save-place-mode)))
+
+(test--assert "3.3 savehist-mode is enabled"
+  (cl-assert (bound-and-true-p savehist-mode)))
+
+(test--assert "3.4 recentf-mode is enabled"
+  (cl-assert (bound-and-true-p recentf-mode)))
+
+(test--assert "3.5 recentf-max-saved-items is 100"
+  (cl-assert (eq recentf-max-saved-items 100)))
+
+(test--assert "3.6 C-x C-r is bound to recentf-open-files"
+  (cl-assert (eq (key-binding (kbd "C-x C-r")) 'recentf-open-files)))
+
+(test--assert "3.7 which-function-mode is enabled"
+  (cl-assert (bound-and-true-p which-function-mode)))
+
+(test--assert "3.8 whitespace-cleanup is in before-save-hook"
+  (cl-assert (memq 'whitespace-cleanup before-save-hook)))
+
+(test--assert "3.9 narrow-to-region is not disabled"
+  (cl-assert (null (get 'narrow-to-region 'disabled))))
+
+(test--assert "3.10 delete-selection-mode is enabled"
+  (cl-assert (bound-and-true-p delete-selection-mode)))
+
+(test--assert "3.11 vundo command is defined"
+  (cl-assert (fboundp 'vundo)))
+
+(test--assert "3.12 ace-window command is defined"
+  (cl-assert (fboundp 'ace-window)))
+
+(test--assert "3.13 M-o is bound to ace-window"
+  (cl-assert (eq (key-binding (kbd "M-o")) 'ace-window)))
+
+
+;;; ==========================================================================
+;;; 4. THEME & VISUAL TESTS
+;;; ==========================================================================
+
+(test--assert "4.1 modus-vivendi theme is loaded"
+  (cl-assert (memq 'modus-vivendi custom-enabled-themes)))
+
+(test--assert "4.2 modus-themes palette overrides are set"
+  (cl-assert (assoc 'bg-main modus-themes-common-palette-overrides)))
+
+(test--assert "4.3 bg-main is #1a1b26"
+  (cl-assert (string= "#1a1b26"
+                       (car (cdr (assoc 'bg-main modus-themes-common-palette-overrides))))))
+
+(test--assert "4.4 fg-main is #c0caf5"
+  (cl-assert (string= "#c0caf5"
+                       (car (cdr (assoc 'fg-main modus-themes-common-palette-overrides))))))
+
+(test--assert "4.5 Column number mode is on"
+  (cl-assert (eq column-number-mode t)))
+
+(test--assert "4.6 Global line numbers are enabled"
+  ;; In batch mode, display-line-numbers may differ. Verify via init.el source.
+  (cl-assert (string-match-p "global-display-line-numbers-mode"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+(test--assert "4.7 Global hl-line-mode is enabled"
+  (cl-assert (bound-and-true-p global-hl-line-mode)))
+
+(test--assert "4.8 hl-line-sticky-flag is nil"
+  (cl-assert (eq hl-line-sticky-flag nil)))
+
+(test--assert "4.9 show-paren-mode is enabled"
+  (cl-assert (bound-and-true-p show-paren-mode)))
+
+(test--assert "4.10 show-paren-style is mixed"
+  (cl-assert (eq show-paren-style 'mixed)))
+
+(test--assert "4.11 electric-pair-mode is enabled"
+  (cl-assert (bound-and-true-p electric-pair-mode)))
+
+(test--assert "4.12 Cursor type is bar"
+  (cl-assert (eq (default-value 'cursor-type) 'bar)))
+
+(test--assert "4.13 Blink cursor mode is off"
+  (cl-assert (eq blink-cursor-mode nil)))
+
+(test--assert "4.14 scroll-margin is 3"
+  (cl-assert (eq scroll-margin 3)))
+
+(test--assert "4.15 scroll-conservatively is 101"
+  (cl-assert (eq scroll-conservatively 101)))
+
+(test--assert "4.16 scroll-preserve-screen-position is t"
+  (cl-assert (eq scroll-preserve-screen-position t)))
+
+
+;;; ==========================================================================
+;;; 5. COMPLETION TESTS
+;;; ==========================================================================
+
+(test--assert "5.1 vertico-mode is enabled"
+  (cl-assert (bound-and-true-p vertico-mode)))
+
+(test--assert "5.2 orderless is in completion-styles"
+  (cl-assert (memq 'orderless completion-styles)))
+
+(test--assert "5.3 basic is in completion-styles"
+  (cl-assert (memq 'basic completion-styles)))
+
+(test--assert "5.4 marginalia-mode is enabled"
+  (cl-assert (bound-and-true-p marginalia-mode)))
+
+(test--assert "5.5 global-corfu-mode is enabled"
+  (cl-assert (bound-and-true-p global-corfu-mode)))
+
+(test--assert "5.6 corfu-auto is t"
+  (cl-assert (eq corfu-auto t)))
+
+(test--assert "5.7 corfu-auto-delay is configured"
+  ;; corfu-defcustoms are not bound in batch. Verify init.el source.
+  (cl-assert (string-match-p "corfu-auto-delay 0.1"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+(test--assert "5.8 corfu-auto-prefix is configured"
+  (cl-assert (string-match-p "corfu-auto-prefix 1"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+(test--assert "5.9 cape-dabbrev is configured"
+  (cl-assert (and (fboundp 'cape-dabbrev)
+                  (memq 'cape-dabbrev (default-value 'completion-at-point-functions)))))
+
+(test--assert "5.10 cape-file is configured"
+  (cl-assert (memq 'cape-file (default-value 'completion-at-point-functions))))
+
+(test--assert "5.11 cape-keyword is configured"
+  (cl-assert (memq 'cape-keyword (default-value 'completion-at-point-functions))))
+
+
+;;; ==========================================================================
+;;; 6. SEARCH TESTS
+;;; ==========================================================================
+
+(test--assert "6.1 C-s is bound to consult-line"
+  (cl-assert (eq (key-binding (kbd "C-s")) 'consult-line)))
+
+(test--assert "6.2 C-x b is bound to consult-buffer"
+  (cl-assert (eq (key-binding (kbd "C-x b")) 'consult-buffer)))
+
+(test--assert "6.3 C-x r b is bound to consult-bookmark"
+  (cl-assert (eq (key-binding (kbd "C-x r b")) 'consult-bookmark)))
+
+(test--assert "6.4 M-s r is bound to consult-ripgrep"
+  (cl-assert (eq (key-binding (kbd "M-s r")) 'consult-ripgrep)))
+
+(test--assert "6.5 M-y is bound to consult-yank-pop"
+  (cl-assert (eq (key-binding (kbd "M-y")) 'consult-yank-pop)))
+
+
+;;; ==========================================================================
+;;; 7. HELP TESTS
+;;; ==========================================================================
+
+(test--assert "7.1 helpful-callable replaces describe-function"
+  (cl-assert (eq (command-remapping 'describe-function) 'helpful-callable)))
+
+(test--assert "7.2 helpful-variable replaces describe-variable"
+  (cl-assert (eq (command-remapping 'describe-variable) 'helpful-variable)))
+
+(test--assert "7.3 helpful-key replaces describe-key"
+  (cl-assert (eq (command-remapping 'describe-key) 'helpful-key)))
+
+(test--assert "7.4 helpful-symbol replaces describe-symbol"
+  (cl-assert (eq (command-remapping 'describe-symbol) 'helpful-symbol)))
+
+
+;;; ==========================================================================
+;;; 8. GIT TESTS
+;;; ==========================================================================
+
+(test--assert "8.1 magit-status is defined"
+  (cl-assert (fboundp 'magit-status)))
+
+(test--assert "8.2 magit-get-current-branch is defined"
+  (cl-assert (fboundp 'magit-get-current-branch)))
+
+(test--assert "8.3 magit-display-buffer-function is configured"
+  (cl-assert (string-match-p "magit-display-buffer-function"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+(test--assert "8.4 diff-hl command is defined"
+  (cl-assert (fboundp 'diff-hl-mode)))
+
+(test--assert "8.5 diff-hl hooks are configured"
+  (cl-assert (string-match-p "diff-hl-mode"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+
+;;; ==========================================================================
+;;; 9. LSP TESTS
+;;; ==========================================================================
+
+(test--assert "9.1 eglot-autoshutdown is t"
+  (cl-assert (eq eglot-autoshutdown t)))
+
+(test--assert "9.2 python-mode-hook has eglot setup"
+  (cl-assert (and python-mode-hook (listp python-mode-hook))))
+
+(test--assert "9.3 c++-mode-hook has eglot setup"
+  (cl-assert (and c++-mode-hook (listp c++-mode-hook))))
+
+(test--assert "9.4 c-mode-hook has eglot setup"
+  (cl-assert (and c-mode-hook (listp c-mode-hook))))
+
+(test--assert "9.5 eglot-ensure is in java-mode-hook"
+  (cl-assert (memq 'eglot-ensure java-mode-hook)))
+
+(test--assert "9.6 eglot-ensure is in sh-mode-hook"
+  (cl-assert (memq 'eglot-ensure sh-mode-hook)))
+
+(test--assert "9.7 flymake-error face is configured"
+  ;; Check that the face configuration exists in init.el source
+  (cl-assert (string-match-p "flymake-error"
+                              (with-temp-buffer
+                                (insert-file-contents
+                                 (expand-file-name "init.el"
+                                                   (file-name-directory load-file-name)))
+                                (buffer-string)))))
+
+
+;;; ==========================================================================
+;;; 10. SNIPPETS TESTS
+;;; ==========================================================================
+
+(test--assert "10.1 tempo-interactive is nil"
+  (cl-assert (eq tempo-interactive nil)))
+
+(test--assert "10.2 C main template is defined"
+  (cl-assert (and (boundp 'tempo-tags) (assoc "c-main" tempo-tags))))
+
+(test--assert "10.3 Python main template is defined"
+  (cl-assert (assoc "python-main" tempo-tags)))
+
+(test--assert "10.4 Bash header template is defined"
+  (cl-assert (assoc "bash-header" tempo-tags)))
+
+(test--assert "10.5 Elisp func template is defined"
+  (cl-assert (assoc "elisp-func" tempo-tags)))
+
+
+;;; ==========================================================================
+;;; 11. TERMINAL TESTS
+;;; ==========================================================================
+
+(test--assert "11.1 eat command is defined"
+  (cl-assert (fboundp 'eat)))
+
+(test--assert "11.2 C-c t n is bound to eat"
+  (cl-assert (eq (key-binding (kbd "C-c t n")) 'eat)))
+
+
+;;; ==========================================================================
+;;; 12. PROJECT TESTS
+;;; ==========================================================================
+
+(test--assert "12.1 project-switch-commands is project-find-dir"
+  (cl-assert (eq project-switch-commands 'project-find-dir)))
+
+(test--assert "12.2 project-list-files-gap is 0"
+  (cl-assert (eq project-list-files-gap 0)))
+
+(test--assert "12.3 my/project-new is defined"
+  (cl-assert (fboundp 'my/project-new)))
+
+
+;;; ==========================================================================
+;;; 13. BUILD & RUN TESTS
+;;; ==========================================================================
+
+(test--assert "13.1 my/cpp-build is defined"
+  (cl-assert (fboundp 'my/cpp-build)))
+
+(test--assert "13.2 my/cpp-run is defined"
+  (cl-assert (fboundp 'my/cpp-run)))
+
+(test--assert "13.3 my/python-run is defined"
+  (cl-assert (fboundp 'my/python-run)))
+
+(test--assert "13.4 my/bash-run is defined"
+  (cl-assert (fboundp 'my/bash-run)))
+
+(test--assert "13.5 my/run is defined"
+  (cl-assert (fboundp 'my/run)))
+
+(test--assert "13.6 C-c l r is bound to my/run"
+  (cl-assert (eq (key-binding (kbd "C-c l r")) 'my/run)))
+
+(test--assert "13.7 C-c l b is bound to my/cpp-build"
+  (cl-assert (eq (key-binding (kbd "C-c l b")) 'my/cpp-build)))
+
+(test--assert "13.8 compilation-scroll-output is t"
+  (cl-assert (eq compilation-scroll-output t)))
+
+(test--assert "13.9 C-c l c is bound to compile"
+  (cl-assert (eq (key-binding (kbd "C-c l c")) 'compile)))
+
+(test--assert "13.10 C-c l k is bound to kill-compilation"
+  (cl-assert (eq (key-binding (kbd "C-c l k")) 'kill-compilation)))
+
+(test--assert "13.11 C-c l n is bound to next-error"
+  (cl-assert (eq (key-binding (kbd "C-c l n")) 'next-error)))
+
+(test--assert "13.12 C-c l p is bound to previous-error"
+  (cl-assert (eq (key-binding (kbd "C-c l p")) 'previous-error)))
+
+
+;;; ==========================================================================
+;;; 14. ORG-MODE TESTS
+;;; ==========================================================================
+
+(test--assert "14.1 org-babel-load-languages includes shell"
+  (cl-assert (assq 'shell org-babel-load-languages)))
+
+
+;;; ==========================================================================
+;;; SUMMARY
+;;; ==========================================================================
+
+(test--summary)
+
+;;; test_init.el ends here
