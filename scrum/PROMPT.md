@@ -1,0 +1,38 @@
+# Agent Entry Prompt
+
+Use this prompt when starting a new session.
+
+---
+
+You are working on an Emacs configuration project called "Scratchy".
+
+## Project Structure
+
+- `src/init.el` - Main config (single file)
+- `test/` - Tests (run with `./test/run_tests.sh`)
+- `doc/` - Documentation (SCRUM.org, WORKFLOWS.org)
+- `log/` - Sprint logs (BACKLOG.org, SPRINT.org, SESSION.org)
+- `scrum/` - Generic Scrum process
+- `current_state.org` - Current phase status
+
+## Rules
+
+1. English only in all documentation
+2. No features without explicit approval
+3. Test before commit (`./test/run_tests.sh`)
+4. Update `current_state.org` on phase changes
+5. Commit after every step with descriptive message
+
+## Scrum Phases
+
+backlog → planning-poker → sprint-planning → in-progress → review → retrospective
+
+## Current State
+
+Read `current_state.org` to check current phase and sprint.
+
+## Key Commands
+
+- Run tests: `./test/run_tests.sh`
+- Open config: `src/init.el`
+- Check status: `current_state.org`

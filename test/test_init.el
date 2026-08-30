@@ -54,7 +54,7 @@
 ;;; ==========================================================================
 
 (message "# Loading init.el...")
-(load (expand-file-name "init.el" (file-name-directory load-file-name)) nil t)
+(load (expand-file-name "src/init.el" (file-name-directory (directory-file-name (file-name-directory load-file-name)))) nil t)
 (message "# init.el loaded successfully.")
 (message "")
 
@@ -115,16 +115,16 @@
   (cl-assert (string-match-p "Noto Sans Mono"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 (test--assert "2.9 Font height is 145"
   (cl-assert (string-match-p ":height 145"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 (test--assert "2.10 Transparency is set to 90"
@@ -218,8 +218,8 @@
   (cl-assert (string-match-p "global-display-line-numbers-mode"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 (test--assert "4.7 Global hl-line-mode is enabled"
@@ -280,16 +280,16 @@
   (cl-assert (string-match-p "corfu-auto-delay 0.1"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 (test--assert "5.8 corfu-auto-prefix is configured"
   (cl-assert (string-match-p "corfu-auto-prefix 1"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 (test--assert "5.9 cape-dabbrev is configured"
@@ -354,8 +354,8 @@
   (cl-assert (string-match-p "magit-display-buffer-function"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 (test--assert "8.4 diff-hl command is defined"
@@ -365,8 +365,8 @@
   (cl-assert (string-match-p "diff-hl-mode"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 
@@ -397,8 +397,8 @@
   (cl-assert (string-match-p "flymake-error"
                               (with-temp-buffer
                                 (insert-file-contents
-                                 (expand-file-name "init.el"
-                                                   (file-name-directory load-file-name)))
+                                 (expand-file-name "src/init.el"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
                                 (buffer-string)))))
 
 
@@ -494,6 +494,77 @@
 
 (test--assert "14.1 org-babel-load-languages includes shell"
   (cl-assert (assq 'shell org-babel-load-languages)))
+
+
+;;; ==========================================================================
+;;; 15. LANGUAGE MODES TESTS
+;;; ==========================================================================
+
+(test--assert "15.1 markdown-mode command is defined"
+  (cl-assert (fboundp 'markdown-mode)))
+
+(test--assert "15.2 markdown-mode is configured"
+  (cl-assert (string-match-p "use-package markdown-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "15.3 yaml-mode command is defined"
+  (cl-assert (fboundp 'yaml-mode)))
+
+(test--assert "15.4 yaml-mode is configured"
+  (cl-assert (string-match-p "use-package yaml-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "15.5 json-mode command is defined"
+  (cl-assert (fboundp 'json-mode)))
+
+(test--assert "15.6 json-mode is configured"
+  (cl-assert (string-match-p "use-package json-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "15.7 toml-mode command is defined"
+  (cl-assert (fboundp 'toml-mode)))
+
+(test--assert "15.8 toml-mode is configured"
+  (cl-assert (string-match-p "use-package toml-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "15.9 nix-mode command is defined"
+  (cl-assert (fboundp 'nix-mode)))
+
+(test--assert "15.10 nix-mode is configured with eglot"
+  (cl-assert (string-match-p "use-package nix-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "15.11 dockerfile-mode command is defined"
+  (cl-assert (fboundp 'dockerfile-mode)))
+
+(test--assert "15.12 dockerfile-mode is configured"
+  (cl-assert (string-match-p "use-package dockerfile-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
 
 
 ;;; ==========================================================================

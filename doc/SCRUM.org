@@ -34,13 +34,14 @@
 #+begin_example
 emacs_from_scratch/
 ├── src/
-│   └── init.el                          # Main config (640 lines, 22 KB)
+│   └── init.el                          # Main config (667 lines, 23 KB)
 ├── test/
-│   ├── test_init.el                     # Test suite (505 lines, 18 KB, 106 tests)
+│   ├── test_init.el                     # Test suite (535 lines, 19 KB, 118 tests)
 │   └── run_tests.sh                     # Test runner (22 lines, 486 B)
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
-│   └── WORKFLOWS.org                    # Keybinding cheat sheet
+│   ├── WORKFLOWS.org                    # Keybinding cheat sheet
+│   └── DOD.md                           # Definition of Done
 ├── scrum/
 │   ├── PROMPT.md                        # Agent entry prompt (auto-loaded)
 │   ├── RULES.md                         # Scrum rules
@@ -67,7 +68,7 @@ To modify agent behavior:
 
 ** Architecture
 
-14 numbered sections in =src/init.el=:
+15 numbered sections in =src/init.el=:
 
 | #   | Section      | Packages             | Key Features                                         |
 |-----+--------------+----------------------+------------------------------------------------------|
@@ -85,6 +86,7 @@ To modify agent behavior:
 | 12  | Project      | — (project.el built-in) | Scaffolding (C++/Python), .projectile, git init   |
 | 13  | Build & Run  | —                    | CMake build, mode-specific run, compile mode         |
 | 14  | Org-Mode     | —                    | Babel shell integration                              |
+| 15  | Language Modes | markdown, yaml, json, toml, nix, dockerfile | Config file support |
 
 ** Keybinding Reference
 
@@ -243,13 +245,19 @@ To modify agent behavior:
 | vundo      | ELPA   | 3       | Visual undo         | Lazy (command)|
 | ace-window | ELPA   | 3       | Window switching    | Eager (bind)  |
 | eat        | ELPA   | 11      | Terminal emulator   | Lazy (command)|
+| markdown-mode | MELPA | 15     | Markdown files      | Eager         |
+| yaml-mode  | MELPA   | 15      | YAML files          | Eager         |
+| json-mode  | MELPA   | 15      | JSON files          | Eager         |
+| toml-mode  | ELPA    | 15      | TOML files          | Eager         |
+| nix-mode   | MELPA   | 15      | Nix files           | Eager         |
+| dockerfile-mode | MELPA | 15   | Dockerfiles         | Eager         |
 
 ** Testing
 
 - *Format*: TAP (Test Anything Protocol)
 - *Runner*: =./test/run_tests.sh= or =emacs --batch -l test/test_init.el=
 - *Exit Code*: 0 = pass, 1 = fail
-- *Total Tests*: 106
+- *Total Tests*: 118
 
 *** Coverage by Section
 
@@ -269,6 +277,7 @@ To modify agent behavior:
 | 12. Project   |     3 | Project.el config, scaffolding function               |
 | 13. Build & Run |   12 | All functions, keybindings, compile settings          |
 | 14. Org-Mode  |     1 | Babel shell integration                               |
+| 15. Language Modes |  12 | markdown, yaml, json, toml, nix, dockerfile           |
 
 ** Dependencies
 

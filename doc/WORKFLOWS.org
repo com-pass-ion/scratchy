@@ -1,0 +1,267 @@
+#+TITLE: Emacs Power Workflows
+#+STARTUP: overview
+
+Quick reference for the most important workflows in this config.
+
+---
+
+## Search & Navigation
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `C-s` | `consult-line` | Fuzzy search in current buffer |
+| `C-x b` | `consult-buffer` | Switch buffer (with preview) |
+| `C-x r b` | `consult-bookmark` | Load bookmark |
+| `M-s r` | `consult-ripgrep` | Fuzzy search in entire project |
+| `M-y` | `consult-yank-pop` | Yank history (clipboard) |
+| `C-r` | `consult-history` | Minibuffer history (after `M-x` etc.) |
+
+**Fuzzy Search Example:**
+1. Press `C-s`
+2. Type: `def main` — filtered immediately
+3. `C-n`/`C-p` for next/previous results
+4. `RET` to jump
+
+---
+
+## Completion (Autocompletion)
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `TAB` | corfu-complete | Accept current completion |
+| `M-TAB` | corfu-next | Next option |
+| `C-g` | corfu-quit | Cancel |
+
+**Behavior:**
+- Completion starts automatically after 1 character
+- Appears inline under cursor (no popup window)
+- Works in all modes
+
+---
+
+## Snippets (tempo)
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `C-<TAB>` | `tempo-complete-tag` | Type template name and press C-TAB |
+
+**Available Templates:**
+
+| Template | Mode | Content |
+|----------|------|---------|
+| `c-main` | C | `#include <stdio.h>` + main() |
+| `python-main` | Python | `def main():` + `if __name__` |
+| `bash-header` | Bash | Shebang + `set -euo pipefail` |
+| `elisp-func` | Elisp | `(defun ...)` with docstring |
+
+**Example:**
+1. Open new buffer (`C-x b`)
+2. Type `python-main`
+3. Press `C-<TAB>`
+4. Template is inserted
+
+---
+
+## Build & Run
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `C-c l r` | `my/run` | Run file (mode-dependent) |
+| `C-c l b` | `my/cpp-build` | Build C++ project (CMake) |
+| `C-c l c` | `compile` | Run arbitrary compile command |
+| `C-c l k` | `kill-compilation` | Kill running compilation |
+| `C-c l n` | `next-error` | Jump to next error |
+| `C-c l p` | `previous-error` | Jump to previous error |
+| `C-c C-c` | `python-shell-send-buffer` | Send Python buffer to shell |
+
+### C++
+1. `C-c l b` — Build project
+2. `C-c l r` — Build + Run
+
+### Python
+1. `C-c C-c` — Send buffer to Python shell
+2. `C-c l r` — Run script
+
+### Bash
+1. `C-c l r` — Run script
+
+### Elisp
+1. `C-c l r` — Evaluate current buffer
+2. `C-x C-e` — Evaluate last S-expression
+
+---
+
+## Terminal
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `C-c t n` | `eat` | Open terminal (right split) |
+
+**Usage:**
+- `C-c t n` opens `eat` in a side window
+- Shell commands are executed directly
+- For interactive programs (htop, gitui, etc.)
+
+---
+
+## Git (magit + diff-hl)
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `M-x magit-status` | `magit-status` | Open git status |
+| `C-x v =` | `diff-hl-diff-goto-hunk` | Show diff for current hunk |
+| `C-x v n` | `diff-hl-next-hunk` | Jump to next changed hunk |
+| `C-x v p` | `diff-hl-previous-hunk` | Jump to previous changed hunk |
+
+**Diff-Hl:**
+- Shows changes in fringe (left of line numbers)
+- Green = line added, Red = deleted, Blue = modified
+- Automatically active in prog-mode
+
+**Magit Workflow:**
+1. `M-x magit-status` — Open status buffer
+2. `s` — Stage files
+3. `c c` — Create commit
+4. `P` — Push
+5. `F` — Pull
+6. `b b` — Switch branch
+
+---
+
+## Window & Buffer
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `M-o` | `ace-window` | Jump to window (by number) |
+| `C-x C-r` | `recentf-open-files` | Open recent files |
+| `C-x 2` | `split-window-below` | Split horizontally |
+| `C-x 3` | `split-window-right` | Split vertically |
+| `C-x 1` | `delete-other-windows` | Only active window |
+| `C-x 0` | `delete-window` | Close current window |
+
+**Ace-Window:**
+1. Press `M-o` — numbers appear over each window
+2. Type number (a/s/d/f/g/h/j/k/l) — jump to window immediately
+
+---
+
+## Undo (vundo)
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `C-/` | `undo` | Undo (standard) |
+| `C-?` | `undo-redo` | Redo (standard) |
+| `C-c u` | `vundo` | Visual undo tree |
+
+**Vundo:**
+- Shows change history as tree diagram
+- Arrows for navigation, RET to jump
+- q to quit
+
+---
+
+## LSP (eglot)
+
+**Automatically active for:** Python, C++, C, Java, Bash
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `M-.` | `xref-find-definitions` | Jump to definition |
+| `M-,` | `xref-pop-marker-location` | Go back from definition |
+| `M-?` | `xref-find-references` | Find all references |
+| `M-n` | `flymake-goto-next-error` | Jump to next error |
+| `M-p` | `flymake-goto-prev-error` | Jump to previous error |
+
+---
+
+## Help (helpful)
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `C-h f` | `helpful-callable` | Document function |
+| `C-h v` | `helpful-variable` | Document variable |
+| `C-h k` | `helpful-key` | Explain key combination |
+| `C-h o` | `helpful-symbol` | Symbol (function/variable) |
+
+---
+
+## Minibuffer
+
+| Key | Function | Description |
+|-----|----------|-------------|
+| `M-A` | `marginalia-cycle` | Toggle annotations |
+| `C-n` | `vertico-next` | Next result |
+| `C-p` | `vertico-previous` | Previous result |
+| `C-s` | `orderless-flex` | Continue filtering |
+| `C-j` | `vertico-exit` | Confirm selection |
+| `C-r` | `consult-history` | Search command history |
+
+---
+
+## Create Project
+
+**`M-x my/project-new`** creates a new project:
+
+1. Select language: `cpp` or `python`
+2. Enter project name
+3. Automatically:
+   - Create directory structure
+   - Create `.projectile` file
+   - Create `CMakeLists.txt` (C++) or `main.py` (Python)
+   - Create `.gitignore`
+   - Initialize git repo + initial commit
+   - Python: create virtual environment
+
+**Location:** `~/Projects/<name>`
+
+---
+
+## Emacs-Specific Workflows
+
+### Buffer Management
+| Key | Function |
+|-----|----------|
+| `C-x b` | Switch buffer |
+| `C-x k` | Close buffer |
+| `C-x 1` | Only current buffer |
+| `C-x 2` | Split horizontally |
+| `C-x 3` | Split vertically |
+
+### Region & Text
+| Key | Function |
+|-----|----------|
+| `C-SPC` | Set mark |
+| `C-x C-x` | Swap mark and cursor |
+| `C-w` | Cut |
+| `M-w` | Copy |
+| `C-y` | Paste |
+| `M-y` | Yank history |
+
+### Navigation
+| Key | Function |
+|-----|----------|
+| `C-a` | Line beginning |
+| `C-e` | Line end |
+| `M-<` | File beginning |
+| `M->` | File end |
+| `C-v` | Page down |
+| `M-v` | Page up |
+
+### Editing
+| Key | Function |
+|-----|----------|
+| `C-/` | Undo |
+| `C-?` | Redo |
+| `M-/` | Autocomplete (dabbrev) |
+| `C-M-\` | Indent region |
+
+---
+
+## Exit Emacs
+
+| Key | Function |
+|-----|----------|
+| `C-x C-c` | Close Emacs |
+| `C-z` | Minimize (iconify) |
+| `C-x r r` | Save register |
+| `C-x r j` | Load register |

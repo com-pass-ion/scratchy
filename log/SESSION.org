@@ -1,6 +1,28 @@
-# Session Log
+#+TITLE: Session Log
+#+STARTUP: overview
 
 Scrum-style changelog. Each session gets a dated entry. Newest on top.
+
+---
+
+## [2026-08-30] Session 3 — Sprint 3: More Modes + DoD
+
+### Done
+- Added 6 new language modes: markdown-mode, yaml-mode, json-mode, toml-mode, nix-mode, dockerfile-mode
+- Added 12 new tests for language modes (106 → 118 tests)
+- Created doc/DOD.md (Definition of Done for pre-commit hook)
+- Updated SPRINT.org with Sprint 3 planned items
+
+### Changed
+- init.el: 640 → 667 lines (+27 lines)
+- Test count: 106 → 118 (+12 tests)
+- Added section 15 (Language Modes) to init.el
+
+### Blocked
+- (none)
+
+### Next
+- Sprint 4: Pre-commit hook (requires DoD implementation)
 
 ---
 
@@ -16,16 +38,14 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 - Fixed SPEC.md (stale file counts, removed fixed known issues, removed completed planned items)
 
 ### Changed
-- Test count: 99 → 106 (7 new tests for Phase 2 features)
-- init.el: 609 → 633 lines
+- Test count: 99 → 106 (7 new tests)
+- init.el: 609 → 640 lines
 
 ### Blocked
 - (none)
 
 ### Next
-- Phase 3: Enhance project scaffolding (add more templates)
-- Phase 4: Consider additional LSP features
-- Commit current state to git
+- Sprint 3: Select backlog items
 
 ---
 
@@ -39,10 +59,10 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 - Created automated test suite (99 tests, TAP format)
 - Created run_tests.sh pipeline script
 - Added packages: diff-hl (git gutter), vundo (visual undo), ace-window (window switching)
-- Created SPEC.md (technical specification)
-- Created SESSION.md (this file)
+- Created doc/SCRUM.org (technical specification)
+- Created SESSION.org (this file)
 - Updated install_emacs_config_dependencies.sh (Noto Sans Mono font)
-- Updated WORKFLOWS.md (fix errors, add missing features)
+- Updated doc/WORKFLOWS.org (fix errors, add missing features)
 
 ### Changed
 - Font: Hack → Noto Sans Mono
@@ -54,8 +74,7 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 - (none)
 
 ### Next
-- Phase 2 Quick Wins: delete-selection-mode, frame title, compile keys, flymake faces
-- Commit current state to git
+- Refactor and expand config
 
 ---
 

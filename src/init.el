@@ -328,6 +328,17 @@
   ;; Open magit in the current window, not a new one.
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+;; --- Git Gutter (diff-hl) -------------------------------------------------
+;; Shows added/modified/deleted lines in the fringe (green/red/blue marks).
+;; C-x v = to diff, C-x v n/p to jump between changes.
+
+(use-package diff-hl
+  :hook ((prog-mode . diff-hl-mode)
+	 (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  (setq diff-hl-side 'left)
+  (setq diff-hl-margin-mode nil))
+
 
 ;;; ==========================================================================
 ;;; 9. LSP — Eglot (built-in Language Server Protocol)
@@ -388,17 +399,6 @@
   (set-face-attribute 'flymake-warning nil
 		      :underline '(:style wave :color "e0af68")
 		      :foreground "e0af68"))
-
-;; --- Git Gutter (diff-hl) -------------------------------------------------
-;; Shows added/modified/deleted lines in the fringe (green/red/blue marks).
-;; C-x v = to diff, C-x v n/p to jump between changes.
-
-(use-package diff-hl
-  :hook ((prog-mode . diff-hl-mode)
-	 (magit-post-refresh . diff-hl-magit-post-refresh))
-  :config
-  (setq diff-hl-side 'left)
-  (setq diff-hl-margin-mode nil))
 
 
 ;;; ==========================================================================
@@ -535,6 +535,7 @@
 	    (find-file main-py))))
 
 	;; Git init + initial commit.
+	(require 'magit)
 	(let ((default-directory proj-root))
 	  (magit-init)
 	  (magit-stage-all)
@@ -629,6 +630,38 @@
 
 ;; Enable shell code blocks in Org files.
 (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
+
+
+;;; ==========================================================================
+;;; 15. LANGUAGE MODES — Config file support
+;;; ==========================================================================
+
+;; Markdown mode
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . markdown-mode)
+  :config
+  (setq markdown-fontify-whole-heading-line t))
+
+;; YAML mode
+(use-package yaml-mode
+  :mode ("\\.ya?ml\\'" . yaml-mode))
+
+;; JSON mode
+(use-package json-mode
+  :mode ("\\.json\\'" . json-mode))
+
+;; TOML mode
+(use-package toml-mode
+  :mode ("\\.toml\\'" . toml-mode))
+
+;; Nix mode
+(use-package nix-mode
+  :mode ("\\.nix\\'" . nix-mode)
+  :hook ((nix-mode . eglot-ensure)))
+
+;; Dockerfile mode
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode))
 
 
 ;;; ==========================================================================

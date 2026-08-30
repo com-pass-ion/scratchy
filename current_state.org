@@ -1,0 +1,19 @@
+#+TITLE: Current Scrum Phase
+
+* Status
+  :PROPERTIES:
+  :Phase:    review
+  :Sprint:   3
+  :Updated:  2026-08-30
+  :END:
+
+* Phase Definitions
+
+| Phase             | Description                                      |
+|-------------------+--------------------------------------------------|
+| backlog           | Items are being added and estimated              |
+| planning-poker    | Estimating new items with Story Points           |
+| sprint-planning   | Selecting items for the current sprint           |
+| in-progress       | Active development during sprint                 |
+| review            | Sprint review - documenting completed work       |
+| retrospective     | Analyzing what went well, what didn't            |

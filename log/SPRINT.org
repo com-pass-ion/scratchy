@@ -1,0 +1,64 @@
+#+TITLE: Sprint Log
+#+STARTUP: overview
+
+Current sprint, velocity, and retrospective.
+
+* Sprint 3
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+|       |             |      |         |
+
+** Planned Items
+- More Modes (2 SP): markdown-mode, yaml-mode, json-mode, toml-mode, nix-mode, dockerfile-mode
+- Definition of Done (doc/DOD.md)
+
+* Velocity
+
+| Sprint | Date       | Planned | Delivered | Notes                     |
+|--------+------------+---------+-----------+---------------------------|
+| 1      | 2026-04-28 | —       | 8         | Setup + Refactor          |
+| 2      | 2026-08-30 | —       | 8         | Quick Wins                |
+| 3      | 2026-08-30 | 2       | —         | More Modes + DoD            |
+
+*Average*: 8 SP/Sprint
+
+* Retrospective
+
+** Sprint 1 — 2026-04-28
+*** What went well
+- Quick initial setup
+- Clear structure from the start
+
+*** What didn't go well
+- No tests from the beginning
+
+*** Actions
+- Write tests for all features
+
+** Sprint 2 — 2026-08-30
+*** What went well
+- Quick wins implemented cleanly
+- All 106 tests passed
+
+*** What didn't go well
+- File counts not noticed immediately
+- diff-hl in wrong section
+
+*** Actions
+- Update file counts with every change
+- Check section assignment before commit
+
+* Retrospective Template
+
+** Sprint X — [Date]
+*** What went well
+-
+
+*** What didn't go well
+-
+
+*** Actions
+-
