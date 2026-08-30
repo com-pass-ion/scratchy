@@ -5,17 +5,19 @@ All planned features, sorted by category.
 
 * Product Backlog
 
-** TODO Tree-sitter (treesit)
+** DONE Tree-sitter (treesit)
    :PROPERTIES:
    :Effort:   3
    :Category: :editor:
+   :Sprint:   5
    :END:
    Better syntax highlighting via treesit (built-in Emacs 30).
 
-** TODO Desktop Save
+** DONE Desktop Save
    :PROPERTIES:
    :Effort:   1
    :Category: :editor:
+   :Sprint:   5
    :END:
    Session persistence (files, buffers, windows).
 
@@ -26,17 +28,19 @@ All planned features, sorted by category.
    :END:
    Research: evaluate Tempel as modern snippet alternative to Tempo.
 
-** TODO Git pre-commit hook
+** DONE Git pre-commit hook
    :PROPERTIES:
    :Effort:   2
    :Category: :devops:
+   :Sprint:   5
    :END:
    Automatic testing before each commit.
 
-** TODO Docker (docker.el)
+** DONE Docker (docker.el)
    :PROPERTIES:
    :Effort:   2
    :Category: :devops:
+   :Sprint:   5
    :END:
    Docker container management (dockerfile-mode already added).
 

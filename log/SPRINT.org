@@ -9,13 +9,31 @@ Current sprint, velocity, and retrospective.
 
 | TO DO | IN PROGRESS | DONE | BLOCKED |
 |-------+-------------+------+---------|
-|       |             |      |         |
+|       |             | Tree-sitter |  |
+|       |             | Desktop Save |  |
+|       |             | Git pre-commit |  |
+|       |             | Docker.el |  |
 
 ** Planned Items
 - Tree-sitter (treesit) (3 SP)
 - Desktop Save (1 SP)
 - Git pre-commit hook (2 SP)
 - Docker.el (2 SP)
+
+** Retrospective
+
+*** What went well
+- All 4 features completed (8 SP)
+- 139 tests passing (up from 125)
+- Docker.el added as bonus feature
+- Workflow tutorials task added to backlog
+
+*** What could improve
+- Consider adding more DevOps features
+- Explore Tempel for snippets
+
+*** Action items
+- None
 
 * Sprint 4
 
@@ -51,8 +69,9 @@ Current sprint, velocity, and retrospective.
 | 2      | 2026-08-30 | —       | 8         | Quick Wins                |
 | 3      | 2026-08-30 | 2       | 2         | More Modes + DoD          |
 | 4      | 2026-08-30 | 9       | 9         | Media & Documents         |
+| 5      | 2026-08-30 | 8       | 8         | Tree-sitter, Desktop, Git, Docker |
 
-*Average*: 6.75 SP/Sprint
+*Average*: 7.0 SP/Sprint
 
 * Retrospective
 
