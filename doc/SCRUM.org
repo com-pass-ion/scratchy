@@ -34,9 +34,9 @@
 #+begin_example
 emacs_from_scratch/
 ├── src/
-│   └── init.el                          # Main config (667 lines, 23 KB)
+│   └── init.el                          # Main config (720 lines, 24 KB)
 ├── test/
-│   ├── test_init.el                     # Test suite (535 lines, 19 KB, 118 tests)
+│   ├── test_init.el                     # Test suite (570 lines, 20 KB, 123 tests)
 │   └── run_tests.sh                     # Test runner (22 lines, 486 B)
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
@@ -52,7 +52,7 @@ emacs_from_scratch/
 │   └── SESSION.org                      # Session changelog
 ├── current_state.org                    # Current Scrum phase status
 ├── opencode.json                        # OpenCode agent config
-├── install_emacs_config_dependencies.sh # System deps installer (34 lines, 658 B)
+├── install_emacs_config_dependencies.sh # System deps installer (40 lines, 750 B)
 ├── .gitignore                           # Git ignore rules
 └── .git/                                # Git repository
 #+end_example
@@ -68,7 +68,7 @@ To modify agent behavior:
 
 ** Architecture
 
-15 numbered sections in =src/init.el=:
+16 numbered sections in =src/init.el=:
 
 | #   | Section      | Packages             | Key Features                                         |
 |-----+--------------+----------------------+------------------------------------------------------|
@@ -87,6 +87,7 @@ To modify agent behavior:
 | 13  | Build & Run  | —                    | CMake build, mode-specific run, compile mode         |
 | 14  | Org-Mode     | —                    | Babel shell integration                              |
 | 15  | Language Modes | markdown, yaml, json, toml, nix, dockerfile | Config file support |
+| 16  | Media & Documents | pdf-tools, image-dired+, mermaid-mode, svg-tag-mode | PDF, images, diagrams, SVG |
 
 ** Keybinding Reference
 
@@ -251,13 +252,17 @@ To modify agent behavior:
 | toml-mode  | ELPA    | 15      | TOML files          | Eager         |
 | nix-mode   | MELPA   | 15      | Nix files           | Eager         |
 | dockerfile-mode | MELPA | 15   | Dockerfiles         | Eager         |
+| pdf-tools  | ELPA    | 16      | PDF viewing         | Lazy (command)|
+| image-dired+ | MELPA | 16     | Image thumbnails    | Eager         |
+| mermaid-mode | MELPA | 16     | Mermaid diagrams    | Lazy (command)|
+| svg-tag-mode | MELPA | 16     | SVG inline          | Eager (hook)  |
 
 ** Testing
 
 - *Format*: TAP (Test Anything Protocol)
 - *Runner*: =./test/run_tests.sh= or =emacs --batch -l test/test_init.el=
 - *Exit Code*: 0 = pass, 1 = fail
-- *Total Tests*: 118
+- *Total Tests*: 122
 
 *** Coverage by Section
 
@@ -278,6 +283,7 @@ To modify agent behavior:
 | 13. Build & Run |   12 | All functions, keybindings, compile settings          |
 | 14. Org-Mode  |     1 | Babel shell integration                               |
 | 15. Language Modes |  12 | markdown, yaml, json, toml, nix, dockerfile           |
+| 16. Media & Documents |   5 | pdf-tools, image-dired+, mermaid-mode, svg-tag-mode  |
 
 ** Dependencies
 

@@ -2,7 +2,7 @@
 
 * Status
   :PROPERTIES:
-  :Phase:    review
+  :Phase:    sprint-planning
   :Sprint:   3
   :Updated:  2026-08-30
   :END:

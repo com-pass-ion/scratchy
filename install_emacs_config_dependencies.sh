@@ -24,9 +24,18 @@ sudo apt install -y jdtls
 # Python dependencies
 sudo apt install -y python3 python3-pip python3-venv npm
 
+# Media & Document support (pdf-tools, svg-tag-mode)
+sudo apt install -y \
+    libpoppler-glib-dev \
+    libpoppler-private-dev \
+    librsvg2-dev
+
 # Install LSP servers via npm
 sudo npm install -g pyright
 sudo npm install -g bash-language-server
+
+# Mermaid CLI (for mermaid-mode)
+sudo npm install -g @mermaid-js/mermaid-cli
 
 # Install Noto Sans Mono font (as specified in init.el)
 sudo apt install -y fonts-noto

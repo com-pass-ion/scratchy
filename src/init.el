@@ -665,6 +665,53 @@
 
 
 ;;; ==========================================================================
+;;; 16. MEDIA & DOCUMENTS — PDF, Images, Mermaid, SVG
+;;; ==========================================================================
+
+;; --- PDF Tools (pdf-tools) ------------------------------------------------
+;; View, annotate, and search PDFs inside Emacs.
+;; Requires: sudo apt install libpoppler-glib-dev libpoppler-private-dev
+
+(use-package pdf-tools
+  :if (file-exists-p "/usr/lib/x86_64-linux-gnu/libpoppler-glib.so")
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (pdf-tools-install)
+  (setq pdf-view-display-size 'fit-width)
+  (setq pdf-view-resize-factor 1.1))
+
+;; --- Image Dired+ (better thumbnails) ------------------------------------
+;; Enhanced image-dired with better thumbnail management.
+
+(use-package image-dired+
+  :ensure t
+  :after image-dired
+  :config
+  (setq image-dired-thumb-size 150)
+  (setq image-dired-thumb-margin 10)
+  (setq image-dired-thumb-relief 3))
+
+;; --- Mermaid Mode ---------------------------------------------------------
+;; Edit and preview Mermaid diagrams.
+
+(use-package mermaid-mode
+  :mode ("\\.mmd\\'" . mermaid-mode)
+  :config
+  (setq mermaid-cli-path "/usr/local/bin/mmdc"))
+
+;; --- SVG Tag Mode ---------------------------------------------------------
+;; Render SVG images inline in Org-Mode.
+
+(use-package svg-tag-mode
+  :hook (org-mode . svg-tag-mode)
+  :config
+  (setq svg-tag-tags
+        '(("info" . "◉")
+          ("warning" . "⚠")
+          ("error" . "✕"))))
+
+
+;;; ==========================================================================
 ;;; FOOTER
 ;;; ==========================================================================
 

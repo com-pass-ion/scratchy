@@ -568,6 +568,38 @@
 
 
 ;;; ==========================================================================
+;;; 16. MEDIA & DOCUMENTS TESTS
+;;; ==========================================================================
+
+(test--assert "16.1 pdf-tools is configured"
+  (cl-assert (string-match-p "use-package pdf-tools"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "16.3 image-dired+ is configured"
+  (cl-assert (string-match-p "use-package image-dired+"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+(test--assert "16.4 mermaid-mode command is defined"
+  (cl-assert (fboundp 'mermaid-mode)))
+
+(test--assert "16.5 svg-tag-mode is configured"
+  (cl-assert (string-match-p "use-package svg-tag-mode"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (expand-file-name "src/init.el"
+                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+                               (buffer-string)))))
+
+
+;;; ==========================================================================
 ;;; SUMMARY
 ;;; ==========================================================================
 

@@ -18,6 +18,7 @@ Quick reference of all rules to follow when working on this project.
 - **Definition of Done**: All code must pass tests, be documented, and follow style guide
 - **Test Before Commit**: Run `./test/run_tests.sh` before committing
 - **Commit After Every Step**: Commit after completing each task with descriptive message
+- **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
 
 ## Sprint
 
