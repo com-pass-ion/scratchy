@@ -30,6 +30,8 @@ Quick reference of all rules to follow when working on this project.
 - **Sprint Goal**: Each sprint must have a clear, measurable goal
 - **Capacity**: 2-4 hours per session
 - **Phase Tracking**: Update `current_state.org` on every phase change
+- **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)
+- **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
 
 ## File Locations
 

@@ -3,6 +3,20 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 4
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+|       |             |      |         |
+
+** Planned Items
+- PDF Tools (3 SP)
+- Image Support (2 SP)
+- Mermaid Mode (2 SP)
+- SVG Support (2 SP)
+
 * Sprint 3
 
 ** Kanban Board
@@ -21,9 +35,10 @@ Current sprint, velocity, and retrospective.
 |--------+------------+---------+-----------+---------------------------|
 | 1      | 2026-04-28 | —       | 8         | Setup + Refactor          |
 | 2      | 2026-08-30 | —       | 8         | Quick Wins                |
-| 3      | 2026-08-30 | 2       | —         | More Modes + DoD            |
+| 3      | 2026-08-30 | 2       | 2         | More Modes + DoD          |
+| 4      | 2026-08-30 | 9       | 9         | Media & Documents         |
 
-*Average*: 8 SP/Sprint
+*Average*: 6.75 SP/Sprint
 
 * Retrospective
 
@@ -50,6 +65,32 @@ Current sprint, velocity, and retrospective.
 *** Actions
 - Update file counts with every change
 - Check section assignment before commit
+
+** Sprint 3 — 2026-08-30
+*** What went well
+- 6 language modes added cleanly
+- Definition of Done created
+- Project restructured
+
+*** What didn't go well
+- (none)
+
+*** Actions
+- (none)
+
+** Sprint 4 — 2026-08-30
+*** What went well
+- Media & Documents section added
+- Test strategy improved (feature tests)
+- Rules added (dependencies, test strategy, functional style)
+
+*** What didn't go well
+- SPRINT.org not updated during sprint
+- current_state.org not updated
+
+*** Actions
+- Update SPRINT.org during sprint
+- Update current_state.org on phase changes
 
 * Retrospective Template
 
