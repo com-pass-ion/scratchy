@@ -2,7 +2,7 @@
 
 * Status
   :PROPERTIES:
-  :Phase:    review
+  :Phase:    retrospective
   :Sprint:   6
   :Updated:  2026-08-30
   :END:

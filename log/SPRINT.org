@@ -35,14 +35,14 @@ Current sprint, velocity, and retrospective.
 
 | Question | Answer |
 |----------|--------|
-| Did we meet the sprint goal? | |
-| What was the biggest blocker? | |
-| What should we start doing? | |
-| What should we stop doing? | |
-| What should we continue doing? | |
-| Any technical debt to address? | |
-| Any process improvements? | |
-| Should we adjust velocity? | |
+| Did we meet the sprint goal? | Yes, replaced Tempo with Tempel and added coverage report |
+| What was the biggest blocker? | None — smooth sprint |
+| What should we start doing? | Consider tempel-collection for more snippets |
+| What should we stop doing? | Nothing — process is working well |
+| What should we continue doing? | Minimal package philosophy, test-first approach |
+| Any technical debt to address? | None identified |
+| Any process improvements? | Consider adding more IDE snippets for productivity |
+| Should we adjust velocity? | No, 4 SP was appropriate for this sprint |
 
 * Sprint 5
 
