@@ -665,10 +665,6 @@
   :mode ("\\.nix\\'" . nix-mode)
   :hook ((nix-mode . eglot-ensure)))
 
-;; Dockerfile mode
-(use-package dockerfile-mode
-  :mode ("Dockerfile\\'" . dockerfile-mode))
-
 
 ;;; ==========================================================================
 ;;; 16. MEDIA & DOCUMENTS — PDF, Images, Mermaid, SVG
@@ -724,8 +720,10 @@
 ;; Tree-sitter provides incremental parsing for better syntax highlighting.
 ;; Built-in in Emacs 29+. Requires language grammars in ~/.emacs.d/tree-sitter/.
 
-(setq treesit-auto-install 'prompt)
-(add-hook 'prog-mode-hook #'treesit-auto-mode)
+(use-package treesit-auto
+  :config
+  (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
 
 
 ;;; ==========================================================================

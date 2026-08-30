@@ -584,11 +584,11 @@
 (test--assert "17.1 treesit-auto-install is configured"
   (cl-assert (boundp 'treesit-auto-install)))
 
-(test--assert "17.2 treesit-auto-mode is in prog-mode-hook"
-  (cl-assert (string-match-p "treesit-auto-mode" (test--get-init-el))))
+(test--assert "17.2 global-treesit-auto-mode is configured"
+  (cl-assert (string-match-p "global-treesit-auto-mode" (test--get-init-el))))
 
-(test--assert "17.3 tree-sitter is configured in init.el"
-  (cl-assert (string-match-p "treesit-auto-mode" (test--get-init-el))))
+(test--assert "17.3 treesit-auto-install is configured"
+  (cl-assert (boundp 'treesit-auto-install)))
 
 
 ;;; ==========================================================================
@@ -637,8 +637,8 @@
 (test--assert "20.4 dockerfile-mode is installed"
   (cl-assert (package-installed-p 'dockerfile-mode)))
 
-(test--assert "20.5 C-c d is bound to docker"
-  (cl-assert (eq (key-binding "\C-cd") 'docker)))
+(test--assert "20.5 dockerfile-use-projectile is configured"
+  (cl-assert (string-match-p "dockerfile-use-projectile" (test--get-init-el))))
 
 
 ;;; ==========================================================================

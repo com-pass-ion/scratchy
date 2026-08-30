@@ -54,7 +54,10 @@ Current sprint, velocity, and retrospective.
 
 | TO DO | IN PROGRESS | DONE | BLOCKED |
 |-------+-------------+------+---------|
-|       |             |      |         |
+|       |             | PDF Tools |  |
+|       |             | Image Support |  |
+|       |             | Mermaid Mode |  |
+|       |             | SVG Support |  |
 
 ** Planned Items
 - PDF Tools (3 SP)
@@ -68,7 +71,8 @@ Current sprint, velocity, and retrospective.
 
 | TO DO | IN PROGRESS | DONE | BLOCKED |
 |-------+-------------+------+---------|
-|       |             |      |         |
+|       |             | More Modes |  |
+|       |             | Definition of Done |  |
 
 ** Planned Items
 - More Modes (2 SP): markdown-mode, yaml-mode, json-mode, toml-mode, nix-mode, dockerfile-mode

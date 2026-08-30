@@ -97,7 +97,7 @@ All planned features, sorted by category.
 ** DONE PDF Tools (pdf-tools)
    :PROPERTIES:
    :Effort:   3
-   :Category: :lang:
+   :Category: :media:
    :Sprint:   4
    :END:
    View and annotate PDFs inside Emacs.
@@ -105,7 +105,7 @@ All planned features, sorted by category.
 ** DONE Image Support (image-mode, image-dired)
    :PROPERTIES:
    :Effort:   2
-   :Category: :lang:
+   :Category: :media:
    :Sprint:   4
    :END:
    View images (png, jpg, gif, svg) and create thumbnails.
@@ -113,7 +113,7 @@ All planned features, sorted by category.
 ** DONE Mermaid Mode (mermaid-mode)
    :PROPERTIES:
    :Effort:   2
-   :Category: :lang:
+   :Category: :media:
    :Sprint:   4
    :END:
    Edit and preview Mermaid diagrams in Emacs.
@@ -121,7 +121,7 @@ All planned features, sorted by category.
 ** DONE SVG Support (svg-tag-mode)
    :PROPERTIES:
    :Effort:   2
-   :Category: :lang:
+   :Category: :media:
    :Sprint:   4
    :END:
    Render SVG images inline with svg-tag-mode.
@@ -130,6 +130,7 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   5
    :Category: :editor:
+   :Sprint:   5
    :END:
    Replaced by Tempo (sufficient for current needs). Consider Tempel for future.
 
@@ -137,6 +138,7 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   3
    :Category: :editor:
+   :Sprint:   5
    :END:
    Not needed: whitespace-cleanup + eglot-format cover 80% of use cases.
 
@@ -144,6 +146,7 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   8
    :Category: :editor:
+   :Sprint:   5
    :END:
    Not needed: user doesn't require tabs/workspace management.
 
@@ -151,8 +154,17 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   3
    :Category: :ai:
+   :Sprint:   5
    :END:
    Replaced by Custom Agent Environment for low-level control.
+
+** DONE Definition of Done (doc/DOD.md)
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :docs:
+   :Sprint:   3
+   :END:
+   Created Definition of Done document with checklist.
 
 * Done
 

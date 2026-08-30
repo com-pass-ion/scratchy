@@ -18,7 +18,7 @@
 - *Built-in first*: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
 - *Minimal packages*: Only add packages that provide clear, measurable value
 - *Single-file config*: Everything in =src/init.el=, no modular splitting
-- *Testable*: Every feature has an automated test (106 tests, TAP format)
+- *Testable*: Every feature has an automated test (139 tests, TAP format)
 - *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
 - *Documented*: Documentation lives in ./doc as WORKFLOWS.org & SCRUM.org
 - *Session-tracked*: Scrum-style changelog in log/SESSION.org
@@ -34,9 +34,9 @@
 #+begin_example
 emacs_from_scratch/
 ├── src/
-│   └── init.el                          # Main config (720 lines, 24 KB)
+│   └── init.el                          # Main config (787 lines, 24 KB)
 ├── test/
-│   ├── test_init.el                     # Test suite (570 lines, 20 KB, 123 tests)
+│   ├── test_init.el                     # Test suite (650 lines, 20 KB, 139 tests)
 │   └── run_tests.sh                     # Test runner (22 lines, 486 B)
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
@@ -68,7 +68,7 @@ To modify agent behavior:
 
 ** Architecture
 
-16 numbered sections in =src/init.el=:
+20 numbered sections in =src/init.el=:
 
 | #   | Section      | Packages             | Key Features                                         |
 |-----+--------------+----------------------+------------------------------------------------------|
@@ -86,8 +86,12 @@ To modify agent behavior:
 | 12  | Project      | — (project.el built-in) | Scaffolding (C++/Python), .projectile, git init   |
 | 13  | Build & Run  | —                    | CMake build, mode-specific run, compile mode         |
 | 14  | Org-Mode     | —                    | Babel shell integration                              |
-| 15  | Language Modes | markdown, yaml, json, toml, nix, dockerfile | Config file support |
+| 15  | Language Modes | markdown, yaml, json, toml, nix | Config file support |
 | 16  | Media & Documents | pdf-tools, image-dired+, mermaid-mode, svg-tag-mode | PDF, images, diagrams, SVG |
+| 17  | Tree-sitter  | treesit-auto         | Better syntax highlighting                           |
+| 18  | Session      | — (built-in)         | Desktop save (session persistence)                   |
+| 19  | Git Hooks    | —                    | Pre-commit test runner                               |
+| 20  | DevOps       | docker, dockerfile-mode | Docker container management                      |
 
 ** Keybinding Reference
 
@@ -256,13 +260,15 @@ To modify agent behavior:
 | image-dired+ | MELPA | 16     | Image thumbnails    | Eager         |
 | mermaid-mode | MELPA | 16     | Mermaid diagrams    | Lazy (command)|
 | svg-tag-mode | MELPA | 16     | SVG inline          | Eager (hook)  |
+| treesit-auto | MELPA | 17     | Tree-sitter auto    | Eager         |
+| docker       | MELPA | 20     | Docker management   | Lazy (bind)   |
 
 ** Testing
 
 - *Format*: TAP (Test Anything Protocol)
 - *Runner*: =./test/run_tests.sh= or =emacs --batch -l test/test_init.el=
 - *Exit Code*: 0 = pass, 1 = fail
-- *Total Tests*: 125
+- *Total Tests*: 139
 
 *** Coverage by Section
 
@@ -283,6 +289,11 @@ To modify agent behavior:
 | 13. Build & Run |   12 | All functions, keybindings, compile settings          |
 | 14. Org-Mode  |     1 | Babel shell integration                               |
 | 15. Language Modes |  12 | markdown, yaml, json, toml, nix, dockerfile           |
+| 16. Media & Documents | 7 | PDF tools, images, mermaid, SVG                |
+| 17. Tree-sitter |   3 | treesit-auto-install, global-treesit-auto-mode        |
+| 18. Session   |     3 | desktop-save-mode, auto-save-timeout, desktop-save    |
+| 19. Git Hooks |     3 | Pre-commit script, executable, function definition    |
+| 20. DevOps    |     5 | Docker command, keybinding, dockerfile-mode, projectile|
 | 16. Media & Documents |   5 | pdf-tools, image-dired+, mermaid-mode, svg-tag-mode  |
 
 ** Dependencies
@@ -302,6 +313,10 @@ To modify agent behavior:
 | python3-venv      | Python virtual envs      |
 | npm               | Node.js package manager  |
 | fonts-noto        | Noto Sans Mono font      |
+| ripgrep           | Fast grep (consult-ripgrep) |
+| libpoppler-glib-dev | PDF tools support     |
+| libpoppler-private-dev | PDF tools support  |
+| librsvg2-dev      | SVG support              |
 
 *** npm Packages (global)
 
@@ -309,6 +324,7 @@ To modify agent behavior:
 |-----------------------+--------------------------|
 | pyright               | Python language server   |
 | bash-language-server  | Bash language server     |
+| @mermaid-js/mermaid-cli | Mermaid diagram rendering |
 
 *** Install Command
 
@@ -417,3 +433,34 @@ To modify agent behavior:
 | ●●●   | 1-2 h     | Medium task                           |
 | ●●●●  | 2-4 h     | Large task                            |
 | ●●●●● | > 4 h     | Epic — break down into sub-tasks      |
+
+* Review Log
+
+** Sprint 5 Review — 2026-08-30
+
+*** Issues Found
+
+| #   | Severity | Issue | Status |
+|-----+----------+-------+--------|
+| 1   | Critical | Missing use-package for treesit-auto | FIXED |
+| 2   | Medium | Duplicate dockerfile-mode declarations | FIXED |
+| 3   | Low | Duplicate tests 17.2/17.3, 20.2/20.5 | FIXED |
+| 4   | Medium | doc/SCRUM.org outdated (16 sections → 20) | FIXED |
+| 5   | Medium | Test count inconsistent (106/125 → 139) | FIXED |
+| 6   | Medium | SESSION.org missing Sprints 4-5 | FIXED |
+| 7   | Medium | Sprint 3/4 Kanban boards empty | FIXED |
+| 8   | Low | Category mislabeling (:lang: → :media:) | FIXED |
+| 9   | Low | DONE items missing :Sprint: property | FIXED |
+| 10  | Low | Missing rules in SCRUM-WORKFLOW.md/PROMPT.md | FIXED |
+| 11  | Low | Missing dependencies in doc/SCRUM.org | FIXED |
+
+*** Actions Taken
+- Added Follow-up Questions and Session Logging rules to RULES.md
+- Added use-package block for treesit-auto in init.el
+- Consolidated dockerfile-mode into Section 20 only
+- Fixed duplicate tests in test_init.el
+- Updated doc/SCRUM.org: architecture, test count, file structure, packages, dependencies
+- Fixed BACKLOG.org categories and added missing Sprint properties
+- Updated Sprint 3/4 Kanban boards in SPRINT.org
+- Added session logs for Sprints 4-5
+- Updated SCRUM-WORKFLOW.md and PROMPT.md with missing rules

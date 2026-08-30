@@ -11,6 +11,15 @@ This document contains the generic Scrum process used in this project.
 - **Definition of Done**: All code must pass tests, be documented, and follow style guide
 - **Sprint Goal**: Each sprint must have a clear, measurable goal
 - **Phase Tracking**: Update `current_state.org` on every phase change
+- **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)
+- **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
+- **Follow-up Questions**: After every sprint retrospective, answer 8 questions in `log/SPRINT.org`
+- **Session Logging**: Update `log/SESSION.org` with a summary of completed work before starting each new session or sprint
+- **Test Strategy**: Tests must verify functionality, not just code presence
+- **Commit After Every Step**: Commit after completing each task with descriptive message
+- **Test Before Commit**: Run `./test/run_tests.sh` before committing
+- **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
+- **Capacity**: 2-4 hours per session
 
 ## Process Flow
 

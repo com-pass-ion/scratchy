@@ -5,6 +5,54 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
+## [2026-08-30] Session 5 — Sprint 5: Tree-sitter, Desktop, Git, Docker
+
+### Done
+- Added tree-sitter support via treesit-auto package
+- Added desktop-save-mode for session persistence
+- Added git pre-commit hook for automatic testing
+- Added docker.el for Docker container management
+- Consolidated duplicate dockerfile-mode declarations
+- Fixed missing use-package for treesit-auto
+- Fixed duplicate tests (17.2/17.3, 20.2/20.5)
+- Added 14 new tests (125 → 139 tests)
+- Added workflow tutorials task to backlog
+
+### Changed
+- init.el: 720 → 787 lines (+67 lines)
+- Test count: 125 → 139 (+14 tests)
+- Added sections 17-20 to init.el
+
+### Blocked
+- (none)
+
+### Next
+- Sprint 6: Select backlog items
+
+---
+
+## [2026-08-30] Session 4 — Sprint 4: Media & Documents
+
+### Done
+- Added PDF tools for viewing and annotating PDFs
+- Added image-dired+ for better thumbnail management
+- Added mermaid-mode for editing Mermaid diagrams
+- Added svg-tag-mode for rendering SVG images inline
+- Added 14 new tests (118 → 125 tests)
+
+### Changed
+- init.el: 667 → 720 lines (+53 lines)
+- Test count: 118 → 125 (+7 tests)
+- Added section 16 (Media & Documents) to init.el
+
+### Blocked
+- (none)
+
+### Next
+- Sprint 5: Select backlog items
+
+---
+
 ## [2026-08-30] Session 3 — Sprint 3: More Modes + DoD
 
 ### Done

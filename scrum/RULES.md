@@ -32,6 +32,16 @@ Quick reference of all rules to follow when working on this project.
 - **Phase Tracking**: Update `current_state.org` on every phase change
 - **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)
 - **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
+- **Follow-up Questions**: After every sprint retrospective, answer these questions in `log/SPRINT.org`:
+  1. Did we meet the sprint goal?
+  2. What was the biggest blocker?
+  3. What should we start doing?
+  4. What should we stop doing?
+  5. What should we continue doing?
+  6. Any technical debt to address?
+  7. Any process improvements?
+  8. Should we adjust velocity?
+- **Session Logging**: Update `log/SESSION.org` with a summary of completed work before starting each new session or sprint
 
 ## File Locations
 
