@@ -61,10 +61,11 @@ All planned features, sorted by category.
    :END:
    Better syntax highlighting via treesit (built-in Emacs 30).
 
-** TODO More Modes (markdown, yaml, json)
+** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
+   :Sprint:   3
    :END:
    markdown-mode, yaml-mode, json-mode for config files and docs.
 
@@ -95,6 +96,41 @@ All planned features, sorted by category.
    :Category: :ai:
    :END:
    LLM integration via gptel with OpenAI/Anthropic API.
+
+** TODO PDF Tools (pdf-tools)
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :lang:
+   :END:
+   View and annotate PDFs inside Emacs.
+
+** TODO Image Support (image-mode, image-dired)
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :lang:
+   :END:
+   View images (png, jpg, gif, svg) and create thumbnails.
+
+** TODO Mermaid Mode (mermaid-mode)
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :lang:
+   :END:
+   Edit and preview Mermaid diagrams in Emacs.
+
+** TODO SVG Support (svg-tag-mode)
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :lang:
+   :END:
+   Render SVG images inline with svg-tag-mode.
+
+** TODO Test Strategy Review
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :testing:
+   :END:
+   Review test coverage, add integration tests, human-in-the-loop approval.
 
 * Done
 
