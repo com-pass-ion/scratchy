@@ -83,31 +83,35 @@ All planned features, sorted by category.
    :END:
    Docker container management (dockerfile-mode already added).
 
-** TODO PDF Tools (pdf-tools)
+** DONE PDF Tools (pdf-tools)
    :PROPERTIES:
    :Effort:   3
    :Category: :lang:
+   :Sprint:   4
    :END:
    View and annotate PDFs inside Emacs.
 
-** TODO Image Support (image-mode, image-dired)
+** DONE Image Support (image-mode, image-dired)
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
+   :Sprint:   4
    :END:
    View images (png, jpg, gif, svg) and create thumbnails.
 
-** TODO Mermaid Mode (mermaid-mode)
+** DONE Mermaid Mode (mermaid-mode)
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
+   :Sprint:   4
    :END:
    Edit and preview Mermaid diagrams in Emacs.
 
-** TODO SVG Support (svg-tag-mode)
+** DONE SVG Support (svg-tag-mode)
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
+   :Sprint:   4
    :END:
    Render SVG images inline with svg-tag-mode.
 
