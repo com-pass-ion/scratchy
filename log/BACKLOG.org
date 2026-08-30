@@ -5,26 +5,26 @@ All planned features, sorted by category.
 
 * Product Backlog
 
-** TODO apheleia (format-on-save)
+** TODO Tree-sitter (treesit)
    :PROPERTIES:
    :Effort:   3
    :Category: :editor:
    :END:
-   Format-on-save for consistent code style.
+   Better syntax highlighting via treesit (built-in Emacs 30).
 
-** TODO yasnippet + Better Snippet Strategy
+** TODO Desktop Save
    :PROPERTIES:
-   :Effort:   5
+   :Effort:   1
    :Category: :editor:
    :END:
-   Replace Tempo with yasnippet, add snippets for Java, Bash, Rust, Go.
+   Session persistence (files, buffers, windows).
 
-** TODO tab-bar / persp-mode (workspaces)
+** TODO Consider Tempel
    :PROPERTIES:
-   :Effort:   8
+   :Effort:   1
    :Category: :editor:
    :END:
-   Workspace management for parallel projects.
+   Research: evaluate Tempel as modern snippet alternative to Tempo.
 
 ** TODO Git pre-commit hook
    :PROPERTIES:
@@ -33,12 +33,26 @@ All planned features, sorted by category.
    :END:
    Automatic testing before each commit.
 
+** TODO Docker (docker.el)
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :devops:
+   :END:
+   Docker container management (dockerfile-mode already added).
+
 ** TODO Coverage report
    :PROPERTIES:
    :Effort:   2
    :Category: :testing:
    :END:
    Track test coverage.
+
+** TODO Test Strategy Review
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :testing:
+   :END:
+   Review test coverage, add integration tests, human-in-the-loop approval.
 
 ** TODO CHANGELOG.md
    :PROPERTIES:
@@ -47,12 +61,19 @@ All planned features, sorted by category.
    :END:
    Structured change log.
 
-** TODO Tree-sitter (treesit)
+** TODO Expand Org-Mode (org-babel, org-roam)
    :PROPERTIES:
-   :Effort:   3
-   :Category: :editor:
+   :Effort:   5
+   :Category: :lang:
    :END:
-   Better syntax highlighting via treesit (built-in Emacs 30).
+   org-babel for Python/C, org-roam for notes.
+
+** TODO Custom Agent Environment
+   :PROPERTIES:
+   :Effort:   5
+   :Category: :ai:
+   :END:
+   Build low-level AI agent control with url.el + json.el.
 
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
@@ -61,27 +82,6 @@ All planned features, sorted by category.
    :Sprint:   3
    :END:
    markdown-mode, yaml-mode, json-mode for config files and docs.
-
-** TODO Expand Org-Mode (org-babel, org-roam)
-   :PROPERTIES:
-   :Effort:   5
-   :Category: :lang:
-   :END:
-   org-babel for Python/C, org-roam for notes.
-
-** TODO gptel + Cloud API (LLM-Workflow)
-   :PROPERTIES:
-   :Effort:   3
-   :Category: :ai:
-   :END:
-   LLM integration via gptel with OpenAI/Anthropic API.
-
-** TODO Docker (docker.el)
-   :PROPERTIES:
-   :Effort:   2
-   :Category: :devops:
-   :END:
-   Docker container management (dockerfile-mode already added).
 
 ** DONE PDF Tools (pdf-tools)
    :PROPERTIES:
@@ -115,12 +115,33 @@ All planned features, sorted by category.
    :END:
    Render SVG images inline with svg-tag-mode.
 
-** TODO Test Strategy Review
+** DONE yasnippet + Better Snippet Strategy
+   :PROPERTIES:
+   :Effort:   5
+   :Category: :editor:
+   :END:
+   Replaced by Tempo (sufficient for current needs). Consider Tempel for future.
+
+** DONE apheleia (format-on-save)
    :PROPERTIES:
    :Effort:   3
-   :Category: :testing:
+   :Category: :editor:
    :END:
-   Review test coverage, add integration tests, human-in-the-loop approval.
+   Not needed: whitespace-cleanup + eglot-format cover 80% of use cases.
+
+** DONE tab-bar / persp-mode (workspaces)
+   :PROPERTIES:
+   :Effort:   8
+   :Category: :editor:
+   :END:
+   Not needed: user doesn't require tabs/workspace management.
+
+** DONE gptel + Cloud API (LLM-Workflow)
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :ai:
+   :END:
+   Replaced by Custom Agent Environment for low-level control.
 
 * Done
 
