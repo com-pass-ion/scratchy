@@ -60,19 +60,20 @@ All planned features, sorted by category.
    :END:
    Track test coverage.
 
-** TODO Test Strategy Review
+** TODO Testing Strategy (modules, integration, usability)
    :PROPERTIES:
    :Effort:   3
    :Category: :testing:
    :END:
-   Review test coverage, add integration tests, human-in-the-loop approval.
+   Three-tier testing: module tests (unit), integration tests (workflow), usability tests (human-in-the-loop).
 
-** TODO CHANGELOG.md
+** DONE CHANGELOG.md
    :PROPERTIES:
    :Effort:   1
    :Category: :docs:
+   :Sprint:   6
    :END:
-   Structured change log.
+   Not needed — SESSION.org provides detailed changelog. Git log for commit history.
 
 ** TODO Expand Org-Mode (org-babel, org-roam)
    :PROPERTIES:
@@ -87,6 +88,20 @@ All planned features, sorted by category.
    :Category: :ai:
    :END:
    Build low-level AI agent control with url.el + json.el.
+
+** TODO Consider tempel-collection
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :editor:
+   :END:
+   Evaluate tempel-collection for additional IDE snippets beyond current 88+.
+
+** TODO Expand WORKFLOWS.org
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :docs:
+   :END:
+   Add screenshots, keybinding cheatsheet, and video tutorials for workflows.
 
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
