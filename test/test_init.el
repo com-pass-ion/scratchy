@@ -409,20 +409,20 @@
 ;;; 10. SNIPPETS TESTS
 ;;; ==========================================================================
 
-(test--assert "10.1 tempo-interactive is nil"
-  (cl-assert (eq tempo-interactive nil)))
+(test--assert "10.1 tempel is installed"
+  (cl-assert (package-installed-p 'tempel)))
 
-(test--assert "10.2 C main template is defined"
-  (cl-assert (and (boundp 'tempo-tags) (assoc "c-main" tempo-tags))))
+(test--assert "10.2 M-+ is bound to tempel-complete"
+  (cl-assert (eq (key-binding (kbd "M-+")) 'tempel-complete)))
 
-(test--assert "10.3 Python main template is defined"
-  (cl-assert (assoc "python-main" tempo-tags)))
+(test--assert "10.3 M-* is bound to tempel-insert"
+  (cl-assert (eq (key-binding (kbd "M-*")) 'tempel-insert)))
 
-(test--assert "10.4 Bash header template is defined"
-  (cl-assert (assoc "bash-header" tempo-tags)))
+(test--assert "10.4 tempel-path is configured"
+  (cl-assert (boundp 'tempel-path)))
 
-(test--assert "10.5 Elisp func template is defined"
-  (cl-assert (assoc "elisp-func" tempo-tags)))
+(test--assert "10.5 tempel-expand is in completion-at-point-functions"
+  (cl-assert (string-match-p "tempel-expand" (test--get-init-el))))
 
 
 ;;; ==========================================================================
@@ -639,6 +639,22 @@
 
 (test--assert "20.5 dockerfile-use-projectile is configured"
   (cl-assert (string-match-p "dockerfile-use-projectile" (test--get-init-el))))
+
+
+;;; ==========================================================================
+;;; 21. COVERAGE REPORT TESTS
+;;; ==========================================================================
+
+(test--assert "21.1 coverage script exists"
+  (cl-assert (file-exists-p (expand-file-name "test/coverage.sh"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "21.2 coverage script is executable"
+  (cl-assert (file-executable-p (expand-file-name "test/coverage.sh"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "21.3 templates file exists"
+  (cl-assert (file-exists-p (concat (file-name-directory (directory-file-name (file-name-directory load-file-name))) "src/templates"))))
 
 
 ;;; ==========================================================================

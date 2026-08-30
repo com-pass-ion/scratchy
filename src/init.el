@@ -19,7 +19,7 @@
 ;;   7. Help             — Helpful
 ;;   8. Git              — Magit, diff-hl
 ;;   9. LSP              — Eglot (Python, C/C++, Java, Bash)
-;;  10. Snippets         — Tempo templates
+;;  10. Snippets         — Tempel templates
 ;;  11. Terminal         — Eat
 ;;  12. Project          — Project.el, templates
 ;;  13. Build & Run      — Language-specific compile commands
@@ -408,50 +408,23 @@
 
 
 ;;; ==========================================================================
-;;; 10. SNIPPETS — Tempo (built-in)
+;;; 10. SNIPPETS — Tempel (modern templates)
 ;;; ==========================================================================
 
-;; Tempo provides lightweight template expansion.
-;; Usage: type snippet name (e.g. "python-main"), then C-TAB to expand.
+;; Tempel provides lightweight template expansion with full Elisp support.
+;; Templates defined in ~/.emacs.d/templates (single file).
+;; Usage: type snippet name, then M-+ (tempel-complete) or M-* (tempel-insert).
 
-(require 'tempo)
-(setq tempo-interactive nil)  ;; don't prompt for cursor position
-
-(tempo-define-template "c-main"
-  '("#include <stdio.h>" n n
-    "int main(void) {" n
-    > _ n
-    "    return 0;" n
-    "}" n)
-  "c-main"
-  "C main template")
-
-(tempo-define-template "python-main"
-  '("def main():" n
-    > _ n n
-    "if __name__ == '__main__':" n
-    "    main()" n)
-  "python-main"
-  "Python main template")
-
-(tempo-define-template "bash-header"
-  '("#!/usr/bin/env bash" n n
-    "set -euo pipefail" n n
-    > _ n)
-  "bash-header"
-  "Bash script header")
-
-(tempo-define-template "elisp-func"
-  '("(defun " _ " ()" n
-    "  \"Docstring.\"" n
-    "  (interactive)" n
-    "  )" n)
-  "elisp-func"
-  "Elisp function template")
-
-;; C-TAB expands the snippet at point in prog-mode buffers.
-(add-hook 'prog-mode-hook
-	  (lambda () (local-set-key (kbd "<C-tab>") 'tempo-complete-tag)))
+(use-package tempel
+  :bind (("M-+" . tempel-complete)
+         ("M-*" . tempel-insert))
+  :init
+  (setq tempel-path (expand-file-name "templates" (file-name-directory load-file-name)))
+  (defun tempel-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand completion-at-point-functions)))
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf))
 
 
 ;;; ==========================================================================

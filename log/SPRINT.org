@@ -3,6 +3,18 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 6
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+|       |             |      |         |
+
+** Planned Items
+- Replace Tempo with Tempel (2 SP)
+- Coverage report (2 SP)
+
 * Sprint 5
 
 ** Kanban Board
