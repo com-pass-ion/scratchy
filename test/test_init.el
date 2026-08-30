@@ -622,6 +622,26 @@
 
 
 ;;; ==========================================================================
+;;; 20. DEVOPS TESTS
+;;; ==========================================================================
+
+(test--assert "20.1 docker command is defined"
+  (cl-assert (fboundp 'docker)))
+
+(test--assert "20.2 docker is bound to C-c d"
+  (cl-assert (eq (key-binding "\C-cd") 'docker)))
+
+(test--assert "20.3 dockerfile-mode command is defined"
+  (cl-assert (fboundp 'dockerfile-mode)))
+
+(test--assert "20.4 dockerfile-mode is installed"
+  (cl-assert (package-installed-p 'dockerfile-mode)))
+
+(test--assert "20.5 C-c d is bound to docker"
+  (cl-assert (eq (key-binding "\C-cd") 'docker)))
+
+
+;;; ==========================================================================
 ;;; SUMMARY
 ;;; ==========================================================================
 

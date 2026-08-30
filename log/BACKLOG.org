@@ -40,6 +40,13 @@ All planned features, sorted by category.
    :END:
    Docker container management (dockerfile-mode already added).
 
+** TODO Workflow Tutorials & Tests
+   :PROPERTIES:
+   :Effort:   5
+   :Category: :docs:
+   :END:
+   Create tutorials for each workflow (lsp, git, build, debug) with test cases.
+
 ** TODO Coverage report
    :PROPERTIES:
    :Effort:   2

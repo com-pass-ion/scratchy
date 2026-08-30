@@ -15,6 +15,7 @@ Current sprint, velocity, and retrospective.
 - Tree-sitter (treesit) (3 SP)
 - Desktop Save (1 SP)
 - Git pre-commit hook (2 SP)
+- Docker.el (2 SP)
 
 * Sprint 4
 

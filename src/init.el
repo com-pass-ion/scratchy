@@ -29,6 +29,7 @@
 ;;  17. Tree-sitter      — Better syntax highlighting
 ;;  18. Session          — Desktop save
 ;;  19. Git Hooks        — Pre-commit
+;;  20. DevOps           — Docker
 ;;
 
 ;;; Code:
@@ -758,6 +759,22 @@
 
 ;; Note: To activate, symlink or copy to .git/hooks/pre-commit:
 ;;   ln -sf ../../test/git-pre-commit .git/hooks/pre-commit
+
+
+;;; ==========================================================================
+;;; 20. DEVOPS — Docker
+;;; ==========================================================================
+
+;; Docker container management via docker.el.
+
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
+
+(use-package dockerfile-mode
+  :mode "Dockerfile\\'"
+  :config
+  (setq dockerfile-use-projectile t))
 
 
 ;;; ==========================================================================
