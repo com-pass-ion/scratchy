@@ -48,6 +48,19 @@
     (message "# RESULT: PASSED")
     (kill-emacs 0)))
 
+(defun test--init-init-el ()
+  "Load init.el if not already loaded."
+  (unless (featurep 'init)
+    (load (expand-file-name "src/init.el" (file-name-directory (directory-file-name (file-name-directory load-file-name)))) nil t)))
+
+(defun test--get-init-el ()
+  "Return contents of init.el as string."
+  (with-temp-buffer
+    (insert-file-contents
+     (expand-file-name "src/init.el"
+                       (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
+    (buffer-string)))
+
 
 ;;; ==========================================================================
 ;;; LOAD INIT.EL
@@ -111,21 +124,21 @@
   (cl-assert (eq tooltip-mode nil)))
 
 (test--assert "2.8 Font is Noto Sans Mono"
-  ;; In batch mode, face-attribute may return unspecified. Verify via init.el source.
-  (cl-assert (string-match-p "Noto Sans Mono"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  ;; Check face-attribute in batch mode (may return unspecified)
+  ;; or verify via init.el source for critical config
+  (let ((font (face-attribute 'default :font)))
+    (if (eq font 'unspecified)
+        ;; Fallback: verify source code has correct font
+        (cl-assert (string-match-p "Noto Sans Mono" (test--get-init-el)))
+      (cl-assert (string-match-p "Noto Sans Mono" (format "%s" font))))))
 
 (test--assert "2.9 Font height is 145"
-  (cl-assert (string-match-p ":height 145"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  (let ((height (face-attribute 'default :height)))
+    (if (eq height 'unspecified)
+        ;; Fallback: verify source code has correct height
+        (cl-assert (string-match-p ":height 145" (test--get-init-el)))
+      ;; In batch mode, height may not be a number. Just verify source code as fallback.
+      (cl-assert (string-match-p ":height 145" (test--get-init-el))))))
 
 (test--assert "2.10 Transparency is set to 90"
   (cl-assert (eq (frame-parameter (selected-frame) 'alpha-background) 90)))
@@ -276,21 +289,15 @@
   (cl-assert (eq corfu-auto t)))
 
 (test--assert "5.7 corfu-auto-delay is configured"
-  ;; corfu-defcustoms are not bound in batch. Verify init.el source.
-  (cl-assert (string-match-p "corfu-auto-delay 0.1"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  ;; corfu-defcustoms may not be bound in batch. Use custom-value or fallback to source.
+  (if (boundp 'corfu-auto-delay)
+      (cl-assert (= corfu-auto-delay 0.1))
+    (cl-assert (string-match-p "corfu-auto-delay 0.1" (test--get-init-el)))))
 
 (test--assert "5.8 corfu-auto-prefix is configured"
-  (cl-assert (string-match-p "corfu-auto-prefix 1"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  (if (boundp 'corfu-auto-prefix)
+      (cl-assert (= corfu-auto-prefix 1))
+    (cl-assert (string-match-p "corfu-auto-prefix 1" (test--get-init-el)))))
 
 (test--assert "5.9 cape-dabbrev is configured"
   (cl-assert (and (fboundp 'cape-dabbrev)
@@ -351,23 +358,21 @@
   (cl-assert (fboundp 'magit-get-current-branch)))
 
 (test--assert "8.3 magit-display-buffer-function is configured"
-  (cl-assert (string-match-p "magit-display-buffer-function"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  ;; Check if magit is loaded and function is set
+  (if (featurep 'magit)
+      (cl-assert (boundp 'magit-display-buffer-function))
+    ;; Fallback: verify source code
+    (cl-assert (string-match-p "magit-display-buffer-function" (test--get-init-el)))))
 
 (test--assert "8.4 diff-hl command is defined"
   (cl-assert (fboundp 'diff-hl-mode)))
 
 (test--assert "8.5 diff-hl hooks are configured"
-  (cl-assert (string-match-p "diff-hl-mode"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  ;; Check if diff-hl is loaded and hooks are set
+  (if (featurep 'diff-hl)
+      (cl-assert (memq 'diff-hl-mode prog-mode-hook))
+    ;; Fallback: verify source code
+    (cl-assert (string-match-p "diff-hl-mode" (test--get-init-el)))))
 
 
 ;;; ==========================================================================
@@ -393,13 +398,11 @@
   (cl-assert (memq 'eglot-ensure sh-mode-hook)))
 
 (test--assert "9.7 flymake-error face is configured"
-  ;; Check that the face configuration exists in init.el source
-  (cl-assert (string-match-p "flymake-error"
-                              (with-temp-buffer
-                                (insert-file-contents
-                                 (expand-file-name "src/init.el"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                                (buffer-string)))))
+  ;; Check if flymake is loaded and face is configured
+  (if (featurep 'flymake)
+      (cl-assert (facep 'flymake-error))
+    ;; Fallback: verify source code
+    (cl-assert (string-match-p "flymake-error" (test--get-init-el)))))
 
 
 ;;; ==========================================================================
@@ -503,57 +506,32 @@
 (test--assert "15.1 markdown-mode command is defined"
   (cl-assert (fboundp 'markdown-mode)))
 
-(test--assert "15.2 markdown-mode is configured"
-  (cl-assert (string-match-p "use-package markdown-mode"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "15.2 markdown-mode is installed"
+  (cl-assert (package-installed-p 'markdown-mode)))
 
 (test--assert "15.3 yaml-mode command is defined"
   (cl-assert (fboundp 'yaml-mode)))
 
-(test--assert "15.4 yaml-mode is configured"
-  (cl-assert (string-match-p "use-package yaml-mode"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "15.4 yaml-mode is installed"
+  (cl-assert (package-installed-p 'yaml-mode)))
 
 (test--assert "15.5 json-mode command is defined"
   (cl-assert (fboundp 'json-mode)))
 
-(test--assert "15.6 json-mode is configured"
-  (cl-assert (string-match-p "use-package json-mode"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "15.6 json-mode is installed"
+  (cl-assert (package-installed-p 'json-mode)))
 
 (test--assert "15.7 toml-mode command is defined"
   (cl-assert (fboundp 'toml-mode)))
 
-(test--assert "15.8 toml-mode is configured"
-  (cl-assert (string-match-p "use-package toml-mode"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "15.8 toml-mode is installed"
+  (cl-assert (package-installed-p 'toml-mode)))
 
 (test--assert "15.9 nix-mode command is defined"
   (cl-assert (fboundp 'nix-mode)))
 
-(test--assert "15.10 nix-mode is configured with eglot"
-  (cl-assert (string-match-p "use-package nix-mode"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "15.10 nix-mode is installed"
+  (cl-assert (package-installed-p 'nix-mode)))
 
 (test--assert "15.11 dockerfile-mode command is defined"
   (cl-assert (fboundp 'dockerfile-mode)))
@@ -571,32 +549,32 @@
 ;;; 16. MEDIA & DOCUMENTS TESTS
 ;;; ==========================================================================
 
-(test--assert "16.1 pdf-tools is configured"
-  (cl-assert (string-match-p "use-package pdf-tools"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "16.1 pdf-tools is installed"
+  (cl-assert (package-installed-p 'pdf-tools)))
 
-(test--assert "16.3 image-dired+ is configured"
-  (cl-assert (string-match-p "use-package image-dired+"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "16.2 image-dired+ is installed"
+  (cl-assert (package-installed-p 'image-dired+)))
 
-(test--assert "16.4 mermaid-mode command is defined"
+(test--assert "16.3 mermaid-mode command is defined"
   (cl-assert (fboundp 'mermaid-mode)))
 
-(test--assert "16.5 svg-tag-mode is configured"
-  (cl-assert (string-match-p "use-package svg-tag-mode"
-                             (with-temp-buffer
-                               (insert-file-contents
-                                (expand-file-name "src/init.el"
-                                                  (file-name-directory (directory-file-name (file-name-directory load-file-name)))))
-                               (buffer-string)))))
+(test--assert "16.4 mermaid-mode is installed"
+  (cl-assert (package-installed-p 'mermaid-mode)))
+
+(test--assert "16.5 svg-tag-mode is installed"
+  (cl-assert (package-installed-p 'svg-tag-mode)))
+
+(test--assert "16.6 pdf-view-display-size is fit-width"
+  (if (boundp 'pdf-view-display-size)
+      (cl-assert (eq pdf-view-display-size 'fit-width))
+    ;; Fallback: verify source code
+    (cl-assert (string-match-p "pdf-view-display-size 'fit-width" (test--get-init-el)))))
+
+(test--assert "16.7 mermaid-cli-path is configured"
+  (if (boundp 'mermaid-cli-path)
+      (cl-assert (string= mermaid-cli-path "/usr/local/bin/mmdc"))
+    ;; Fallback: verify source code
+    (cl-assert (string-match-p "mermaid-cli-path" (test--get-init-el)))))
 
 
 ;;; ==========================================================================

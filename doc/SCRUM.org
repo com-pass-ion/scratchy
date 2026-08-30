@@ -262,7 +262,7 @@ To modify agent behavior:
 - *Format*: TAP (Test Anything Protocol)
 - *Runner*: =./test/run_tests.sh= or =emacs --batch -l test/test_init.el=
 - *Exit Code*: 0 = pass, 1 = fail
-- *Total Tests*: 122
+- *Total Tests*: 125
 
 *** Coverage by Section
 
