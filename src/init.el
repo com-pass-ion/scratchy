@@ -24,6 +24,11 @@
 ;;  12. Project          — Project.el, templates
 ;;  13. Build & Run      — Language-specific compile commands
 ;;  14. Org-Mode         — Babel integration
+;;  15. Language Modes   — markdown, yaml, json, toml, nix, dockerfile
+;;  16. Media & Documents — PDF, images, mermaid, SVG
+;;  17. Tree-sitter      — Better syntax highlighting
+;;  18. Session          — Desktop save
+;;  19. Git Hooks        — Pre-commit
 ;;
 
 ;;; Code:
@@ -709,6 +714,50 @@
         '(("info" . "◉")
           ("warning" . "⚠")
           ("error" . "✕"))))
+
+
+;;; ==========================================================================
+;;; 17. TREE-SITTER — Better syntax highlighting
+;;; ==========================================================================
+
+;; Tree-sitter provides incremental parsing for better syntax highlighting.
+;; Built-in in Emacs 29+. Requires language grammars in ~/.emacs.d/tree-sitter/.
+
+(setq treesit-auto-install 'prompt)
+(add-hook 'prog-mode-hook #'treesit-auto-mode)
+
+
+;;; ==========================================================================
+;;; 18. SESSION — Desktop Save
+;;; ==========================================================================
+
+;; Save and restore sessions (files, buffers, windows) across restarts.
+
+(desktop-save-mode 1)
+(setq desktop-auto-save-timeout 300)  ;; auto-save every 5 minutes
+(setq desktop-dirname user-emacs-directory)
+(setq desktop-base-file-name ".desktop")
+(setq desktop-base-lock-name ".desktop.lock")
+(setq desktop-save t)  ;; save without asking
+
+
+;;; ==========================================================================
+;;; 19. GIT HOOKS — Pre-commit
+;;; ==========================================================================
+
+;; Run tests before each commit via git hook.
+
+(defun my/git-pre-commit-hook ()
+  "Run tests before git commit."
+  (let ((default-directory (project-root (project-current))))
+    (when (file-exists-p "test/run_tests.sh")
+      (message "Running pre-commit tests...")
+      (if (zerop (call-process "bash" nil nil nil "test/run_tests.sh"))
+          (message "Pre-commit tests passed!")
+        (error "Pre-commit tests failed! Commit aborted.")))))
+
+;; Note: To activate, symlink or copy to .git/hooks/pre-commit:
+;;   ln -sf ../../test/git-pre-commit .git/hooks/pre-commit
 
 
 ;;; ==========================================================================

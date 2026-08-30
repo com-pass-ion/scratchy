@@ -578,6 +578,50 @@
 
 
 ;;; ==========================================================================
+;;; 17. TREE-SITTER TESTS
+;;; ==========================================================================
+
+(test--assert "17.1 treesit-auto-install is configured"
+  (cl-assert (boundp 'treesit-auto-install)))
+
+(test--assert "17.2 treesit-auto-mode is in prog-mode-hook"
+  (cl-assert (string-match-p "treesit-auto-mode" (test--get-init-el))))
+
+(test--assert "17.3 tree-sitter is configured in init.el"
+  (cl-assert (string-match-p "treesit-auto-mode" (test--get-init-el))))
+
+
+;;; ==========================================================================
+;;; 18. SESSION TESTS
+;;; ==========================================================================
+
+(test--assert "18.1 desktop-save-mode is enabled"
+  (cl-assert (bound-and-true-p desktop-save-mode)))
+
+(test--assert "18.2 desktop-auto-save-timeout is 300"
+  (cl-assert (= desktop-auto-save-timeout 300)))
+
+(test--assert "18.3 desktop-save is t"
+  (cl-assert (eq desktop-save t)))
+
+
+;;; ==========================================================================
+;;; 19. GIT HOOKS TESTS
+;;; ==========================================================================
+
+(test--assert "19.1 pre-commit hook script exists"
+  (cl-assert (file-exists-p (expand-file-name "test/git-pre-commit"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "19.2 pre-commit hook is executable"
+  (cl-assert (file-executable-p (expand-file-name "test/git-pre-commit"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "19.3 my/git-pre-commit-hook is defined"
+  (cl-assert (fboundp 'my/git-pre-commit-hook)))
+
+
+;;; ==========================================================================
 ;;; SUMMARY
 ;;; ==========================================================================
 

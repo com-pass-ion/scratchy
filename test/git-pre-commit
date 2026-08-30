@@ -1,0 +1,13 @@
+#!/bin/bash
+# Git pre-commit hook
+# Run tests before each commit
+
+echo "Running pre-commit tests..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if bash "$SCRIPT_DIR/run_tests.sh"; then
+    echo "Pre-commit tests passed!"
+    exit 0
+else
+    echo "Pre-commit tests failed! Commit aborted."
+    exit 1
+fi

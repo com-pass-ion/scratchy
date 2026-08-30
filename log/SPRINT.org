@@ -3,6 +3,19 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 5
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+|       |             |      |         |
+
+** Planned Items
+- Tree-sitter (treesit) (3 SP)
+- Desktop Save (1 SP)
+- Git pre-commit hook (2 SP)
+
 * Sprint 4
 
 ** Kanban Board
