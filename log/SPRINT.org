@@ -3,6 +3,19 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 7
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+|       |             |      |         |
+
+** Planned Items
+- Testing Strategy (modules, integration, usability) (3 SP)
+- Consider tempel-collection (1 SP)
+- Workflow Tutorials & Tests (5 SP)
+
 * Sprint 6
 
 ** Kanban Board
