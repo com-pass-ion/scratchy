@@ -12,12 +12,12 @@ All planned features, sorted by category.
    :END:
    Format-on-save for consistent code style.
 
-** TODO yasnippet (richer snippets with tabstops)
+** TODO yasnippet + Better Snippet Strategy
    :PROPERTIES:
    :Effort:   5
    :Category: :editor:
    :END:
-   Richer snippets with tabstops instead of just Tempo.
+   Replace Tempo with yasnippet, add snippets for Java, Bash, Rust, Go.
 
 ** TODO tab-bar / persp-mode (workspaces)
    :PROPERTIES:
@@ -32,13 +32,6 @@ All planned features, sorted by category.
    :Category: :devops:
    :END:
    Automatic testing before each commit.
-
-** TODO GitHub Actions CI
-   :PROPERTIES:
-   :Effort:   5
-   :Category: :devops:
-   :END:
-   CI pipeline for automatic testing.
 
 ** TODO Coverage report
    :PROPERTIES:
@@ -69,26 +62,12 @@ All planned features, sorted by category.
    :END:
    markdown-mode, yaml-mode, json-mode for config files and docs.
 
-** TODO More Snippets (Java, Bash, Rust, Go)
-   :PROPERTIES:
-   :Effort:   2
-   :Category: :lang:
-   :END:
-   Tempo templates for more languages.
-
 ** TODO Expand Org-Mode (org-babel, org-roam)
    :PROPERTIES:
    :Effort:   5
    :Category: :lang:
    :END:
    org-babel for Python/C, org-roam for notes.
-
-** TODO Docker (dockerfile-mode, docker.el)
-   :PROPERTIES:
-   :Effort:   2
-   :Category: :devops:
-   :END:
-   Dockerfile mode and container management.
 
 ** TODO gptel + Cloud API (LLM-Workflow)
    :PROPERTIES:
