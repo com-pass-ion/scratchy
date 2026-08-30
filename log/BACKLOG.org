@@ -21,10 +21,11 @@ All planned features, sorted by category.
    :END:
    Session persistence (files, buffers, windows).
 
-** TODO Consider Tempel
+** DONE Consider Tempel
    :PROPERTIES:
    :Effort:   1
    :Category: :editor:
+   :Sprint:   6
    :END:
    Research: evaluate Tempel as modern snippet alternative to Tempo.
 
@@ -51,10 +52,11 @@ All planned features, sorted by category.
    :END:
    Create tutorials for each workflow (lsp, git, build, debug) with test cases.
 
-** TODO Coverage report
+** DONE Coverage report
    :PROPERTIES:
    :Effort:   2
    :Category: :testing:
+   :Sprint:   6
    :END:
    Track test coverage.
 

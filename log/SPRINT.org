@@ -9,11 +9,40 @@ Current sprint, velocity, and retrospective.
 
 | TO DO | IN PROGRESS | DONE | BLOCKED |
 |-------+-------------+------+---------|
-|       |             |      |         |
+|       |             | Replace Tempo with Tempel |  |
+|       |             | Coverage report |  |
 
 ** Planned Items
 - Replace Tempo with Tempel (2 SP)
 - Coverage report (2 SP)
+
+** Retrospective
+
+*** What went well
+- Tempel provides modern template system
+- Standard IDE snippets added for 8+ languages
+- Coverage report script created
+- All 142 tests passing
+
+*** What could improve
+- Consider adding more snippets from tempel-collection
+- Explore Corfu integration with Tempel
+
+*** Action items
+- None
+
+*** Follow-up Questions
+
+| Question | Answer |
+|----------|--------|
+| Did we meet the sprint goal? | |
+| What was the biggest blocker? | |
+| What should we start doing? | |
+| What should we stop doing? | |
+| What should we continue doing? | |
+| Any technical debt to address? | |
+| Any process improvements? | |
+| Should we adjust velocity? | |
 
 * Sprint 5
 
@@ -99,8 +128,9 @@ Current sprint, velocity, and retrospective.
 | 3      | 2026-08-30 | 2       | 2         | More Modes + DoD          |
 | 4      | 2026-08-30 | 9       | 9         | Media & Documents         |
 | 5      | 2026-08-30 | 8       | 8         | Tree-sitter, Desktop, Git, Docker |
+| 6      | 2026-08-30 | 4       | 4         | Tempel + Coverage Report  |
 
-*Average*: 7.0 SP/Sprint
+*Average*: 6.5 SP/Sprint
 
 * Retrospective
 

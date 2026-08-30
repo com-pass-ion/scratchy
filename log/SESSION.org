@@ -5,6 +5,29 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
+## [2026-08-30] Session 6 — Sprint 6: Tempel + Coverage Report
+
+### Done
+- Replaced Tempo with Tempel (modern template system)
+- Added 88+ standard IDE snippets for C, Python, Bash, Elisp, Java, Org, Markdown, LaTeX, Nix
+- Created coverage report script (test/coverage.sh)
+- Updated tests for Tempel (5 new tests)
+- All 142 tests passing
+
+### Changed
+- init.el: 787 → 783 lines (simplified Tempo → Tempel)
+- Test count: 139 → 142 (+3 tests)
+- Added src/templates file with snippets
+- Added test/coverage.sh script
+
+### Blocked
+- (none)
+
+### Next
+- Sprint 7: Select backlog items
+
+---
+
 ## [2026-08-30] Session 5 — Sprint 5: Tree-sitter, Desktop, Git, Docker
 
 ### Done
