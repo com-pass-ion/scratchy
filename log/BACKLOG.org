@@ -76,6 +76,13 @@ All planned features, sorted by category.
    :END:
    LLM integration via gptel with OpenAI/Anthropic API.
 
+** TODO Docker (docker.el)
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :devops:
+   :END:
+   Docker container management (dockerfile-mode already added).
+
 ** TODO PDF Tools (pdf-tools)
    :PROPERTIES:
    :Effort:   3

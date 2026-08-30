@@ -11,6 +11,7 @@ Quick reference of all rules to follow when working on this project.
 - **No Features Without Approval**: Only implement features when explicitly approved
 - **No New Features Without Approval**: Only add new items to backlog with confirmation
 - **Planning Poker**: Estimation before sprint planning for new items
+- **Backlog Tasks: DONE not Deleted**: Tasks removed from backlog must be marked as DONE, not deleted
 
 ## Quality
 
