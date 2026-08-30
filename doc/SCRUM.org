@@ -1,0 +1,404 @@
+#+TITLE: Emacs From Scratch
+#+AUTHOR: Nico Josef Hechler
+#+STARTUP: overview
+
+* Scratchy — Technical Specification
+
+** Overview
+
+- *Project*: Scratchy — minimal, modern, workflow-oriented
+- *Author*: Nico Josef Hechler
+- *Emacs Version*: 30.1
+- *Platform*: Linux (RaspiOS / Ubuntu)
+- *Purpose*: multi-purpose, workflow-oriented, classical emacs config
+- *Supported Languages*: Python, C/C++, Java, Bash, Elisp
+
+** Design Philosophy
+
+- *Built-in first*: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
+- *Minimal packages*: Only add packages that provide clear, measurable value
+- *Single-file config*: Everything in =src/init.el=, no modular splitting
+- *Testable*: Every feature has an automated test (106 tests, TAP format)
+- *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
+- *Documented*: Documentation lives in ./doc as WORKFLOWS.org & SCRUM.org
+- *Session-tracked*: Scrum-style changelog in log/SESSION.org
+
+** Development Workflow
+
+- *Commit after every step*: After completing each task or feature, commit the changes immediately with a descriptive message
+- *Test before commit*: Run =./test/run_tests.sh= to verify all tests pass before committing
+- *Update log/SESSION.org*: Log completed work in the scrum-style changelog before committing
+
+** File Structure
+
+#+begin_example
+emacs_from_scratch/
+├── src/
+│   └── init.el                          # Main config (640 lines, 22 KB)
+├── test/
+│   ├── test_init.el                     # Test suite (505 lines, 18 KB, 106 tests)
+│   └── run_tests.sh                     # Test runner (22 lines, 486 B)
+├── doc/
+│   ├── SCRUM.org                        # This file — specs & workflow
+│   └── WORKFLOWS.org                    # Keybinding cheat sheet
+├── scrum/
+│   ├── PROMPT.md                        # Agent entry prompt (auto-loaded)
+│   ├── RULES.md                         # Scrum rules
+│   └── SCRUM-WORKFLOW.md                # Generic Scrum process
+├── log/
+│   ├── BACKLOG.org                      # Product Backlog
+│   ├── SPRINT.org                       # Sprint Board, Velocity, Retrospective
+│   └── SESSION.org                      # Session changelog
+├── current_state.org                    # Current Scrum phase status
+├── opencode.json                        # OpenCode agent config
+├── install_emacs_config_dependencies.sh # System deps installer (34 lines, 658 B)
+├── .gitignore                           # Git ignore rules
+└── .git/                                # Git repository
+#+end_example
+
+** Agent Configuration
+
+OpenCode is configured to automatically load =scrum/PROMPT.md= at session start. This file contains project context, rules, and key commands for the AI agent.
+
+To modify agent behavior:
+- Edit =scrum/PROMPT.md= for session instructions
+- Edit =opencode.json= to change which files are loaded
+- Restart OpenCode after config changes
+
+** Architecture
+
+14 numbered sections in =src/init.el=:
+
+| #   | Section      | Packages             | Key Features                                         |
+|-----+--------------+----------------------+------------------------------------------------------|
+| 1   | Bootstrap    | use-package          | GC threshold, package archives, use-package init     |
+| 2   | Frame & UI   | —                    | Font (Noto Sans Mono), transparency (90%), no chrome |
+| 3   | Comfort      | vundo, ace-window    | which-key, save-place, savehist, recentf, etc.       |
+| 4   | Theme & Visual | —                  | Tokyo Night (modus-vivendi), line numbers, hl-line   |
+| 5   | Completion   | vertico, orderless, marginalia, corfu, cape | Full completion stack |
+| 6   | Search       | consult              | Line, buffer, bookmark, ripgrep, yank-pop, history   |
+| 7   | Help         | helpful              | Enhanced describe-function/variable/key/symbol       |
+| 8   | Git          | magit, diff-hl       | Magit status, git gutter in fringe                   |
+| 9   | LSP          | eglot                | pyright, clangd, jdtls, bash-ls, flymake navigation  |
+| 10  | Snippets     | — (tempo built-in)   | C, Python, Bash, Elisp templates, C-TAB expand       |
+| 11  | Terminal     | eat                  | Shell in Emacs                                       |
+| 12  | Project      | — (project.el built-in) | Scaffolding (C++/Python), .projectile, git init   |
+| 13  | Build & Run  | —                    | CMake build, mode-specific run, compile mode         |
+| 14  | Org-Mode     | —                    | Babel shell integration                              |
+
+** Keybinding Reference
+
+*** Search & Navigation
+| Key     | Command             | Description                     |
+|---------+---------------------+---------------------------------|
+| =C-s=   | =consult-line=      | Fuzzy search in current buffer  |
+| =C-x b= | =consult-buffer=    | Switch buffer (with preview)    |
+| =C-x r b= | =consult-bookmark= | Jump to bookmark                |
+| =M-s r= | =consult-ripgrep=   | Search entire project           |
+| =M-y=   | =consult-yank-pop=  | Paste history (kill ring)       |
+
+*** Build & Compile
+| Key       | Command                | Description                                    |
+|-----------+------------------------+------------------------------------------------|
+| =C-c l r= | =my/run=               | Run file (C++, Python, Bash, Elisp)            |
+| =C-c l b= | =my/cpp-build=         | Build C++ project with CMake                   |
+| =C-c l c= | =compile=              | Run arbitrary compile command                  |
+| =C-c l k= | =kill-compilation=     | Kill running compilation                       |
+| =C-c l n= | =next-error=           | Jump to next compilation error                 |
+| =C-c l p= | =previous-error=       | Jump to previous compilation error             |
+
+*** Completion
+| Key      | Command            | Description                  |
+|----------+--------------------+------------------------------|
+| =TAB=    | =corfu-complete=   | Accept current completion    |
+| =M-TAB=  | =corfu-next=       | Next completion option       |
+| =C-g=    | =corfu-quit=       | Cancel completion            |
+
+*** LSP & Errors
+| Key      | Command                        | Description                          |
+|----------+--------------------------------+--------------------------------------|
+| =M-.=    | =xref-find-definitions=        | Go to definition                     |
+| =M-,=    | =xref-pop-marker-location=     | Go back from definition              |
+| =M-?=    | =xref-find-references=         | Find all references                  |
+| =M-n=    | =flymake-goto-next-error=      | Jump to next error                   |
+| =M-p=    | =flymake-goto-prev-error=      | Jump to previous error               |
+| =C-c C-c= | =python-shell-send-buffer=    | Send buffer to Python REPL (Python)  |
+
+*** Git
+| Key            | Command                   | Description                |
+|----------------+---------------------------+----------------------------|
+| =C-x v =       | =diff-hl-diff-goto-hunk= | View diff for current hunk |
+| =C-x v n       | =diff-hl-next-hunk=      | Jump to next changed hunk  |
+| =C-x v p       | =diff-hl-previous-hunk=  | Jump to prev changed hunk  |
+| =M-x magit-status= | =magit-status=        | Open magit status buffer   |
+
+*** Window & Buffer
+| Key       | Command                   | Description               |
+|-----------+---------------------------+---------------------------|
+| =M-o=     | =ace-window=              | Jump to window by number  |
+| =C-x C-r= | =recentf-open-files=      | Open recent file          |
+| =C-x 2=   | =split-window-below=      | Split horizontally        |
+| =C-x 3=   | =split-window-right=      | Split vertically          |
+| =C-x 1=   | =delete-other-windows=    | Close all other windows   |
+| =C-x 0=   | =delete-window=           | Close current window      |
+
+*** Undo
+| Key    | Command       | Description         |
+|--------+---------------+---------------------|
+| =C-/=  | =undo=        | Undo (standard)     |
+| =C-?=  | =undo-redo=   | Redo (standard)     |
+| =C-c u= | =vundo=      | Visual undo tree    |
+
+*** Terminal
+| Key       | Command | Description                 |
+|-----------+---------+-----------------------------|
+| =C-c t n= | =eat=   | Open terminal in side window|
+
+*** Snippets
+| Key         | Command               | Description         |
+|-------------+-----------------------+---------------------|
+| =C-<TAB>=   | =tempo-complete-tag=  | Expand snippet      |
+
+*** Help
+| Key    | Command               | Description               |
+|--------+-----------------------+---------------------------|
+| =C-h f= | =helpful-callable=   | Describe function         |
+| =C-h v= | =helpful-variable=   | Describe variable         |
+| =C-h k= | =helpful-key=        | Describe key              |
+| =C-h o= | =helpful-symbol=     | Describe symbol           |
+
+*** Minibuffer
+| Key    | Command               | Description               |
+|--------+-----------------------+---------------------------|
+| =M-A=  | =marginalia-cycle=   | Toggle annotations        |
+| =C-n=  | =vertico-next=       | Next candidate            |
+| =C-p=  | =vertico-previous=   | Previous candidate        |
+| =C-j=  | =vertico-exit=       | Confirm selection         |
+| =C-r=  | =consult-history=    | Search command history    |
+
+** Workflow Patterns
+
+*** Quick Edit
+1. =C-x C-r= — open recent file
+2. Edit with electric-pair + corfu auto-completion
+3. =C-c l r= — run (mode-specific)
+4. =M-n= / =M-p= — navigate errors
+
+*** Git Workflow
+1. Edit code — diff-hl shows changes in fringe
+2. =M-x magit-status= — stage, commit, push
+3. =C-x v = — review diff inline
+
+*** Multi-Window
+1. =C-x 2= — split horizontal
+2. =C-c t n= — open terminal in bottom
+3. =M-o= — jump between windows (a/s/d/f/g/h/j/k/l)
+
+*** New Project
+1. =M-x my/project-new= — scaffold C++ or Python project
+2. Auto: git init, .gitignore, boilerplate, venv (Python)
+
+** Language-Specific Workflows
+
+*** Python
+- LSP: pyright (auto-starts, basic type checking)
+- Run REPL: =C-c C-c= (send buffer)
+- Run script: =C-c l r= (compile)
+- Snippet: =python-main= + =C-<TAB>=
+
+*** C/C++
+- LSP: clangd (C++17 / C11 flags)
+- Build: =C-c l b= (CMake)
+- Run: =C-c l r= (build + execute)
+- Snippet: =c-main= + =C-<TAB>=
+
+*** Bash
+- LSP: bash-language-server (auto-starts)
+- Run: =C-c l r=
+- Snippet: =bash-header= + =C-<TAB>=
+
+*** Java
+- LSP: jdtls (auto-detected)
+- Run: via eglot
+
+*** Elisp
+- Run: =C-c l r= (eval-buffer)
+- Eval last sexpr: =C-x C-e=
+- Snippet: =elisp-func= + =C-<TAB>=
+
+** Packages
+
+| Package    | Source | Section | Purpose             | Load Strategy |
+|------------+--------+---------+---------------------+---------------|
+| use-package | ELPA  | 1       | Package management  | Eager         |
+| vertico    | ELPA   | 5       | Minibuffer completion | Eager       |
+| orderless  | ELPA   | 5       | Fuzzy matching      | Eager         |
+| marginalia | ELPA   | 5       | Minibuffer annotations | Eager      |
+| corfu      | ELPA   | 5       | In-buffer completion | Eager        |
+| cape       | ELPA   | 5       | Completion backends | Eager         |
+| consult    | ELPA   | 6       | Search/navigation   | Lazy (bind)   |
+| helpful    | MELPA  | 7       | Enhanced help       | Eager         |
+| magit      | MELPA  | 8       | Git interface       | Lazy (command)|
+| diff-hl    | MELPA  | 8       | Git gutter          | Eager (hook)  |
+| vundo      | ELPA   | 3       | Visual undo         | Lazy (command)|
+| ace-window | ELPA   | 3       | Window switching    | Eager (bind)  |
+| eat        | ELPA   | 11      | Terminal emulator   | Lazy (command)|
+
+** Testing
+
+- *Format*: TAP (Test Anything Protocol)
+- *Runner*: =./test/run_tests.sh= or =emacs --batch -l test/test_init.el=
+- *Exit Code*: 0 = pass, 1 = fail
+- *Total Tests*: 106
+
+*** Coverage by Section
+
+| Section       | Tests | What's Tested                                        |
+|---------------+-------+------------------------------------------------------|
+| 1. Bootstrap  |     7 | GC, package system, archives, use-package            |
+| 2. Frame & UI |    15 | Font, transparency, chrome, bell, line-spacing, frame-title |
+| 3. Comfort    |    13 | All modes, keybindings, vundo, ace-window             |
+| 4. Theme & Visual | 16 | Colors, line numbers, hl-line, parens, cursor, scrolling |
+| 5. Completion |    11 | All packages, auto-completion, backends               |
+| 6. Search     |     5 | All consult keybindings                               |
+| 7. Help       |     4 | All helpful remaps                                    |
+| 8. Git        |     5 | Magit functions, diff-hl                              |
+| 9. LSP        |     7 | Eglot hooks (5 languages), autoshutdown, flymake faces|
+| 10. Snippets  |     5 | Tempo templates (4 templates)                         |
+| 11. Terminal  |     2 | Eat command, keybinding                               |
+| 12. Project   |     3 | Project.el config, scaffolding function               |
+| 13. Build & Run |   12 | All functions, keybindings, compile settings          |
+| 14. Org-Mode  |     1 | Babel shell integration                               |
+
+** Dependencies
+
+*** System Packages (apt)
+
+| Package           | Purpose                  |
+|-------------------+--------------------------|
+| emacs             | Editor (30.1+)           |
+| git               | Version control          |
+| build-essential   | C compiler, make         |
+| cmake             | C++ build system         |
+| clangd            | C/C++ language server    |
+| jdtls             | Java language server     |
+| python3           | Python runtime           |
+| python3-pip       | Python package manager   |
+| python3-venv      | Python virtual envs      |
+| npm               | Node.js package manager  |
+| fonts-noto        | Noto Sans Mono font      |
+
+*** npm Packages (global)
+
+| Package               | Purpose                  |
+|-----------------------+--------------------------|
+| pyright               | Python language server   |
+| bash-language-server  | Bash language server     |
+
+*** Install Command
+
+#+begin_src bash
+./install_emacs_config_dependencies.sh
+#+end_src
+
+** Known Issues
+
+| Issue                | Detail                                          | Fix                              |
+|----------------------+-------------------------------------------------+----------------------------------|
+| Stale Emacs artifacts | =#init.el#= and =init.el~= in repo           | Added to .gitignore, removed     |
+| Git history minimal  | Only 1 commit, many changes since               | Commit current state             |
+
+* Scrum Workflow
+
+** Rules
+
+- *English Only*: All documentation must be written in English for consistency
+- *No Features Without Approval*: Only implement features when explicitly approved
+- *No New Features Without Approval*: Only add new items to backlog with confirmation
+- *Planning Poker*: Estimation before sprint planning for new items
+- *Definition of Done*: All code must pass tests, be documented, and follow style guide
+- *Sprint Goal*: Each sprint must have a clear, measurable goal
+- *Phase Tracking*: Update =current_state.org= on every phase change
+
+** Process
+
+#+begin_example
+┌─────────────────────────────────────────────────────────────────────┐
+│                        PRODUCT BACKLOG                              │
+│  log/BACKLOG.org — all items with :Effort: + :Category:            │
+└───────────────────────────────┬─────────────────────────────────────┘
+				│
+				▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                     PLANNING POKER                                  │
+│  Estimate new items: each shows SP                                 │
+│  Consensus → update :Effort: in log/BACKLOG.org                    │
+│  No consensus → discuss until consensus reached                    │
+└───────────────────────────────┬─────────────────────────────────────┘
+				│
+				▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                     SPRINT PLANNING                                 │
+│  Move items from log/BACKLOG.org → log/SPRINT.org                  │
+│  Capacity: 2-4 hours per session                                   │
+│  Only approved items!                                              │
+└───────────────────────────────┬─────────────────────────────────────┘
+				│
+				▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                       SPRINT (1 Session)                            │
+│                                                                     │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐          │
+│  │   TO DO      │───▶│ IN PROGRESS  │───▶│     DONE     │          │
+│  │  ○ item 1    │    │  ◉ item 2    │    │  ✓ item 3    │          │
+│  │  ○ item 4    │    │              │    │  ✓ item 5    │          │
+│  └──────────────┘    └──────────────┘    └──────────────┘          │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │ DAILY (per session):                                        │   │
+│  │  1. What did I do? ( Yesterday → Done )                    │   │
+│  │  2. What will I do? ( Today → In Progress )                │   │
+│  │  3. Any blockers? ( → Blocked )                            │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────┬─────────────────────────────────────┘
+				│
+				▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                       SPRINT REVIEW                                 │
+│  Log in log/SESSION.org: Done / Changed / Blocked                   │
+│  Update Velocity table in log/SPRINT.org                            │
+└───────────────────────────────┬─────────────────────────────────────┘
+				│
+				▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                       RETROSPECTIVE                                 │
+│  Log in log/SPRINT.org * Retrospective section                      │
+│  What went well? What didn't? Action items?                        │
+└───────────────────────────────┴─────────────────────────────────────┘
+#+end_example
+
+** Planning Poker
+
+*** Process
+1. Select item from log/BACKLOG.org
+2. Each person shows SP simultaneously (● to ●●●●●)
+3. Discuss if difference > 2 SP
+4. Consensus → update :Effort: in log/BACKLOG.org
+5. No consensus → split or break down item
+
+*** Example
+| Item                     | Estimate 1 | Estimate 2 | Consensus | Final |
+|--------------------------+------------+------------+-----------+-------|
+| Tree-sitter (treesit)    | ●●●        | ●●         | ●●●       | 3     |
+| More Modes               | ●●         | ●●         | ●●        | 2     |
+| gptel + LLM              | ●●●        | ●●●●       | ●●●       | 3     |
+
+** Story Points
+
+| SP    | Effort    | Description                           |
+|-------+-----------+---------------------------------------|
+| ●     | < 30 min  | Trivial, quick fix                    |
+| ●●    | < 1 h     | Small task                            |
+| ●●●   | 1-2 h     | Medium task                           |
+| ●●●●  | 2-4 h     | Large task                            |
+| ●●●●● | > 4 h     | Epic — break down into sub-tasks      |
