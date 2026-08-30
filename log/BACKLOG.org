@@ -96,12 +96,13 @@ All planned features, sorted by category.
    :END:
    Evaluate tempel-collection for additional IDE snippets beyond current 88+.
 
-** TODO Expand WORKFLOWS.org
+** DONE Expand WORKFLOWS.org
    :PROPERTIES:
    :Effort:   3
    :Category: :docs:
+   :Sprint:   6
    :END:
-   Add screenshots, keybinding cheatsheet, and video tutorials for workflows.
+   Created doc/workflows/ folder with sample files for each workflow.
 
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
