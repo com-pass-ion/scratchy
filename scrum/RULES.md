@@ -21,6 +21,10 @@ Quick reference of all rules to follow when working on this project.
 - **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
 - **Test Strategy**: Tests must verify functionality, not just code presence. Use feature tests (fboundp), state tests (bound-and-true-p), and integration tests (file open). Source code tests only for critical configs (font, keybindings).
 
+## Coding Style
+
+- **Pure Functional Style**: Prefer pure functions with no side effects. Use `let` for local bindings, avoid `setq` for global state. Functions should return values, not modify globals. Use `defconst` for constants, `defvar` for mutable state only when necessary.
+
 ## Sprint
 
 - **Sprint Goal**: Each sprint must have a clear, measurable goal
