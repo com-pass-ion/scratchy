@@ -35,6 +35,19 @@ Current sprint, velocity, and retrospective.
 *** Action items
 - None
 
+*** Follow-up Questions
+
+| Question | Answer |
+|----------|--------|
+| Did we meet the sprint goal? | |
+| What was the biggest blocker? | |
+| What should we start doing? | |
+| What should we stop doing? | |
+| What should we continue doing? | |
+| Any technical debt to address? | |
+| Any process improvements? | |
+| Should we adjust velocity? | |
+
 * Sprint 4
 
 ** Kanban Board
