@@ -30,6 +30,9 @@ sudo apt install -y \
     libpoppler-private-dev \
     librsvg2-dev
 
+# Ripgrep (fast grep for consult-ripgrep)
+sudo apt install -y ripgrep
+
 # Install LSP servers via npm
 sudo npm install -g pyright
 sudo npm install -g bash-language-server
