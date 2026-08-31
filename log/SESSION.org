@@ -5,7 +5,33 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
-## [2026-08-30] Session 6 — Sprint 6: Tempel + Coverage Report
+## [2026-08-31] Session 7 — Sprint 7: Testing Strategy + tempel-collection + Workflows
+
+### Done
+- Added integration tests (test/test_integration.el): 32 TAP tests across 12 workflow chains
+- Added tempel-collection package for community IDE snippets
+- Updated test/run_tests.sh to run module + integration suites
+- Updated test/coverage.sh for integration tier reporting
+- Fixed duplicate test 17.1/17.3 in test_init.el
+- Rewrote doc/WORKFLOWS.org snippets section from Tempo to Tempel
+- Added usability checklists to doc/workflows/README.md
+- Synced doc/SCRUM.org (counts, architecture, packages, dependencies)
+- Added ripgrep to install_emacs_config_dependencies.sh
+
+### Changed
+- init.el: 756 → 763 lines (+7 lines for tempel-collection)
+- Test count: 142 module + 0 integration → 143 module + 32 integration
+- Added test/test_integration.el (157 lines)
+- Updated test/run_tests.sh (22 → 29 lines)
+- Updated test/coverage.sh (42 → 55 lines)
+
+### Blocked
+- (none)
+
+### Next
+- Sprint 8: Select backlog items
+
+---
 
 ### Done
 - Replaced Tempo with Tempel (modern template system)

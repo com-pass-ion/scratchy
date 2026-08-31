@@ -45,10 +45,11 @@ All planned features, sorted by category.
    :END:
    Docker container management (dockerfile-mode already added).
 
-** TODO Workflow Tutorials & Tests
+** DONE Workflow Tutorials & Tests
    :PROPERTIES:
    :Effort:   5
    :Category: :docs:
+   :Sprint:   7
    :END:
    Create tutorials for each workflow (lsp, git, build, debug) with test cases.
 
@@ -60,10 +61,11 @@ All planned features, sorted by category.
    :END:
    Track test coverage.
 
-** TODO Testing Strategy (modules, integration, usability)
+** DONE Testing Strategy (modules, integration, usability)
    :PROPERTIES:
    :Effort:   3
    :Category: :testing:
+   :Sprint:   7
    :END:
    Three-tier testing: module tests (unit), integration tests (workflow), usability tests (human-in-the-loop).
 
@@ -89,10 +91,11 @@ All planned features, sorted by category.
    :END:
    Build low-level AI agent control with url.el + json.el.
 
-** TODO Consider tempel-collection
+** DONE Consider tempel-collection
    :PROPERTIES:
    :Effort:   1
    :Category: :editor:
+   :Sprint:   7
    :END:
    Evaluate tempel-collection for additional IDE snippets beyond current 88+.
 
