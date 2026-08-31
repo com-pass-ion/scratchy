@@ -106,112 +106,17 @@ To modify agent behavior:
 
 ** Keybinding Reference
 
-*** Search & Navigation
-| Key     | Command             | Description                     |
-|---------+---------------------+---------------------------------|
-| =C-s=   | =consult-line=      | Fuzzy search in current buffer  |
-| =C-x b= | =consult-buffer=    | Switch buffer (with preview)    |
-| =C-x r b= | =consult-bookmark= | Jump to bookmark                |
-| =M-s r= | =consult-ripgrep=   | Search entire project           |
-| =M-y=   | =consult-yank-pop=  | Paste history (kill ring)       |
-
-*** Build & Compile
-| Key       | Command                | Description                                    |
-|-----------+------------------------+------------------------------------------------|
-| =C-c l r= | =my/run=               | Run file (C++, Python, Bash, Elisp)            |
-| =C-c l b= | =my/cpp-build=         | Build C++ project with CMake                   |
-| =C-c l c= | =compile=              | Run arbitrary compile command                  |
-| =C-c l k= | =kill-compilation=     | Kill running compilation                       |
-| =C-c l n= | =next-error=           | Jump to next compilation error                 |
-| =C-c l p= | =previous-error=       | Jump to previous compilation error             |
-
-*** Completion
-| Key      | Command            | Description                  |
-|----------+--------------------+------------------------------|
-| =TAB=    | =corfu-complete=   | Accept current completion    |
-| =M-TAB=  | =corfu-next=       | Next completion option       |
-| =C-g=    | =corfu-quit=       | Cancel completion            |
-
-*** LSP & Errors
-| Key      | Command                        | Description                          |
-|----------+--------------------------------+--------------------------------------|
-| =M-.=    | =xref-find-definitions=        | Go to definition                     |
-| =M-,=    | =xref-pop-marker-location=     | Go back from definition              |
-| =M-?=    | =xref-find-references=         | Find all references                  |
-| =M-n=    | =flymake-goto-next-error=      | Jump to next error                   |
-| =M-p=    | =flymake-goto-prev-error=      | Jump to previous error               |
-| =C-c C-c= | =python-shell-send-buffer=    | Send buffer to Python REPL (Python)  |
-
-*** Git
-| Key            | Command                   | Description                |
-|----------------+---------------------------+----------------------------|
-| =C-x v =       | =diff-hl-diff-goto-hunk= | View diff for current hunk |
-| =C-x v n       | =diff-hl-next-hunk=      | Jump to next changed hunk  |
-| =C-x v p       | =diff-hl-previous-hunk=  | Jump to prev changed hunk  |
-| =M-x magit-status= | =magit-status=        | Open magit status buffer   |
-
-*** Window & Buffer
-| Key       | Command                   | Description               |
-|-----------+---------------------------+---------------------------|
-| =M-o=     | =ace-window=              | Jump to window by number  |
-| =C-x C-r= | =recentf-open-files=      | Open recent file          |
-| =C-x 2=   | =split-window-below=      | Split horizontally        |
-| =C-x 3=   | =split-window-right=      | Split vertically          |
-| =C-x 1=   | =delete-other-windows=    | Close all other windows   |
-| =C-x 0=   | =delete-window=           | Close current window      |
-
-*** Undo
-| Key    | Command       | Description         |
-|--------+---------------+---------------------|
-| =C-/=  | =undo=        | Undo (standard)     |
-| =C-?=  | =undo-redo=   | Redo (standard)     |
-| =C-c u= | =vundo=      | Visual undo tree    |
-
-*** Terminal
-| Key       | Command | Description                 |
-|-----------+---------+-----------------------------|
-| =C-c t n= | =eat=   | Open terminal in side window|
-
-*** Snippets
-| Key         | Command               | Description         |
-|-------------+-----------------------+---------------------|
-| =M-+=       | =tempel-complete=     | Expand snippet      |
-| =M-*=       | =tempel-insert=       | Insert snippet      |
-
-*** Help
-| Key    | Command               | Description               |
-|--------+-----------------------+---------------------------|
-| =C-h f= | =helpful-callable=   | Describe function         |
-| =C-h v= | =helpful-variable=   | Describe variable         |
-| =C-h k= | =helpful-key=        | Describe key              |
-| =C-h o= | =helpful-symbol=     | Describe symbol           |
-
-*** Minibuffer
-| Key    | Command               | Description               |
-|--------+-----------------------+---------------------------|
-| =M-A=  | =marginalia-cycle=   | Toggle annotations        |
-| =C-n=  | =vertico-next=       | Next candidate            |
-| =C-p=  | =vertico-previous=   | Previous candidate        |
-| =C-j=  | =vertico-exit=       | Confirm selection         |
-| =C-r=  | =consult-history=    | Search command history    |
+See [[file:../doc/WORKFLOWS.org][doc/WORKFLOWS.org]] for the complete keybinding reference.
 
 ** Workflow Patterns
+
+See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentation.
 
 *** Quick Edit
 1. =C-x C-r= — open recent file
 2. Edit with electric-pair + corfu auto-completion
 3. =C-c l r= — run (mode-specific)
 4. =M-n= / =M-p= — navigate errors
-
-*** Git Workflow
-1. Edit code — diff-hl shows changes in fringe
-2. =M-x magit-status= — stage, commit, push
-3. =C-x v = — review diff inline
-
-*** Multi-Window
-1. =C-x 2= — split horizontal
-2. =C-c t n= — open terminal in bottom
-3. =M-o= — jump between windows (a/s/d/f/g/h/j/k/l)
 
 *** New Project
 1. =M-x my/project-new= — scaffold C++ or Python project
@@ -223,18 +128,18 @@ To modify agent behavior:
 - LSP: pyright (auto-starts, basic type checking)
 - Run REPL: =C-c C-c= (send buffer)
 - Run script: =C-c l r= (compile)
-- Snippet: =python-main= + =C-<TAB>=
+- Snippet: =def= + =M-+=
 
 *** C/C++
 - LSP: clangd (C++17 / C11 flags)
 - Build: =C-c l b= (CMake)
 - Run: =C-c l r= (build + execute)
-- Snippet: =c-main= + =C-<TAB>=
+- Snippet: =if= / =for= + =M-+=
 
 *** Bash
 - LSP: bash-language-server (auto-starts)
 - Run: =C-c l r=
-- Snippet: =bash-header= + =C-<TAB>=
+- Snippet: =fun= + =M-+=
 
 *** Java
 - LSP: jdtls (auto-detected)
@@ -243,7 +148,7 @@ To modify agent behavior:
 *** Elisp
 - Run: =C-c l r= (eval-buffer)
 - Eval last sexpr: =C-x C-e=
-- Snippet: =elisp-func= + =C-<TAB>=
+- Snippet: =fun= + =M-+=
 
 ** Packages
 
@@ -374,98 +279,10 @@ To modify agent behavior:
 
 * Scrum Workflow
 
-** Rules
-
-- *English Only*: All documentation must be written in English for consistency
-- *No Features Without Approval*: Only implement features when explicitly approved
-- *No New Features Without Approval*: Only add new items to backlog with confirmation
-- *Planning Poker*: Estimation before sprint planning for new items
-- *Definition of Done*: All code must pass tests, be documented, and follow style guide
-- *Sprint Goal*: Each sprint must have a clear, measurable goal
-- *Phase Tracking*: Update =current_state.org= on every phase change
-
-** Process
-
-#+begin_example
-┌─────────────────────────────────────────────────────────────────────┐
-│                        PRODUCT BACKLOG                              │
-│  log/BACKLOG.org — all items with :Effort: + :Category:            │
-└───────────────────────────────┬─────────────────────────────────────┘
-				│
-				▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                     PLANNING POKER                                  │
-│  Estimate new items: each shows SP                                 │
-│  Consensus → update :Effort: in log/BACKLOG.org                    │
-│  No consensus → discuss until consensus reached                    │
-└───────────────────────────────┬─────────────────────────────────────┘
-				│
-				▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                     SPRINT PLANNING                                 │
-│  Move items from log/BACKLOG.org → log/SPRINT.org                  │
-│  Capacity: 2-4 hours per session                                   │
-│  Only approved items!                                              │
-└───────────────────────────────┬─────────────────────────────────────┘
-				│
-				▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                       SPRINT (1 Session)                            │
-│                                                                     │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐          │
-│  │   TO DO      │───▶│ IN PROGRESS  │───▶│     DONE     │          │
-│  │  ○ item 1    │    │  ◉ item 2    │    │  ✓ item 3    │          │
-│  │  ○ item 4    │    │              │    │  ✓ item 5    │          │
-│  └──────────────┘    └──────────────┘    └──────────────┘          │
-│                                                                     │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │ DAILY (per session):                                        │   │
-│  │  1. What did I do? ( Yesterday → Done )                    │   │
-│  │  2. What will I do? ( Today → In Progress )                │   │
-│  │  3. Any blockers? ( → Blocked )                            │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────┬─────────────────────────────────────┘
-				│
-				▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                       SPRINT REVIEW                                 │
-│  Log in log/SESSION.org: Done / Changed / Blocked                   │
-│  Update Velocity table in log/SPRINT.org                            │
-└───────────────────────────────┬─────────────────────────────────────┘
-				│
-				▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                       RETROSPECTIVE                                 │
-│  Log in log/SPRINT.org * Retrospective section                      │
-│  What went well? What didn't? Action items?                        │
-└───────────────────────────────┴─────────────────────────────────────┘
-#+end_example
-
-** Planning Poker
-
-*** Process
-1. Select item from log/BACKLOG.org
-2. Each person shows SP simultaneously (● to ●●●●●)
-3. Discuss if difference > 2 SP
-4. Consensus → update :Effort: in log/BACKLOG.org
-5. No consensus → split or break down item
-
-*** Example
-| Item                     | Estimate 1 | Estimate 2 | Consensus | Final |
-|--------------------------+------------+------------+-----------+-------|
-| Tree-sitter (treesit)    | ●●●        | ●●         | ●●●       | 3     |
-| More Modes               | ●●         | ●●         | ●●        | 2     |
-| gptel + LLM              | ●●●        | ●●●●       | ●●●       | 3     |
-
-** Story Points
-
-| SP    | Effort    | Description                           |
-|-------+-----------+---------------------------------------|
-| ●     | < 30 min  | Trivial, quick fix                    |
-| ●●    | < 1 h     | Small task                            |
-| ●●●   | 1-2 h     | Medium task                           |
-| ●●●●  | 2-4 h     | Large task                            |
-| ●●●●● | > 4 h     | Epic — break down into sub-tasks      |
+See the following files for the complete Scrum process:
+- [[file:../scrum/RULES.md][scrum/RULES.md]] — All project rules
+- [[file:../scrum/SCRUM-WORKFLOW.md][scrum/SCRUM-WORKFLOW.md]] — Process flow, Planning Poker, Story Points
+- [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] — Keybinding reference
 
 * Review Log
 
