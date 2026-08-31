@@ -18,6 +18,40 @@ Current sprint, velocity, and retrospective.
 - Consider tempel-collection (1 SP)
 - Workflow Tutorials & Tests (5 SP)
 
+** Retrospective
+
+*** What went well
+- Integration tests implemented and passing (32 tests, 12 workflow chains)
+- tempel-collection added for community IDE snippets
+- Workflow tutorials enhanced with usability checklists
+- Documentation consolidated (~194 lines of redundancy removed)
+- Agent safety rules added for context/token limits
+- Scrum document safety guard rule added
+
+*** What could improve
+- Token limits caused mid-sprint interruption
+- Complex prompts failed on 32B models
+- Session restart with enormous context wasted time
+- Documentation redundancy was significant (4 files with rules)
+
+*** Action items
+- Implement Scrum Document Safety Guard (pre-commit hook or validation)
+- Break work into smaller chunks to avoid token limits
+- Keep prompts simple and direct for smaller models
+
+*** Follow-up Questions
+
+| Question | Answer |
+|----------|--------|
+| Did we meet the sprint goal? | Yes, all 3 items completed (9 SP delivered) |
+| What was the biggest blocker? | Token/context limits causing mid-sprint interruption |
+| What should we start doing? | Add safety guards for process files, break work into smaller chunks |
+| What should we stop doing? | Copy-pasting rules across multiple files |
+| What should we continue doing? | Atomic commits, test-first approach, documentation consolidation |
+| Any technical debt to address? | Scrum Document Safety Guard (pre-commit hook or validation) |
+| Any process improvements? | Agent safety rules for token limits, minimal reads on restart |
+| Should we adjust velocity? | No, 9 SP was appropriate for this sprint |
+
 * Sprint 6
 
 ** Kanban Board
