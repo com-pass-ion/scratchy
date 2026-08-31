@@ -108,12 +108,16 @@ All planned features, sorted by category.
    - Configure LaTeX export backend
    - Add test for LaTeX preview
 
-** TODO Research org-roam
+** DONE Research org-roam
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
+   :Sprint:   8
    :END:
    Research org-roam for note-taking in Emacs. What is it? How does it work? Is it useful for this config?
+   - What: Zettelkasten-style knowledge management over .org files with SQLite database
+   - How: Indexes .org files, uses ID-based links, provides graph visualization
+   - Verdict: Not recommended for this config (focused on development, not knowledge management)
 
 ** TODO Custom Agent Environment
    :PROPERTIES:

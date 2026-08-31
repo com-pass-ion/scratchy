@@ -9,7 +9,8 @@ Current sprint, velocity, and retrospective.
 
 | TO DO | IN PROGRESS | DONE | BLOCKED |
 |-------+-------------+------+---------|
-| Research org-roam (2 SP) |  | Org-babel (all languages) (3 SP) |  |
+|  |  | Org-babel (all languages) (3 SP) |  |
+|  |  | Research org-roam (2 SP) |  |
 
 ** Planned Items
 - Org-babel (all configured languages) (3 SP): Python, C/C++, Java, Shell, Emacs Lisp
