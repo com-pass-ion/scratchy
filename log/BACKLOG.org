@@ -107,6 +107,13 @@ All planned features, sorted by category.
    :END:
    Created doc/workflows/ folder with sample files for each workflow.
 
+** TODO Scrum Document Safety Guard
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :process:
+   :END:
+   Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md without explicit approval.
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2
