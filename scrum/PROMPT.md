@@ -22,11 +22,11 @@ You are working on an Emacs configuration project called "Scratchy".
 3. Test before commit (`./test/run_tests.sh`)
 4. Update `current_state.org` on phase changes
 5. Commit after every step with descriptive message
-6. Update `log/SESSION.org` with session summary before each new session
-7. After sprint retrospective, answer 8 follow-up questions in `log/SPRINT.org`
-8. Test strategy: verify functionality, not just code presence
-9. When adding packages with system deps, update `install_emacs_config_dependencies.sh`
-10. Commit after every step with descriptive message
+6. Atomic commits: one logical change per commit, never mix unrelated changes
+7. Update `log/SESSION.org` with session summary before each new session
+8. After sprint retrospective, answer 8 follow-up questions in `log/SPRINT.org`
+9. Test strategy: verify functionality, not just code presence
+10. When adding packages with system deps, update `install_emacs_config_dependencies.sh`
 
 ## Scrum Phases
 

@@ -17,6 +17,7 @@ This document contains the generic Scrum process used in this project.
 - **Session Logging**: Update `log/SESSION.org` with a summary of completed work before starting each new session or sprint
 - **Test Strategy**: Tests must verify functionality, not just code presence
 - **Commit After Every Step**: Commit after completing each task with descriptive message
+- **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes in a single commit.
 - **Test Before Commit**: Run `./test/run_tests.sh` before committing
 - **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
 - **Capacity**: 2-4 hours per session
