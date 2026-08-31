@@ -613,8 +613,24 @@
 ;;; 14. ORG-MODE — Babel integration
 ;;; ==========================================================================
 
-;; Enable shell code blocks in Org files.
-(org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
+;; Enable code block execution for configured languages.
+(org-babel-do-load-languages 'org-babel-load-languages
+                             '((emacs-lisp . t)
+                               (python . t)
+                               (C . t)
+                               (java . t)
+                               (shell . t)))
+
+;; Don't ask for confirmation when evaluating code blocks.
+(setq org-confirm-babel-evaluate nil)
+
+;; Enable structure templates (e.g., <el, <py, <sh).
+(setq org-structure-template-alist
+      '(("el" . "src emacs-lisp")
+        ("py" . "src python")
+        ("sh" . "src shell")
+        ("java" . "src java")
+        ("c" . "src C")))
 
 
 ;;; ==========================================================================

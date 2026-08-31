@@ -77,10 +77,11 @@ All planned features, sorted by category.
    :END:
    Not needed — SESSION.org provides detailed changelog. Git log for commit history.
 
-** TODO Org-babel (all configured languages)
+** DONE Org-babel (all configured languages)
    :PROPERTIES:
    :Effort:   3
    :Category: :lang:
+   :Sprint:   8
    :END:
    Enable org-babel for Python, C/C++, Java, Shell, Emacs Lisp.
    - Configure org-babel in init.el
@@ -95,6 +96,17 @@ All planned features, sorted by category.
    - Add test for org-babel Java
    - Add test for org-babel Shell
    - Add test for org-babel Emacs Lisp
+
+** TODO Org-mode LaTeX support
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :lang:
+   :END:
+   Enable LaTeX preview and export in Org-mode.
+   - Install and configure cdlatex for LaTeX editing
+   - Enable org-preview-latex fragment
+   - Configure LaTeX export backend
+   - Add test for LaTeX preview
 
 ** TODO Research org-roam
    :PROPERTIES:

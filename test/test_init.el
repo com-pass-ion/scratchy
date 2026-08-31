@@ -501,6 +501,24 @@
 (test--assert "14.1 org-babel-load-languages includes shell"
   (cl-assert (assq 'shell org-babel-load-languages)))
 
+(test--assert "14.2 org-babel-load-languages includes emacs-lisp"
+  (cl-assert (assq 'emacs-lisp org-babel-load-languages)))
+
+(test--assert "14.3 org-babel-load-languages includes python"
+  (cl-assert (assq 'python org-babel-load-languages)))
+
+(test--assert "14.4 org-babel-load-languages includes C"
+  (cl-assert (assq 'C org-babel-load-languages)))
+
+(test--assert "14.5 org-babel-load-languages includes java"
+  (cl-assert (assq 'java org-babel-load-languages)))
+
+(test--assert "14.6 org-confirm-babel-evaluate is nil"
+  (cl-assert (eq org-confirm-babel-evaluate nil)))
+
+(test--assert "14.7 org-structure-template-alist is configured"
+  (cl-assert (alist-get "el" org-structure-template-alist nil nil #'string=)))
+
 
 ;;; ==========================================================================
 ;;; 15. LANGUAGE MODES TESTS
