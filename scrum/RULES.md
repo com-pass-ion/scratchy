@@ -29,6 +29,7 @@ Quick reference of all rules to follow when working on this project.
 - **Minimal Reads**: When resuming work, read only: `current_state.org`, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
 - **Prompt Complexity**: Keep prompts simple and direct. Complex multi-step prompts fail on smaller models (32B). Break work into atomic units with clear stop conditions.
 - **Fail-Safe Commits**: If any operation fails (edit, test, commit), stop immediately. Do not attempt workarounds that bypass the fail-safe. Commit partial progress and report.
+- **Scrum Document Safety**: Never modify `scrum/RULES.md`, `scrum/SCRUM-WORKFLOW.md`, or `scrum/PROMPT.md` without explicit user approval. These are process-defining files that affect all future sessions. Propose changes first, wait for confirmation.
 
 ## Coding Style
 

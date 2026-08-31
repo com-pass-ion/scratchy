@@ -12,6 +12,7 @@ Key rules (summary):
 - Update `current_state.org` on phase changes
 - Update `log/SESSION.org` before each new session
 - On token limits: STOP, commit, log state, start fresh
+- Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without approval
 
 ## Process Flow
 
