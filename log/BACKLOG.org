@@ -117,7 +117,30 @@ All planned features, sorted by category.
    Research org-roam for note-taking in Emacs. What is it? How does it work? Is it useful for this config?
    - What: Zettelkasten-style knowledge management over .org files with SQLite database
    - How: Indexes .org files, uses ID-based links, provides graph visualization
-   - Verdict: Not recommended for this config (focused on development, not knowledge management)
+   - Verdict: Won't work for this use case - need Mermaid integration and semantic search instead
+
+** TODO Org-mode Mermaid integration
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :lang:
+   :END:
+   Enable Mermaid diagram visualization in Org-mode for knowledge management.
+   - Configure org-mermaid for code block rendering
+   - Enable Mermaid preview in org buffers
+   - Add org-babel support for mermaid code blocks
+   - Add test for Mermaid org integration
+
+** TODO Semantic search for notes
+   :PROPERTIES:
+   :Effort:   5
+   :Category: :ai:
+   :END:
+   Implement semantic search across org notes for knowledge discovery.
+   - Research embedding-based search approaches
+   - Implement vector similarity search
+   - Add search indexing for org files
+   - Create search UI/interface
+   - Add test for semantic search
 
 ** TODO Custom Agent Environment
    :PROPERTIES:
