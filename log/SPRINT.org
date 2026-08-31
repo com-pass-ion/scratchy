@@ -3,6 +3,19 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 8
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+| Org-babel (all languages) (3 SP) |  |  |  |
+| Research org-roam (2 SP) |  |  |  |
+
+** Planned Items
+- Org-babel (all configured languages) (3 SP): Python, C/C++, Java, Shell, Emacs Lisp
+- Research org-roam (2 SP): Understand what org-roam is and if useful for this config
+
 * Sprint 7
 
 ** Kanban Board

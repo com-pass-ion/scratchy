@@ -77,12 +77,31 @@ All planned features, sorted by category.
    :END:
    Not needed — SESSION.org provides detailed changelog. Git log for commit history.
 
-** TODO Expand Org-Mode (org-babel, org-roam)
+** TODO Org-babel (all configured languages)
    :PROPERTIES:
-   :Effort:   5
+   :Effort:   3
    :Category: :lang:
    :END:
-   org-babel for Python/C, org-roam for notes.
+   Enable org-babel for Python, C/C++, Java, Shell, Emacs Lisp.
+   - Configure org-babel in init.el
+   - Enable Python code block execution
+   - Enable C/C++ code block execution
+   - Enable Java code block execution
+   - Enable Shell code block execution
+   - Enable Emacs Lisp code block execution
+   - Add org-mode settings (structure, exports)
+   - Add test for org-babel Python
+   - Add test for org-babel C/C++
+   - Add test for org-babel Java
+   - Add test for org-babel Shell
+   - Add test for org-babel Emacs Lisp
+
+** TODO Research org-roam
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :lang:
+   :END:
+   Research org-roam for note-taking in Emacs. What is it? How does it work? Is it useful for this config?
 
 ** TODO Custom Agent Environment
    :PROPERTIES:
@@ -90,6 +109,31 @@ All planned features, sorted by category.
    :Category: :ai:
    :END:
    Build low-level AI agent control with url.el + json.el.
+   - Create src/agent/ directory structure
+   - Implement agent-request.el - HTTP GET/POST via url.el
+   - Implement agent-json.el - JSON parse/encode
+   - Add unit tests for request functions
+   - Add unit tests for JSON functions
+   - Create agent-core.el - main interaction loop
+   - Implement response handling and parsing
+   - Add agent configuration system
+   - Create agent-config.el for settings
+   - Add integration test for agent workflow
+
+** TODO Research agentic workflows for SOA agents
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :ai:
+   :END:
+   Research agentic workflow patterns for emulating SOA agents with full control in the agents module.
+   - Research SOA (Service-Oriented Architecture) agent patterns
+   - Study agent communication protocols (REST, gRPC, message queues)
+   - Research agent lifecycle management (spawn, suspend, resume, terminate)
+   - Study agent orchestration patterns (choreography vs orchestration)
+   - Research agent state management and persistence
+   - Study agent security patterns (authentication, authorization, audit)
+   - Research agent monitoring and observability
+   - Document findings and recommendations for implementation
 
 ** DONE Consider tempel-collection
    :PROPERTIES:
@@ -113,12 +157,36 @@ All planned features, sorted by category.
    :Category: :process:
    :END:
    Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md without explicit approval.
+   - Create scripts/validate_process_files.sh
+   - Add git diff check for RULES.md, SCRUM-WORKFLOW.md, PROMPT.md
+   - Return error if unauthorized changes detected
+   - Create test case in test/test_document_guard.sh
+   - Document usage in doc/ or README
 
-** TODO Review sprint documentation - true append only, reformatting only no text changes & canonical files.
+** TODO Phase-specific commands and next steps rules
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :process:
+   :END:
+   Define which commands and next steps are appropriate in each Scrum phase.
+   - Document allowed commands per phase (backlog, planning-poker, sprint-planning, in-progress, review, retrospective)
+   - Define valid phase transitions
+   - Document what file modifications are allowed per phase
+   - Add validation rules for phase-appropriate actions
+   - Create reference table in SCRUM-WORKFLOW.md or RULES.md
+
+** TODO Review sprint documentation
    :PROPERTIES:
    :Effort:   2
    :Category: :docs:
    :END:
+   Audit sprint docs for true append-only compliance, reformatting only, no text changes, canonical files.
+   - Audit SPRINT.org - verify append-only entries
+   - Audit BACKLOG.org - verify status changes only
+   - Audit SESSION.org - verify structure compliance
+   - Check for duplicate rules across files
+   - Fix any violations found
+   - Document audit results
 
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
