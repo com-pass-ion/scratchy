@@ -34,7 +34,7 @@ Three-tier testing approach: **Module**, **Integration**, and **Usability**.
 - Use `bound-and-true-p` to verify modes are enabled
 - Use `string-match-p` on source for critical configs (font, keybindings)
 
-**Current Coverage**: 142 tests across 20 sections
+**Current Coverage**: 143 module tests + 32 integration tests
 
 **Example Tests**:
 ```elisp
@@ -135,9 +135,9 @@ Three-tier testing approach: **Module**, **Integration**, and **Usability**.
 
 | Tier | Current | Target | Status |
 |------|---------|--------|--------|
-| Module | 142 tests | 150+ | ✅ On track |
-| Integration | 0 tests | 10+ | 🔄 Planned |
-| Usability | Manual | Checklist | 🔄 Planned |
+| Module | 143 tests | 150+ | On track |
+| Integration | 32 tests | 10+ | Done |
+| Usability | Manual | Checklist | Done |
 
 ## Future Enhancements
 
