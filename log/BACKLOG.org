@@ -114,6 +114,13 @@ All planned features, sorted by category.
    :END:
    Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md without explicit approval.
 
+** TODO Review Sprint Documentation
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :docs:
+   :END:
+   Normalize SPRINT.org format: move Sprints 1-4 retrospectives inline (under Kanban), fill Sprint 5 empty answers, keep Velocity table and template at bottom. Append-only, reformatting only — no text changes to existing content.
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2
