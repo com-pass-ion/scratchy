@@ -20,6 +20,7 @@ This document contains the generic Scrum process used in this project.
 - **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes in a single commit.
 - **Test Before Commit**: Run `./test/run_tests.sh` before committing
 - **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
+- **Agent Safety**: On token/context limits, STOP and commit. On restart, read `current_state.org` only. Keep prompts simple and direct for smaller models.
 - **Capacity**: 2-4 hours per session
 
 ## Process Flow

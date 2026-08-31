@@ -22,6 +22,14 @@ Quick reference of all rules to follow when working on this project.
 - **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
 - **Test Strategy**: Tests must verify functionality, not just code presence. Use feature tests (fboundp), state tests (bound-and-true-p), and integration tests (file open). Source code tests only for critical configs (font, keybindings).
 
+## Agent Safety
+
+- **Context Limits**: If session runs out of tokens or context becomes too large, STOP. Do not continue with partial work. Commit what exists, log state in SESSION.org, and start fresh in a new session.
+- **Session Restart Protocol**: On session restart, read `current_state.org` first. Do not re-read all project files. Only read files needed for the current task.
+- **Minimal Reads**: When resuming work, read only: `current_state.org`, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
+- **Prompt Complexity**: Keep prompts simple and direct. Complex multi-step prompts fail on smaller models (32B). Break work into atomic units with clear stop conditions.
+- **Fail-Safe Commits**: If any operation fails (edit, test, commit), stop immediately. Do not attempt workarounds that bypass the fail-safe. Commit partial progress and report.
+
 ## Coding Style
 
 - **Pure Functional Style**: Prefer pure functions with no side effects. Use `let` for local bindings, avoid `setq` for global state. Functions should return values, not modify globals. Use `defconst` for constants, `defvar` for mutable state only when necessary.

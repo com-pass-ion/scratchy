@@ -27,6 +27,9 @@ You are working on an Emacs configuration project called "Scratchy".
 8. After sprint retrospective, answer 8 follow-up questions in `log/SPRINT.org`
 9. Test strategy: verify functionality, not just code presence
 10. When adding packages with system deps, update `install_emacs_config_dependencies.sh`
+11. On token/context limits: STOP, commit, log state, start fresh
+12. On restart: read `current_state.org` only, not all project files
+13. Keep prompts simple for 32B models — break work into atomic units
 
 ## Scrum Phases
 
