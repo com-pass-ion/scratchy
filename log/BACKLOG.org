@@ -114,6 +114,12 @@ All planned features, sorted by category.
    :END:
    Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md without explicit approval.
 
+** TODO Review sprint documentation - true append only, reformatting only no text changes & canonical files.
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :docs:
+   :END:
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2
