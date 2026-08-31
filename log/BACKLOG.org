@@ -214,6 +214,18 @@ All planned features, sorted by category.
    - Add validation rules for phase-appropriate actions
    - Create reference table in SCRUM-WORKFLOW.md or RULES.md
 
+** TODO Minimize context window per sprint
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :process:
+   :END:
+   Rule to minimize context window usage during sprints.
+   - Read only necessary files per task (not entire codebase)
+   - Use targeted grep/search instead of full file reads
+   - Commit and log state frequently to enable fresh starts
+   - Keep prompts simple and atomic for 32B models
+   - Document context minimization guidelines
+
 ** TODO Review sprint documentation
    :PROPERTIES:
    :Effort:   2
