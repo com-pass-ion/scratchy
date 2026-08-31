@@ -4,24 +4,14 @@ This document contains the generic Scrum process used in this project.
 
 ## Rules
 
-- **English Only**: All documentation must be written in English for consistency
-- **No Features Without Approval**: Only implement features when explicitly approved
-- **No New Features Without Approval**: Only add new items to backlog with confirmation
-- **Planning Poker**: Estimation before sprint planning for new items
-- **Definition of Done**: All code must pass tests, be documented, and follow style guide
-- **Sprint Goal**: Each sprint must have a clear, measurable goal
-- **Phase Tracking**: Update `current_state.org` on every phase change
-- **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)
-- **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
-- **Follow-up Questions**: After every sprint retrospective, answer 8 questions in `log/SPRINT.org`
-- **Session Logging**: Update `log/SESSION.org` with a summary of completed work before starting each new session or sprint
-- **Test Strategy**: Tests must verify functionality, not just code presence
-- **Commit After Every Step**: Commit after completing each task with descriptive message
-- **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes in a single commit.
-- **Test Before Commit**: Run `./test/run_tests.sh` before committing
-- **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
-- **Agent Safety**: On token/context limits, STOP and commit. On restart, read `current_state.org` only. Keep prompts simple and direct for smaller models.
-- **Capacity**: 2-4 hours per session
+See [RULES.md](RULES.md) for the complete ruleset.
+
+Key rules (summary):
+- English only, no features without approval
+- Test before commit, commit after every step, atomic commits
+- Update `current_state.org` on phase changes
+- Update `log/SESSION.org` before each new session
+- On token limits: STOP, commit, log state, start fresh
 
 ## Process Flow
 
