@@ -286,6 +286,46 @@ See the following files for the complete Scrum process:
 
 * Review Log
 
+** Sprint 7 Review — 2026-08-31
+
+*** Blockers Encountered
+
+| #   | Severity | Issue | Impact |
+|-----+----------+-------+--------|
+| 1   | Critical | Running out of tokens mid-sprint | Interrupted Sprint 7 implementation |
+| 2   | Critical | Complex prompts failing on 32B models | Multiple restarts required |
+| 3   | High | Session restart with enormous context | Lost progress, had to re-read all files |
+
+*** Issues Found
+
+| #   | Severity | Issue | Status |
+|-----+----------+-------+--------|
+| 1   | Medium | Rules duplicated across 4 files (RULES.md, SCRUM-WORKFLOW.md, PROMPT.md, SCRUM.org) | FIXED |
+| 2   | Medium | Keybinding tables duplicated in SCRUM.org and WORKFLOWS.org | FIXED |
+| 3   | Medium | Process diagram duplicated in SCRUM-WORKFLOW.md and SCRUM.org | FIXED |
+| 4   | Medium | Planning Poker/Story Points duplicated | FIXED |
+| 5   | Low | Test count discrepancy (142 vs 143) in TESTING-STRATEGY.md | FIXED |
+| 6   | Low | Language-Specific Workflows referenced Tempo snippets | FIXED |
+| 7   | Low | No safety rules for token/context limits | FIXED |
+
+*** Actions Taken
+- Added Agent Safety rules to RULES.md, SCRUM-WORKFLOW.md, PROMPT.md
+- Consolidated SCRUM-WORKFLOW.md: removed 18 duplicated rules, replaced with reference to RULES.md
+- Consolidated doc/SCRUM.org: removed ~194 lines of duplicated content
+  - Rules section → reference to RULES.md
+  - Keybinding Reference (90 lines) → reference to WORKFLOWS.org
+  - Process diagram (60 lines) → reference to SCRUM-WORKFLOW.md
+  - Planning Poker/Story Points (25 lines) → reference to SCRUM-WORKFLOW.md
+- Fixed test count in TESTING-STRATEGY.md (142 → 143 + 32)
+- Fixed Language-Specific Workflows to use Tempel snippets
+
+*** Files Changed
+- scrum/RULES.md: +5 safety rules
+- scrum/SCRUM-WORKFLOW.md: -18 rules, +8 summary
+- scrum/PROMPT.md: +3 safety rules
+- doc/SCRUM.org: -194 lines, +11 references
+- doc/TESTING-STRATEGY.md: fixed test counts
+
 ** Sprint 5 Review — 2026-08-30
 
 *** Issues Found
