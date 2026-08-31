@@ -18,5 +18,11 @@ echo "Emacs: $(emacs --version | head -1)"
 echo "Date:  $(date)"
 echo ""
 
-# Run tests
+# Run module tests
+echo "--- Module Tests ---"
 emacs --batch -l "$SCRIPT_DIR/test_init.el"
+
+# Run integration tests
+echo ""
+echo "--- Integration Tests ---"
+emacs --batch -l "$SCRIPT_DIR/test_integration.el"

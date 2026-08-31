@@ -590,8 +590,8 @@
 (test--assert "17.2 global-treesit-auto-mode is configured"
   (cl-assert (string-match-p "global-treesit-auto-mode" (test--get-init-el))))
 
-(test--assert "17.3 treesit-auto-install is configured"
-  (cl-assert (boundp 'treesit-auto-install)))
+(test--assert "17.3 treesit-auto is in use-package"
+  (cl-assert (string-match-p "use-package treesit-auto" (test--get-init-el))))
 
 
 ;;; ==========================================================================
