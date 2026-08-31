@@ -39,25 +39,28 @@ Quick reference for the most important workflows in this config.
 
 ---
 
-## Snippets (tempo)
+## Snippets (tempel)
 
 | Key | Function | Description |
 |-----|----------|-------------|
-| `C-<TAB>` | `tempo-complete-tag` | Type template name and press C-TAB |
+| `M-+` | `tempel-complete` | Expand snippet at point (completion) |
+| `M-*` | `tempel-insert` | Insert snippet by name |
 
 **Available Templates:**
 
 | Template | Mode | Content |
 |----------|------|---------|
-| `c-main` | C | `#include <stdio.h>` + main() |
-| `python-main` | Python | `def main():` + `if __name__` |
-| `bash-header` | Bash | Shebang + `set -euo pipefail` |
-| `elisp-func` | Elisp | `(defun ...)` with docstring |
+| `if` | C/Python | If statement |
+| `for` | C/Python | For loop |
+| `def` | Python | Function definition |
+| `main` | C/Python | Main entry point |
+| `fun` | Bash | Function definition |
+| `echo` | Bash | Echo statement |
 
 **Example:**
 1. Open new buffer (`C-x b`)
-2. Type `python-main`
-3. Press `C-<TAB>`
+2. Type `def`
+3. Press `M-+` (tempel-complete) or `M-*` (tempel-insert)
 4. Template is inserted
 
 ---
