@@ -18,7 +18,7 @@
 - *Built-in first*: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
 - *Minimal packages*: Only add packages that provide clear, measurable value
 - *Single-file config*: Everything in =src/init.el=, no modular splitting
-- *Testable*: Every feature has an automated test (139 tests, TAP format)
+- *Testable*: Every feature has an automated test (143 module + 32 integration tests, TAP format)
 - *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
 - *Documented*: Documentation lives in ./doc as WORKFLOWS.org & SCRUM.org
 - *Session-tracked*: Scrum-style changelog in log/SESSION.org
@@ -34,13 +34,24 @@
 #+begin_example
 emacs_from_scratch/
 ├── src/
-│   └── init.el                          # Main config (787 lines, 24 KB)
+│   └── init.el                          # Main config (756 lines, 24 KB)
 ├── test/
-│   ├── test_init.el                     # Test suite (650 lines, 20 KB, 139 tests)
-│   └── run_tests.sh                     # Test runner (22 lines, 486 B)
+│   ├── test_init.el                     # Module tests (667 lines, 20 KB, 143 tests)
+│   ├── test_integration.el              # Integration tests (157 lines, 5 KB, 32 tests)
+│   ├── run_tests.sh                     # Test runner (29 lines, 500 B)
+│   └── coverage.sh                      # Coverage report (55 lines, 1.5 KB)
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
 │   ├── WORKFLOWS.org                    # Keybinding cheat sheet
+│   ├── TESTING-STRATEGY.md              # Three-tier testing strategy
+│   ├── workflows/                       # Workflow test samples
+│   │   ├── README.md                    # Usability checklists
+│   │   ├── python-lsp.py               # LSP + Completion test
+│   │   ├── cpp-build.cpp               # Build + Run test
+│   │   ├── bash-terminal.sh            # Terminal test
+│   │   ├── elisp-test.el               # Eval + Debug test
+│   │   ├── git-test.py                 # Git + Diff test
+│   │   └── snippet-test.py             # Snippets test
 │   └── DOD.md                           # Definition of Done
 ├── scrum/
 │   ├── PROMPT.md                        # Agent entry prompt (auto-loaded)
@@ -52,7 +63,7 @@ emacs_from_scratch/
 │   └── SESSION.org                      # Session changelog
 ├── current_state.org                    # Current Scrum phase status
 ├── opencode.json                        # OpenCode agent config
-├── install_emacs_config_dependencies.sh # System deps installer (40 lines, 750 B)
+├── install_emacs_config_dependencies.sh # System deps installer (44 lines, 800 B)
 ├── .gitignore                           # Git ignore rules
 └── .git/                                # Git repository
 #+end_example
@@ -81,7 +92,7 @@ To modify agent behavior:
 | 7   | Help         | helpful              | Enhanced describe-function/variable/key/symbol       |
 | 8   | Git          | magit, diff-hl       | Magit status, git gutter in fringe                   |
 | 9   | LSP          | eglot                | pyright, clangd, jdtls, bash-ls, flymake navigation  |
-| 10  | Snippets     | — (tempo built-in)   | C, Python, Bash, Elisp templates, C-TAB expand       |
+| 10  | Snippets     | tempel, tempel-collection | C, Python, Bash, Elisp, Java templates, M-+/M-* expand |
 | 11  | Terminal     | eat                  | Shell in Emacs                                       |
 | 12  | Project      | — (project.el built-in) | Scaffolding (C++/Python), .projectile, git init   |
 | 13  | Build & Run  | —                    | CMake build, mode-specific run, compile mode         |
@@ -164,7 +175,8 @@ To modify agent behavior:
 *** Snippets
 | Key         | Command               | Description         |
 |-------------+-----------------------+---------------------|
-| =C-<TAB>=   | =tempo-complete-tag=  | Expand snippet      |
+| =M-+=       | =tempel-complete=     | Expand snippet      |
+| =M-*=       | =tempel-insert=       | Insert snippet      |
 
 *** Help
 | Key    | Command               | Description               |
@@ -249,6 +261,8 @@ To modify agent behavior:
 | diff-hl    | MELPA  | 8       | Git gutter          | Eager (hook)  |
 | vundo      | ELPA   | 3       | Visual undo         | Lazy (command)|
 | ace-window | ELPA   | 3       | Window switching    | Eager (bind)  |
+| tempel     | ELPA   | 10      | Template system     | Eager         |
+| tempel-collection | MELPA | 10  | Community templates | Eager (after tempel) |
 | eat        | ELPA   | 11      | Terminal emulator   | Lazy (command)|
 | markdown-mode | MELPA | 15     | Markdown files      | Eager         |
 | yaml-mode  | MELPA   | 15      | YAML files          | Eager         |
@@ -266,9 +280,11 @@ To modify agent behavior:
 ** Testing
 
 - *Format*: TAP (Test Anything Protocol)
-- *Runner*: =./test/run_tests.sh= or =emacs --batch -l test/test_init.el=
+- *Runner*: =./test/run_tests.sh= (runs module + integration)
 - *Exit Code*: 0 = pass, 1 = fail
-- *Total Tests*: 139
+- *Module Tests*: 143
+- *Integration Tests*: 32
+- *Coverage*: =./test/coverage.sh=
 
 *** Coverage by Section
 
@@ -283,7 +299,7 @@ To modify agent behavior:
 | 7. Help       |     4 | All helpful remaps                                    |
 | 8. Git        |     5 | Magit functions, diff-hl                              |
 | 9. LSP        |     7 | Eglot hooks (5 languages), autoshutdown, flymake faces|
-| 10. Snippets  |     5 | Tempo templates (4 templates)                         |
+| 10. Snippets  |     6 | Tempel, tempel-collection, keybindings, path          |
 | 11. Terminal  |     2 | Eat command, keybinding                               |
 | 12. Project   |     3 | Project.el config, scaffolding function               |
 | 13. Build & Run |   12 | All functions, keybindings, compile settings          |
@@ -294,7 +310,24 @@ To modify agent behavior:
 | 18. Session   |     3 | desktop-save-mode, auto-save-timeout, desktop-save    |
 | 19. Git Hooks |     3 | Pre-commit script, executable, function definition    |
 | 20. DevOps    |     5 | Docker command, keybinding, dockerfile-mode, projectile|
-| 16. Media & Documents |   5 | pdf-tools, image-dired+, mermaid-mode, svg-tag-mode  |
+| 21. Coverage  |     3 | Coverage script, integration tests, templates         |
+
+*** Integration Test Coverage
+
+| Workflow          | Tests | What's Tested                                    |
+|-------------------+-------+--------------------------------------------------|
+| LSP + Completion  |     5 | Eglot + Corfu + Cape + Vertico + Orderless        |
+| Git + Diff        |     3 | Magit + diff-hl hooks + display function          |
+| Project + Build   |     4 | Project.el + build functions + compile settings   |
+| Snippets + Completion | 3 | Tempel + keybindings + path                      |
+| Search + Navigation |   2 | Consult keybindings + which-key                   |
+| Comfort + UX      |     3 | Persistent state + vundo + ace-window             |
+| Theme + Visual    |     3 | Modus-vivendi + line numbers + hl-line            |
+| Terminal          |     2 | Eat command + keybinding                          |
+| Help              |     1 | Helpful describe function remaps                  |
+| Docker            |     2 | Docker command + dockerfile-mode                  |
+| Tree-sitter       |     2 | treesit-auto-install + global-treesit-auto-mode   |
+| Session           |     2 | Desktop-save-mode + desktop settings              |
 
 ** Dependencies
 
