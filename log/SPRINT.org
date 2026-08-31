@@ -16,6 +16,34 @@ Current sprint, velocity, and retrospective.
 - Org-babel (all configured languages) (3 SP): Python, C/C++, Java, Shell, Emacs Lisp
 - Research org-roam (2 SP): Understand what org-roam is and if useful for this config
 
+** Retrospective
+
+*** What went well
+- Org-babel configured for all 5 languages in config
+- Research completed: org-roam not suitable, identified Mermaid + semantic search needs
+- All tests passing (181 total)
+- Clean atomic commits
+
+*** What could improve
+- Research task took longer than expected due to web search
+- Could have started implementation earlier
+
+*** Action items
+- None
+
+*** Follow-up Questions
+
+| Question | Answer |
+|----------|--------|
+| Did we meet the sprint goal? | Yes, both items completed (5 SP delivered) |
+| What was the biggest blocker? | None - smooth sprint |
+| What should we start doing? | Add Mermaid org integration and semantic search to backlog |
+| What should we stop doing? | Nothing - process working well |
+| What should we continue doing? | Atomic commits, test-first approach |
+| Any technical debt to address? | None identified |
+| Any process improvements? | Consider smaller research tasks |
+| Should we adjust velocity? | No, 5 SP was appropriate |
+
 * Sprint 7
 
 ** Kanban Board
@@ -192,8 +220,9 @@ Current sprint, velocity, and retrospective.
 | 5      | 2026-08-30 | 8       | 8         | Tree-sitter, Desktop, Git, Docker |
 | 6      | 2026-08-30 | 4       | 4         | Tempel + Coverage Report  |
 | 7      | 2026-08-31 | 9       | 9         | Testing Strategy + tempel-collection + Workflows |
+| 8      | 2026-08-31 | 5       | 5         | Org-babel + Research org-roam |
 
-*Average*: 6.9 SP/Sprint
+*Average*: 6.6 SP/Sprint
 
 * Retrospective
 
