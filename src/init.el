@@ -426,6 +426,12 @@
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 
+;; Community snippet collection (more IDE templates beyond our custom set).
+
+(use-package tempel-collection
+  :ensure t
+  :after tempel)
+
 
 ;;; ==========================================================================
 ;;; 11. TERMINAL — Eat (pure Elisp terminal emulator)

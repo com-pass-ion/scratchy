@@ -424,6 +424,9 @@
 (test--assert "10.5 tempel-expand is in completion-at-point-functions"
   (cl-assert (string-match-p "tempel-expand" (test--get-init-el))))
 
+(test--assert "10.6 tempel-collection is installed"
+  (cl-assert (package-installed-p 'tempel-collection)))
+
 
 ;;; ==========================================================================
 ;;; 11. TERMINAL TESTS
