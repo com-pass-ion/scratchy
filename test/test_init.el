@@ -519,6 +519,12 @@
 (test--assert "14.7 org-structure-template-alist is configured"
   (cl-assert (alist-get "el" org-structure-template-alist nil nil #'string=)))
 
+(test--assert "14.8 cdlatex is installed"
+  (cl-assert (package-installed-p 'cdlatex)))
+
+(test--assert "14.9 org-cdlatex-mode is in org-mode-hook"
+  (cl-assert (string-match-p "org-cdlatex-mode" (test--get-init-el))))
+
 
 ;;; ==========================================================================
 ;;; 15. LANGUAGE MODES TESTS
@@ -675,7 +681,33 @@
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "21.3 templates file exists"
-  (cl-assert (file-exists-p (concat (file-name-directory (directory-file-name (file-name-directory load-file-name))) "src/templates"))))
+  (cl-assert (file-exists-p (expand-file-name "src/templates"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+
+;;; ==========================================================================
+;;; 22. SCRUM DOCUMENT SAFETY GUARD TESTS
+;;; ==========================================================================
+
+(test--assert "22.1 validate_process_files.sh exists"
+  (cl-assert (file-exists-p (expand-file-name "test/validate_process_files.sh"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "22.2 validate_process_files.sh is executable"
+  (cl-assert (file-executable-p (expand-file-name "test/validate_process_files.sh"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "22.3 RULES.md exists"
+  (cl-assert (file-exists-p (expand-file-name "scrum/RULES.md"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "22.4 SCRUM-WORKFLOW.md exists"
+  (cl-assert (file-exists-p (expand-file-name "scrum/SCRUM-WORKFLOW.md"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "22.5 PROMPT.md exists"
+  (cl-assert (file-exists-p (expand-file-name "scrum/PROMPT.md"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 
 ;;; ==========================================================================
