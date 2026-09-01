@@ -161,10 +161,12 @@ All planned features, sorted by category.
    - Create agent-config.el for settings
    - Add integration test for agent workflow
 
-** TODO Research Open Code architecture for minimal agentic workflow
+** DONE Research Open Code architecture for minimal agentic workflow
    :PROPERTIES:
-   :Effort:   3
-   :Category: :ai:
+   :Effort:   5
+   :Category:   :ai:
+   :Sprint:   11
+   :END:
    :END:
    Research Open Code's architecture to understand minimal agentic workflow implementation.
    - Study Open Code's core architecture and design patterns

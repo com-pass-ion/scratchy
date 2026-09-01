@@ -1,0 +1,295 @@
+#+TITLE: Open Code Architecture Research - Function Calls & Skills
+#+STARTUP: overview
+
+Research findings on Open Code's architecture, focusing on function
+calls and skills organization for minimal agentic workflow.
+
+* Executive Summary
+
+Open Code's architecture is built on three core primitives:
+1. **Tools** - Functions the LLM can call (file ops, bash, web, etc.)
+2. **Skills** - Reusable instruction sets loaded on-demand
+3. **Agents** - Configured AI assistants with prompts, models, and tool access
+
+The key insight: tools provide runtime capabilities, skills provide
+domain knowledge, and agents orchestrate both.
+
+* Tool System Architecture
+
+** Tool Definition
+
+Tools are defined with three components:
+
+```typescript
+{
+  description: string,      // What the tool does (shown to LLM)
+  parameters: ZodSchema,    // Input schema (validated by runtime)
+  execute: async (params) => result  // Actual implementation
+}
+```
+
+** Built-in Tools
+
+| Tool | Purpose |
+|------|---------|
+| BashTool | Execute shell commands |
+| EditTool | Edit files with exact string replacement |
+| ReadTool | Read file contents |
+| WriteTool | Write/create files |
+| GlobTool | Find files by pattern |
+| GrepTool | Search file contents |
+| ListTool | List directory contents |
+| WebFetchTool | Fetch web URL content |
+| TodoWriteTool | Write/update todo list |
+| TodoReadTool | Read todo list |
+| TaskTool | Launch subagent sessions |
+| SkillTool | Load skill instructions |
+
+** Tool Execution Flow
+
+```
+User Input → LLM → Tool Call (schema + description)
+                          ↓
+                    AI SDK validates params
+                          ↓
+                    execute() function runs
+                          ↓
+                    Result fed back to LLM
+                          ↓
+                    LLM decides next action
+```
+
+** Tool Access Control
+
+Each agent has permission rules for tools:
+
+```typescript
+permission: {
+  "*": "allow",           // Default: allow all
+  "edit": "ask",          // Ask before editing
+  "bash": {               // Pattern-based
+    "*": "allow",
+    "rm *": "deny"        // Deny destructive commands
+  }
+}
+```
+
+** MCP Integration
+
+Open Code supports Model Context Protocol (MCP) tools:
+- Tools defined on local/remote MCP servers
+- Discovered automatically on startup
+- Same interface as built-in tools
+- Enables external tool integration
+
+* Skill System Architecture
+
+** Skill Definition
+
+Skills are Markdown files with YAML frontmatter:
+
+```markdown
+---
+name: git-release
+description: Create consistent releases and changelogs
+license: MIT
+---
+
+## Instructions
+
+- Draft release notes from merged PRs
+- Propose a version bump
+- Provide `gh release create` command
+```
+
+** Skill Discovery
+
+Open Code searches multiple locations:
+
+| Priority | Location | Scope |
+|----------|----------|-------|
+| 1 | `.opencode/skills/` | Project |
+| 2 | `.claude/skills/` | Project (compat) |
+| 3 | `.agents/skills/` | Project (compat) |
+| 4 | `~/.config/opencode/skills/` | Global |
+| 5 | `~/.claude/skills/` | Global (compat) |
+| 6 | `~/.agents/skills/` | Global (compat) |
+
+Discovery walks up from cwd to git worktree root.
+
+** Skill Loading
+
+1. Agent sees available skills in tool description
+2. Agent calls `skill({ name: "git-release" })`
+3. OpenCode resolves winning definition (later source wins)
+4. Checks permissions for the agent
+5. Adds Markdown body to conversation
+6. Provides base directory and supporting file paths
+
+** Skill Permissions
+
+```json
+{
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "pr-review": "allow",
+      "internal-*": "deny",
+      "experimental-*": "ask"
+    }
+  }
+}
+```
+
+| Permission | Behavior |
+|------------|----------|
+| allow | Skill loads immediately |
+| deny | Skill hidden, access rejected |
+| ask | User prompted before loading |
+
+** Skill vs Tool
+
+| Aspect | Tool | Skill |
+|--------|------|-------|
+| Purpose | Runtime capability | Domain knowledge |
+| Format | TypeScript function | Markdown instructions |
+| Loading | Always available | On-demand |
+| State | Executes code | Injects context |
+| Example | `edit`, `bash` | `git-release`, `pr-review` |
+
+* Agent System Architecture
+
+** Agent Definition
+
+```typescript
+{
+  name: string,
+  description: string,
+  mode: "primary" | "subagent",
+  model: { providerID, modelID },
+  temperature: number,
+  tools: Record<string, boolean>,
+  permission: PermissionRuleset,
+  prompt: string
+}
+```
+
+** Built-in Agents
+
+| Agent | Mode | Purpose |
+|-------|------|---------|
+| build | primary | Default agent, executes tools |
+| plan | primary | Read-only planning, no edits |
+| general | subagent | Multi-step research tasks |
+| explore | subagent | Codebase exploration |
+
+** Agent Invocation
+
+Primary agents invoke subagents via TaskTool:
+
+```typescript
+TaskTool.execute({
+  description: "Research topic",
+  prompt: "Detailed task description",
+  subagent_type: "explore"  // Which subagent to use
+})
+```
+
+Creates new session with own tools, prompt, and context window.
+
+** Agent Permissions
+
+Permissions control what each agent can do:
+
+```typescript
+build: {
+  permission: {
+    "*": "allow",
+    "question": "allow",
+    "plan_enter": "allow"
+  }
+}
+
+plan: {
+  permission: {
+    "*": "allow",
+    "edit": { "*": "deny" },  // No editing
+    "bash": "ask"             // Ask before bash
+  }
+}
+```
+
+* Minimal Agentic Workflow Primitives
+
+** Core Primitives (Minimum Viable)
+
+1. **Tool** - Function with description, schema, execute
+2. **Skill** - Markdown instructions loaded on-demand
+3. **Agent** - Prompt + tools + permissions
+4. **Session** - Conversation context with message history
+5. **Permission** - Access control for tools and skills
+
+** Execution Loop
+
+```
+1. User provides input
+2. LLM receives: system prompt + tools + message history
+3. LLM decides: respond OR call tool
+4. If tool call:
+   a. Validate params against schema
+   b. Check permissions
+   c. Execute function
+   d. Feed result back to LLM
+   e. Loop to step 3
+5. If response: return to user
+```
+
+** Minimal Implementation Requirements
+
+For an Emacs implementation:
+
+| Component | Minimum | Nice-to-have |
+|-----------|---------|--------------|
+| Tool | Schema + execute fn | Permission checks |
+| Skill | Markdown parser | Auto-discovery |
+| Agent | Prompt + tool list | Model selection |
+| Session | Message array | Compaction |
+| Permission | Allow/deny list | Pattern matching |
+
+** Key Design Patterns
+
+1. **On-demand loading** - Skills loaded only when needed
+2. **Permission-based access** - Fine-grained control per agent
+3. **Schema validation** - Zod schemas for tool params
+4. **Result injection** - Tool results fed back to LLM context
+5. **Subagent delegation** - Primary agents spawn specialized workers
+
+* Recommendations for Emacs Implementation
+
+** Phase 1: Core Tools
+- Implement basic tool definition format
+- Add bash, read, write, edit, grep, glob tools
+- Simple permission model (allow/deny per tool)
+
+** Phase 2: Skill System
+- Markdown parser for SKILL.md files
+- Skill discovery from project/global dirs
+- Skill tool for on-demand loading
+
+** Phase 3: Agent System
+- Agent definition format
+- Primary/subagent modes
+- TaskTool for delegation
+
+** Phase 4: Advanced Features
+- MCP integration
+- Plugin system
+- Context compaction
+
+* References
+
+- [2025-09] How Coding Agents Actually Work: Inside OpenCode
+- [2026-05] Enhance OpenCode with Custom Tools and Skills
+- Open Code Source: packages/opencode/src/agent/agent.ts
+- Open Code Source: packages/opencode/src/skill/index.ts
+- Open Code Docs: opencode.ai/docs/skills/
