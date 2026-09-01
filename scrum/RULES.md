@@ -38,6 +38,7 @@ Quick reference of all rules to follow when working on this project.
 ## Sprint
 
 - **Sprint Goal**: Each sprint must have a clear, measurable goal
+- **User Selects Items**: The user must explicitly select which backlog items to include in each sprint. The agent may suggest items, but must wait for user approval before finalizing sprint planning.
 - **Capacity**: 2-4 hours per session
 - **Phase Tracking**: Update `current_state.org` on every phase change
 - **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)

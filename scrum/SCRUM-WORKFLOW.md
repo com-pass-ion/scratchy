@@ -13,6 +13,7 @@ Key rules (summary):
 - Update `log/SESSION.org` before each new session
 - On token limits: STOP, commit, log state, start fresh
 - Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without approval
+- User selects sprint items — agent suggests, user approves
 
 ## Process Flow
 

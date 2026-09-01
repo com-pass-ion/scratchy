@@ -31,6 +31,7 @@ You are working on an Emacs configuration project called "Scratchy".
 12. On restart: read `current_state.org` only, not all project files
 13. Keep prompts simple for 32B models — break work into atomic units
 14. Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without explicit approval
+15. User selects sprint items — agent suggests, user approves
 
 ## Scrum Phases
 
