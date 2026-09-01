@@ -101,6 +101,7 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
+   :Sprint:   9
    :END:
    Enable LaTeX preview and export in Org-mode.
    - Install and configure cdlatex for LaTeX editing
@@ -123,6 +124,7 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   3
    :Category: :lang:
+   :Sprint:   9
    :END:
    Enable Mermaid diagram visualization in Org-mode for knowledge management.
    - Configure org-mermaid for code block rendering
@@ -194,6 +196,7 @@ All planned features, sorted by category.
    :PROPERTIES:
    :Effort:   1
    :Category: :process:
+   :Sprint:   9
    :END:
    Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md without explicit approval.
    - Create scripts/validate_process_files.sh

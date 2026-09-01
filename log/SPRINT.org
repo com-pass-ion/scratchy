@@ -3,6 +3,45 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 9
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+| Org-mode LaTeX support (2 SP) |  |  |  |
+| Org-mode Mermaid integration (3 SP) |  |  |  |
+| Scrum Document Safety Guard (1 SP) |  |  |  |
+
+** Planned Items
+- Org-mode LaTeX support (2 SP): cdlatex + preview + export backend
+- Org-mode Mermaid integration (3 SP): org-mermaid + preview + babel
+- Scrum Document Safety Guard (1 SP): pre-commit validation for process files
+
+** Retrospective
+
+*** What went well
+- (pending)
+
+*** What could improve
+- (pending)
+
+*** Action items
+- (pending)
+
+*** Follow-up Questions
+
+| Question | Answer |
+|----------|--------|
+| Did we meet the sprint goal? | |
+| What was the biggest blocker? | |
+| What should we start doing? | |
+| What should we stop doing? | |
+| What should we continue doing? | |
+| Any technical debt to address? | |
+| Any process improvements? | |
+| Should we adjust velocity? | |
+
 * Sprint 8
 
 ** Kanban Board
@@ -221,6 +260,7 @@ Current sprint, velocity, and retrospective.
 | 6      | 2026-08-30 | 4       | 4         | Tempel + Coverage Report  |
 | 7      | 2026-08-31 | 9       | 9         | Testing Strategy + tempel-collection + Workflows |
 | 8      | 2026-08-31 | 5       | 5         | Org-babel + Research org-roam |
+| 9      | 2026-09-01 | 6       | —         | Org LaTeX + Mermaid + Safety Guard |
 
 *Average*: 6.6 SP/Sprint
 
