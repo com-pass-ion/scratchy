@@ -5,6 +5,30 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
+## [2026-09-01] Session 8 — Sprint 9: Org LaTeX + Mermaid + Safety Guard
+
+### Done
+- Added Org-mode LaTeX support via cdlatex package
+- Added org-cdlatex-mode hook for LaTeX editing in org buffers
+- Added LaTeX export backend configuration with listings
+- Added validate_process_files.sh for Scrum Document Safety Guard
+- Added 5 new tests for Sprint 9 features (156 module + 32 integration)
+- Fixed templates file test path construction
+- Added rule: User selects sprint items (RULES.md, SCRUM-WORKFLOW.md, PROMPT.md)
+
+### Changed
+- init.el: 778 → 789 lines (+11 lines for LaTeX support)
+- Test count: 156 module + 32 integration (188 total)
+- Added cdlatex package for LaTeX editing
+- Added test/validate_process_files.sh script
+- Added test section 22: Scrum Document Safety Guard tests
+
+### Blocked
+- org-mermaid and ob-mermaid packages unavailable in MELPA (removed from config)
+
+### Next
+- Sprint 9 review and retrospective
+
 ## [2026-08-31] Session 7 — Sprint 7: Testing Strategy + tempel-collection + Workflows
 
 ### Done
