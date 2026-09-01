@@ -24,8 +24,8 @@ Current sprint, velocity, and retrospective.
 - Clear 4-phase implementation roadmap
 
 *** What could improve
-- Could explore more real-world examples of skill composition
-- Should investigate MCP integration details
+- Could explore more real-world examples of skill composition (Added to backlog)
+- Should investigate MCP integration details (Added to backlog)
 
 *** Action items
 - None

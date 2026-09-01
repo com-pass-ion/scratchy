@@ -20,8 +20,10 @@ Quick reference of all rules to follow when working on this project.
 - **Commit After Every Step**: Commit after completing each task with descriptive message
 - **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes (e.g., code fix + docs update) in a single commit.
 - **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
+- **Dependency Gate**: Verify package availability and system dependencies during planning poker. Do not commit to a sprint item if its core dependencies are unverified.
 - **Test Strategy**: Tests must verify functionality, not just code presence. Use feature tests (fboundp), state tests (bound-and-true-p), and integration tests (file open). Source code tests only for critical configs (font, keybindings).
 - **Research Documents Exempt from Tests**: Documentation-only files in `doc/agent-research/` and similar research directories do not require test coverage. Research is documentation, not code.
+- **Blueprint Requirement**: Research tasks must conclude with a "Prototype/Implementation Sketch" section. This transforms abstract findings into a concrete blueprint for future implementation.
 
 ## Agent Safety
 
@@ -44,6 +46,7 @@ Quick reference of all rules to follow when working on this project.
 - **Phase Tracking**: Update `current_state.org` on every phase change
 - **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)
 - **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
+- **Actionable Retros**: Every point in "What could improve" must be converted into a backlog task or a concrete rule change. No "improvement" remains just a thought.
 - **Follow-up Questions**: After every sprint retrospective, answer these questions in `log/SPRINT.org`:
   1. Did we meet the sprint goal?
   2. What was the biggest blocker?

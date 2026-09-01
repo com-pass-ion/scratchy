@@ -257,6 +257,50 @@ All planned features, sorted by category.
    - Fix any violations found
    - Document audit results
 
+** TODO Time-box research tasks
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :process:
+   :END:
+   Establish time-boxing guidelines for research tasks to prevent scope creep.
+   - Define maximum time limits for research (e.g., 2 hours per topic)
+   - Set clear "stop and document" criteria
+   - Create process for transitioning from research to implementation
+   - Add time-tracking to research tasks
+
+** TODO Mermaid org-babel alternative
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :lang:
+   :END:
+   Find alternative for Mermaid org-babel integration since packages are unavailable in MELPA.
+   - Research ob-mermaid GitHub installation
+   - Investigate other diagramming tools (plantuml, graphviz)
+   - Consider manual export workflows
+   - Test any alternative solutions
+
+** TODO Research MCP integration details
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :ai:
+   :END:
+   Investigate Model Context Protocol (MCP) integration for Open Code architecture.
+   - Study MCP tool discovery and registration
+   - Examine MCP server communication patterns
+   - Research MCP security and permission model
+   - Document MCP implementation requirements for Emacs
+
+** TODO Explore skill composition examples
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :ai:
+   :END:
+   Research real-world examples of how skills are composed in Open Code and similar systems.
+   - Study how multiple skills combine for complex workflows
+   - Examine skill dependencies and inheritance patterns
+   - Research skill versioning and compatibility
+   - Document best practices for skill organization
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2
