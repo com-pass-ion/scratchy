@@ -610,7 +610,7 @@
 
 
 ;;; ==========================================================================
-;;; 14. ORG-MODE — Babel integration
+;;; 14. ORG-MODE — Babel integration, LaTeX, Mermaid
 ;;; ==========================================================================
 
 ;; Enable code block execution for configured languages.
@@ -631,6 +631,23 @@
         ("sh" . "src shell")
         ("java" . "src java")
         ("c" . "src C")))
+
+;; --- LaTeX Support (cdlatex) -----------------------------------------------
+;; Enable LaTeX editing and preview in Org-mode.
+
+(use-package cdlatex
+  :ensure t
+  :hook ((org-mode . org-cdlatex-mode))
+  :config
+  (setq cdlatex-use-dollar-signs t))
+
+;; Enable LaTeX fragment preview in Org-mode.
+(add-hook 'org-mode-hook 'org-fold-show-all)
+
+;; LaTeX export backend.
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-packages-alist '("" "listings" t))
+  (setq org-latex-listings t))
 
 
 ;;; ==========================================================================
