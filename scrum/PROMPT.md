@@ -32,6 +32,7 @@ You are working on an Emacs configuration project called "Scratchy".
 13. Keep prompts simple for 32B models — break work into atomic units
 14. Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without explicit approval
 15. User selects sprint items — agent suggests, user approves
+16. Planning Poker: Agent suggests SP estimates, user confirms or suggests own estimates
 
 ## Scrum Phases
 

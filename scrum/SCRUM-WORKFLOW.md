@@ -14,6 +14,7 @@ Key rules (summary):
 - On token limits: STOP, commit, log state, start fresh
 - Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without approval
 - User selects sprint items — agent suggests, user approves
+- Planning Poker: Agent suggests SP estimates, user confirms or suggests own estimates
 
 ## Process Flow
 
