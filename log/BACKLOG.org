@@ -301,6 +301,31 @@ All planned features, sorted by category.
    - Research skill versioning and compatibility
    - Document best practices for skill organization
 
+** TODO World Model: Core Tools Implementation
+   :PROPERTIES:
+   :Effort:   5
+   :Category: :ai:
+   :END:
+   Implement the foundational tool layer for the Scratchy world model.
+   - Create src/tools/ directory structure
+   - Implement file operation tools (read, write, edit, glob, grep)
+   - Implement execution tools (bash, elisp)
+   - Implement context tools (get_sprint_status, get_feature_context)
+   - Add basic permission model
+   - Add tests for all tools
+
+** TODO World Model: Skill System
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :ai:
+   :END:
+   Implement the skill system for on-demand knowledge loading.
+   - Create SKILL.md parser with YAML frontmatter support
+   - Implement skill discovery from project/global dirs
+   - Create skill tool for on-demand loading
+   - Create first 3 skills: emacs-module-standard, atomic-commit-guide, systematic-debugging
+   - Add tests for skill system
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2

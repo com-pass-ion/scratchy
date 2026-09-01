@@ -1,0 +1,285 @@
+#+TITLE: Scratchy World Model - Tools & Skills Structure
+#+STARTUP: overview
+
+Research-based proposal for organizing tools and skills as a coherent
+"world model" that reduces context overhead and enables composable
+agentic workflows.
+
+* Executive Summary
+
+The current workflow relies heavily on implicit reasoning—each turn
+requires the agent to re-derive how to perform tasks. A world model
+encapsulates this knowledge into explicit, reusable primitives:
+
+1. **Tools**: Runtime capabilities that execute actions
+2. **Skills**: Domain knowledge that prepares the agent
+3. **Context**: Shared state that persists across sessions
+
+The goal: move from "thinking through it every time" to "loading the
+right capability on demand."
+
+* World Model Architecture
+
+** Core Layers
+
+```
+┌─────────────────────────────────────┐
+│           AGENTS                    │
+│  (Primary, Subagent, Specialized)   │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│           SKILLS                    │
+│  (Domain Knowledge, Procedures)     │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│           TOOLS                     │
+│  (Runtime Capabilities)             │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│           CONTEXT                   │
+│  (Project State, Memory, Files)     │
+└─────────────────────────────────────┘
+```
+
+** The Insight
+
+- Tools answer: "What CAN I do?" (capabilities)
+- Skills answer: "HOW do I do it?" (procedures)
+- Context answers: "WHERE am I?" (state)
+- Agents answer: "WHO is doing it?" (identity)
+
+* Tool Categories
+
+** 1. File Operations (Atomic)
+
+| Tool | Input | Output | Purpose |
+|------|-------|--------|---------|
+| `read_file` | path | content | Read file contents |
+| `write_file` | path, content | status | Write/create file |
+| `edit_file` | path, old, new | status | Exact string replacement |
+| `glob_files` | pattern | paths[] | Find files by pattern |
+| `grep_files` | pattern, paths[] | matches[] | Search file contents |
+| `list_dir` | path | entries[] | List directory contents |
+
+** 2. Execution (Controlled)
+
+| Tool | Input | Output | Purpose |
+|------|-------|--------|---------|
+| `run_bash` | command | output | Execute shell command |
+| `run_elisp` | expression | result | Evaluate Emacs Lisp |
+| `run_compilation` | command | output | Compile project |
+
+** 3. Context (Stateful)
+
+| Tool | Input | Output | Purpose |
+|------|-------|--------|---------|
+| `get_sprint_status` | — | status | Current phase, goal, TODOs |
+| `get_feature_context` | feature_id | context | Related files, tests, docs |
+| `get_project_map` | — | structure | Project organization |
+
+** 4. Analysis (Insight)
+
+| Tool | Input | Output | Purpose |
+|------|-------|--------|---------|
+| `impact_analysis` | change_desc | impacts[] | Find potential regressions |
+| `verify_requirements` | reqs[], file | results[] | Check requirements against code |
+| `analyze_complexity` | file | metrics | Code complexity metrics |
+
+** 5. Composition (Workflow)
+
+| Tool | Input | Output | Purpose |
+|------|-------|--------|---------|
+| `batch_edit` | pattern, files[], replacement | status | Apply change across files |
+| `create_module` | name, type | paths[] | Scaffold new module |
+| `run_test_suite` | test_pattern | results | Execute and report tests |
+
+* Skill Categories
+
+** 1. Procedural Skills (How-To)
+
+These load instructions for specific workflows.
+
+| Skill | Trigger | Content |
+|-------|---------|---------|
+| `emacs-module-standard` | Creating new module | Structure, naming, organization |
+| `atomic-commit-guide` | Committing changes | Message format, checklist |
+| `systematic-debugging` | Debugging issues | Step-by-step process |
+| `refactoring-patterns` | Refactoring code | Common patterns, before/after |
+| `integration-test-template` | Adding tests | Template, checklist |
+
+** 2. Contextual Skills (When-To)
+
+These provide domain knowledge for decisions.
+
+| Skill | Trigger | Content |
+|-------|---------|---------|
+| `feature-planning` | Planning feature | Architecture considerations |
+| `dependency-management` | Adding packages | When to add, alternatives |
+| `performance-optimization` | Performance issues | Profiling, optimization patterns |
+| `security-review` | Security concerns | Common vulnerabilities, checks |
+
+** 3. Diagnostic Skills (Why)
+
+These help analyze problems.
+
+| Skill | Trigger | Content |
+|-------|---------|---------|
+| `failure-analysis` | Test failures | Common causes, debugging steps |
+| `regression-investigation` | Regressions | Bisecting, root cause analysis |
+| `conflict-resolution` | Package conflicts | Dependency resolution strategies |
+
+* Context Model
+
+** Static Context (Persistent)
+
+```org
+* Project Structure
+  - src/init.el          :: Main configuration
+  - test/                 :: Test suite
+  - doc/                  :: Documentation
+  - log/                  :: Sprint logs
+
+* Current State
+  - Phase: in-progress
+  - Sprint: 12
+  - Goal: [current goal]
+  - TODOs: [remaining items]
+
+* Feature Map
+  - feature:lsp         :: eglot, lsp-mode, lsp-ui
+  - feature:completion  :: vertico, corfu, cape
+  - feature:org         :: org-mode, org-babel, cdlatex
+```
+
+** Dynamic Context (Session)
+
+```org
+* Active Files
+  - src/init.el         :: [currently editing]
+  - test/test_lsp.el    :: [related test]
+
+* Recent Changes
+  - [commit]: description
+  - [edit]: file:line
+
+* Pending Actions
+  - [ ] Run tests
+  - [ ] Update documentation
+```
+
+* Skill Discovery Protocol
+
+** 1. Metadata Loading (Startup)
+
+At session start, load only skill metadata:
+
+```org
+<available_skills>
+  - emacs-module-standard: Create new Emacs modules
+  - atomic-commit-guide: Write atomic commit messages
+  - systematic-debugging: Debug systematically
+  - ...
+</available_skills>
+```
+
+** 2. On-Demand Loading (Runtime)
+
+When task matches skill description:
+
+```
+User: "Create a new module for LaTeX support"
+Agent: [Loads emacs-module-standard skill]
+       [Reads skill instructions]
+       [Applies procedures]
+```
+
+** 3. Composition (Multi-Skill)
+
+When task requires multiple skills:
+
+```
+User: "Add LaTeX support with tests"
+Agent: [Loads emacs-module-standard]
+       [Loads integration-test-template]
+       [Applies both procedures]
+```
+
+* Tool Execution Protocol
+
+** Pre-Execution Checklist
+
+1. Validate parameters against schema
+2. Check permissions for current agent
+3. Verify prerequisites (files exist, etc.)
+4. Log action for audit trail
+
+** Post-Execution Handling
+
+1. Validate output format
+2. Feed result back to LLM
+3. Update dynamic context if needed
+4. Trigger next action if part of workflow
+
+* Implementation Roadmap
+
+** Phase 1: Core Tools (Sprint 12)
+
+- Implement file operation tools (read, write, edit, glob, grep)
+- Implement execution tools (bash, elisp)
+- Basic permission model
+
+** Phase 2: Context Tools (Sprint 13)
+
+- Implement get_sprint_status
+- Implement get_feature_context
+- Implement get_project_map
+
+** Phase 3: Skill System (Sprint 14)
+
+- Create SKILL.md parser
+- Implement skill discovery
+- Create first 3 skills: emacs-module-standard, atomic-commit-guide, systematic-debugging
+
+** Phase 4: Analysis Tools (Sprint 15)
+
+- Implement impact_analysis
+- Implement verify_requirements
+- Implement batch_edit
+
+** Phase 5: Composition (Sprint 16)
+
+- Implement create_module
+- Implement run_test_suite
+- Multi-skill orchestration
+
+* Benefits
+
+** Context Reduction
+
+- Before: Agent reads 5+ files to understand task (500+ tokens)
+- After: Agent loads 1 skill + 1 tool context (100-200 tokens)
+
+** Consistency
+
+- Before: Each agent derives approach differently
+- After: All agents follow same procedures
+
+** Reusability
+
+- Before: Knowledge lives in prompts (lost on compaction)
+- After: Knowledge persists in skills (survives compaction)
+
+** Composability
+
+- Before: Complex workflows ad-hoc
+- After: Skills compose into workflows
+
+* References
+
+- [2026-02] Agent Skills for Large Language Models (arXiv:2602.12430)
+- [2026-03] SkillNet: Skill Organization Infrastructure
+- [2026-04] GraSP: Graph-Structured Skill Compositions
+- Open Code Architecture Research (doc/agent-research/OPENCODE-ARCHITECTURE-RESEARCH.org)
