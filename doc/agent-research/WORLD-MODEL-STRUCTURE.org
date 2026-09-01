@@ -277,6 +277,151 @@ Agent: [Loads emacs-module-standard]
 - Before: Complex workflows ad-hoc
 - After: Skills compose into workflows
 
+* Agent Bypass
+
+** Why Bypass?
+
+Sometimes you need to:
+- Execute a command without agent interpretation
+- Get raw output without formatting
+- Run a trusted script without reasoning overhead
+- Debug agent behavior by seeing exact inputs/outputs
+- Perform quick operations without LLM latency
+
+** Bypass Types
+
+| Type | Syntax | Purpose |
+|------|--------|---------|
+| Direct | `!command` | Run shell command directly |
+| Raw | `!!tool(args)` | Execute tool without agent reasoning |
+| Trust | `#script` | Run pre-approved script silently |
+| Debug | `?query` | Show what agent would do without doing it |
+
+** Direct Execution (`!`)
+
+Runs shell command directly, bypassing agent:
+
+```
+!git status
+!ls -la src/
+!make test
+```
+
+Output returned as-is, no LLM processing.
+
+** Raw Tool Execution (`!!`)
+
+Executes tool with exact parameters, no schema validation:
+
+```
+!!read_file("src/init.el")
+!!grep_files("defun", ["src/*.el"])
+!!run_bash("echo hello")
+```
+
+Returns raw result without agent interpretation.
+
+** Trusted Scripts (`#`)
+
+Runs pre-approved scripts from `scripts/` directory:
+
+```
+#validate_process_files
+#run_tests
+#coverage_report
+```
+
+Scripts must be:
+1. In `scripts/` directory
+2. Executable (`chmod +x`)
+3. Listed in `TRUSTED_SCRIPTS` config
+4. Non-interactive (no stdin required)
+
+** Debug Mode (`?`)
+
+Shows what agent would do without executing:
+
+```
+?create module for LaTeX
+```
+
+Returns:
+```
+Agent would:
+1. Load skill: emacs-module-standard
+2. Create: src/latex.el
+3. Add to init.el: (require 'latex)
+4. Create test: test/test_latex.el
+5. Run: ./test/run_tests.sh
+```
+
+** Implementation
+
+** Emacs Integration
+
+```elisp
+(defun scratchy/bypass-execute (input)
+  "Execute INPUT bypassing agent reasoning."
+  (cond
+   ;; Direct shell execution
+   ((string-prefix-p "!" input)
+    (shell-command (substring input 1)))
+
+   ;; Raw tool execution
+   ((string-prefix-p "!!" input)
+    (scratchy/raw-tool-execute (substring input 2)))
+
+   ;; Trusted script
+   ((string-prefix-p "#" input)
+    (scratchy/trusted-script-run (substring input 1)))
+
+   ;; Debug mode
+   ((string-prefix-p "?" input)
+    (scratchy/debug-preview (substring input 1)))
+
+   ;; Normal agent processing
+   (t
+    (scratchy/agent-process input))))
+```
+
+** Permission Model
+
+| Bypass Type | Permission Required |
+|-------------|---------------------|
+| `!command` | bash:allow for that command |
+| `!!tool()` | tool:allow for that tool |
+| `#script` | script must be in TRUSTED_SCRIPTS |
+| `?query` | None (read-only preview) |
+
+** Safety Guardrails
+
+1. **No destructive commands** in `!` mode (rm -rf, etc.)
+2. **No file writes** in `!!` mode (use normal agent)
+3. **No network** in `#` mode (offline scripts only)
+4. **Audit log** for all bypass executions
+5. **Timeout** on all bypass operations (30s default)
+
+** Use Cases
+
+| Scenario | Best Approach |
+|----------|---------------|
+| Quick git status | `!git status` |
+| Read a file quickly | `!!read_file("path")` |
+| Run test suite | `#run_tests` |
+| See agent's plan | `?feature idea` |
+| Debug agent behavior | `?query` + audit log |
+| One-off command | `!command` |
+
+** Comparison
+
+| Aspect | Normal Agent | Bypass |
+|--------|--------------|--------|
+| Latency | 2-5s (LLM) | <100ms |
+| Reasoning | Yes | No |
+| Safety | Full checks | Limited |
+| Logging | Full audit | Bypass audit |
+| Context | Consumes tokens | None |
+
 * References
 
 - [2026-02] Agent Skills for Large Language Models (arXiv:2602.12430)

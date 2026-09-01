@@ -326,6 +326,21 @@ All planned features, sorted by category.
    - Create first 3 skills: emacs-module-standard, atomic-commit-guide, systematic-debugging
    - Add tests for skill system
 
+** TODO World Model: Agent Bypass
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :ai:
+   :END:
+   Implement bypass functionality to execute commands without agent reasoning.
+   - Implement ! prefix for direct shell execution
+   - Implement !! prefix for raw tool execution
+   - Implement # prefix for trusted script execution
+   - Implement ? prefix for debug preview mode
+   - Add permission model for each bypass type
+   - Add safety guardrails (destructive command blocking, timeout)
+   - Add audit logging for all bypass executions
+   - Add tests for bypass functionality
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2
