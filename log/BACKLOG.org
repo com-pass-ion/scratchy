@@ -161,10 +161,12 @@ All planned features, sorted by category.
    - Create agent-config.el for settings
    - Add integration test for agent workflow
 
-** TODO Research agentic workflows for SOA agents
+** DONE Research agentic workflows for SOA agents
    :PROPERTIES:
-   :Effort:   3
+   :Effort:   5
    :Category: :ai:
+   :Sprint:   10
+   :END:
    :END:
    Research agentic workflow patterns for emulating SOA agents with full control in the agents module.
    - Research SOA (Service-Oriented Architecture) agent patterns

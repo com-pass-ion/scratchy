@@ -1,0 +1,229 @@
+#+TITLE: Agentic Workflows for SOA Agents - Research
+#+STARTUP: overview
+
+Research findings on agentic workflow patterns for emulating SOA agents
+with full control in the agents module.
+
+* Executive Summary
+
+SOA (Service-Oriented Architecture) principles are being revitalized by
+AI agents. The key insight: agents are dynamic orchestrators that
+decompose tasks into subtasks and use services/tools to achieve goals,
+rather than executing predefined scripts.
+
+* Core Concepts
+
+** SOA Agent Architecture
+
+- Agent as intelligent executor with well-defined API
+- Self-contained service exposed for external invocation
+- Dynamic orchestration via agentic reasoning
+- Services as tools: REST, gRPC, message queues
+
+** Key Principles
+
+| Principle | Description |
+|-----------|-------------|
+| Harness-ability | Agent can discover and use available services |
+| Composability | Agents can be composed into larger workflows |
+| Lifecycle engineering | Full control over spawn/suspend/resume/terminate |
+| Trustworthiness by design | Security and verification built-in |
+| Goal-driven orchestration | Agents reason about how to achieve goals |
+| Observability | Complete audit trail of agent actions |
+
+* Communication Protocols
+
+** REST/HTTP
+- Simple, widely supported
+- Synchronous request/response
+- Good for single-service calls
+
+** gRPC
+- High-performance, bidirectional streaming
+- Protocol Buffers for schema
+- Good for internal agent-to-agent communication
+
+** Message Queues (Kafka, RabbitMQ)
+- Asynchronous, decoupled communication
+- Event-driven choreography pattern
+- Good for parallel, loosely-coupled workflows
+
+** DIDComm (Decentralized Identifiers)
+- End-to-end encrypted messaging
+- Verifiable credentials for identity
+- Transport-agnostic, works across vendors
+
+* Agent Lifecycle Management
+
+** State Machine
+
+```
+Created → Running ↔ Suspended → Completed
+              ↓
+           Terminated
+```
+
+** Lifecycle Operations
+
+| Operation | Description | Trigger |
+|-----------|-------------|---------|
+| spawn | Create new agent with task | Supervisor initiates |
+| initialize | Set up agent context | After spawn |
+| suspend | Pause execution, preserve state | Wait for I/O, budget exceeded |
+| resume | Continue from checkpoint | External result arrives |
+| terminate | Permanent shutdown | Task complete or error |
+| checkpoint | Save state snapshot | Before suspend or periodically |
+
+** Virtual Actor Model (Microsoft Orleans)
+
+- Always conceptually alive (reference by identity)
+- Automatically deactivated when idle
+- Location-transparent (runtime decides hosting)
+- Single-activation guaranteed
+
+** Durable Execution
+
+- Journal every side effect
+- On crash, replay from journal
+- Pending external calls survive restarts
+- Exactly-once semantics for side effects
+
+* Orchestration Patterns
+
+** Sequential Orchestration
+- Linear pipeline, each agent processes previous output
+- Deterministic, predefined order
+- Best for: step-by-step refinement with clear dependencies
+
+** Concurrent Orchestration
+- Parallel pipeline, agents work independently
+- Deterministic or dynamic agent selection
+- Best for: independent analysis from multiple perspectives
+
+** Group Chat Orchestration
+- Conversational pipeline, agents contribute to shared thread
+- Chat manager controls turn order
+- Best for: consensus-building, brainstorming
+
+** Handoff Orchestration
+- Dynamic delegation, one active agent at a time
+- Agents decide when to transfer control
+- Best for: tasks where specialist emerges during processing
+
+** Magentic Orchestration
+- Plan-build-execute model
+- Manager agent builds and adapts task ledger
+- Best for: open-ended problems without predetermined solution
+
+* Choreography vs Orchestration
+
+** When to Use Orchestration
+- Task sequence matters
+- Error recovery is critical
+- Need audit trail
+- Regulated workflows
+- Under 10 agents
+
+** When to Use Choreography
+- Agents are genuinely peers
+- Task is parallel and read-mostly
+- High throughput needed
+- Agents scale independently
+- Over 50 agents
+
+** Hybrid Pattern (Recommended)
+- Orchestrator at the trunk (critical path)
+- Bounded local meshes at the leaves (parallel work)
+- Phase gates between branches
+- Agents within phase can be chatty
+
+* State Management
+
+** Centralized State
+- Single source of truth in coordinator
+- Easy to debug and audit
+- Can become bottleneck
+
+** Distributed State
+- State across agents and event log
+- More scalable
+- Requires distributed tracing
+
+** Recommended: Hybrid
+- Orchestrator holds critical path state
+- Event-driven agents write results independently
+- Shared state store (PostgreSQL, Redis)
+- Agents read only keys they need
+
+* Security Patterns
+
+** Identity and Access
+- DID-based agent identity
+- Verifiable credentials (VC/VP)
+- Scope-limited authorization tokens
+- Short-lived, least-privilege access
+
+** Communication Security
+- End-to-end encryption (DIDComm)
+- Transport-agnostic security
+- Capability-constrained dispatch
+
+** Audit and Compliance
+- Complete audit trail
+- Policy-based selection
+- Verifiable presentations
+
+* Monitoring and Observability
+
+** Key Metrics
+- Per-agent failure attribution rate
+- Token consumption per agent
+- Latency per workflow step
+- Completion rate
+
+** Tools
+- Distributed tracing (OpenTelemetry)
+- Event correlation IDs
+- Dead-letter queues
+- Completeness checks per correlation ID
+
+** Observability Requirements by Pattern
+- Orchestration: centralized logging
+- Choreography: distributed tracing with event correlation
+- Swarm: both + anomaly detection
+
+* Recommendations for Emacs Implementation
+
+** Architecture
+1. Use orchestrator pattern for critical paths
+2. Implement virtual actor model for agent lifecycle
+3. Support both synchronous (REST) and async (queue) communication
+4. Built-in checkpointing for long-running agents
+
+** Lifecycle Management
+1. Spawn agents with goal and tools
+2. Automatic suspension on I/O boundaries
+3. Durable execution with journaling
+4. Configurable restart policies
+
+** Communication
+1. Primary: HTTP/REST for external services
+2. Internal: message queues for agent-to-agent
+3. Security: DID-based identity when needed
+
+** Monitoring
+1. Built-in audit trail
+2. Token budget tracking
+3. Goal drift detection
+4. Loop detection
+
+* References
+
+- [2026-01] Agentic Service-Oriented Computing (ASOC) - IEEE ICWS 2026
+- [2026-01] Agentic Orchestration: The Evolution of SOA
+- [2026-03] Actor Model and Communicating Agent Patterns
+- [2026-05] Agentic Nesting: Enterprise Application Integration
+- [2026-06] SOA Teaches Us About APIs in the Age of Agents
+- [2026-07] Enterprise Agentic Architecture (Salesforce)
+- Microsoft Orleans Virtual Actor Model
+- LangGraph, CrewAI, AutoGen orchestration patterns
