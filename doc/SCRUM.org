@@ -18,7 +18,7 @@
 - *Built-in first*: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
 - *Minimal packages*: Only add packages that provide clear, measurable value
 - *Single-file config*: Everything in =src/init.el=, no modular splitting
-- *Testable*: Every feature has an automated test (143 module + 32 integration tests, TAP format)
+- *Testable*: Every feature has an automated test (143 module + 32 integration + 12 GDB workflow tests, TAP format)
 - *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
 - *Documented*: Documentation lives in ./doc as WORKFLOWS.org & SCRUM.org
 - *Session-tracked*: Scrum-style changelog in log/SESSION.org
@@ -38,7 +38,8 @@ emacs_from_scratch/
 ├── test/
 │   ├── test_init.el                     # Module tests (667 lines, 20 KB, 143 tests)
 │   ├── test_integration.el              # Integration tests (157 lines, 5 KB, 32 tests)
-│   ├── run_tests.sh                     # Test runner (29 lines, 500 B)
+│   ├── test_gdb_workflow.sh             # GDB workflow tests (deps, build, gdb batch, record, rr)
+│   ├── run_tests.sh                     # Test runner (module + integration + GDB workflow)
 │   └── coverage.sh                      # Coverage report (55 lines, 1.5 KB)
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
@@ -52,6 +53,7 @@ emacs_from_scratch/
 │   │   ├── elisp-test.el               # Eval + Debug test
 │   │   ├── git-test.py                 # Git + Diff test
 │   │   └── snippet-test.py             # Snippets test
+│   │   ├── cpp-debug-cheatsheet.md     # C++ GDB debug cheat sheet
 │   └── DOD.md                           # Definition of Done
 ├── scrum/
 │   ├── PROMPT.md                        # Agent entry prompt (auto-loaded)
@@ -185,10 +187,11 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 ** Testing
 
 - *Format*: TAP (Test Anything Protocol)
-- *Runner*: =./test/run_tests.sh= (runs module + integration)
+- *Runner*: =./test/run_tests.sh= (runs module + integration + GDB workflow)
 - *Exit Code*: 0 = pass, 1 = fail
 - *Module Tests*: 143
 - *Integration Tests*: 32
+- *GDB Workflow Tests*: 12 pass + arch/TODO skips (=test/test_gdb_workflow.sh=)
 - *Coverage*: =./test/coverage.sh=
 
 *** Coverage by Section
@@ -233,6 +236,7 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 | Docker            |     2 | Docker command + dockerfile-mode                  |
 | Tree-sitter       |     2 | treesit-auto-install + global-treesit-auto-mode   |
 | Session           |     2 | Desktop-save-mode + desktop settings              |
+| C++ Debug (GDB)   |    12 | Deps, Debug build, deref, record, rr, Sec.21 binds |
 
 ** Dependencies
 
@@ -255,6 +259,8 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 | libpoppler-glib-dev | PDF tools support     |
 | libpoppler-private-dev | PDF tools support  |
 | librsvg2-dev      | SVG support              |
+| gdb               | C++ debugging            |
+| rr                | Deterministic replay (x86_64-focused) |
 
 *** npm Packages (global)
 

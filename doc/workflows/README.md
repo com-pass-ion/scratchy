@@ -19,6 +19,7 @@ Sample files to test and verify Scratchy's workflow configurations.
 | `elisp-test.el` | Eval + Debug | Emacs Lisp, ERT |
 | `git-test.py` | Git + Diff | Magit, diff-hl |
 | `snippet-test.py` | Snippets | Tempel, Templates |
+| `cpp-debug-cheatsheet.md` | C++ Debug | GDB (gud/gdb-mi), record, rr |
 
 ## Workflow Categories
 
@@ -75,6 +76,16 @@ Sample files to test and verify Scratchy's workflow configurations.
 - [ ] Press `M-*` — Insert snippet by name
 - [ ] Type `for` — For loop snippet works
 
+### C++ Debug
+- `cpp-debug-cheatsheet.md` — GDB debugging workflow, keybindings, deref recipes
+
+**Usability Checklist:**
+- [ ] Build demo with `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug`
+- [ ] Press `M-x gdb RET gdb -i=mi --args ./build/<binary>` — 4-window layout opens
+- [ ] Press `C-c b` — Breakpoint set
+- [ ] Press `C-c n`/`C-c s` — Step over/into works
+- [ ] Type `print res` in `*gud*` — Text inserts (no command fires)
+
 ## Verification Summary
 
 | Workflow | Module Test | Integration Test | Usability Test |
@@ -85,3 +96,4 @@ Sample files to test and verify Scratchy's workflow configurations.
 | Eval + Debug | Section 14 | — | elisp-test.el |
 | Git + Diff | Section 8 | Test 2.1-2.3 | git-test.py |
 | Snippets | Section 10 | Test 4.1-4.3 | snippet-test.py |
+| C++ Debug | Section 21 | test_gdb_workflow.sh | cpp-debug-cheatsheet.md |
