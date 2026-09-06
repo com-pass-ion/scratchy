@@ -24,6 +24,8 @@ M-x my/cpp-debug RET <binary>   # smart default: newest executable under build/
 This builds Debug (`cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug &&
 cmake --build build`) and launches `gdb -i=mi` with pretty-printing
 (values, arrays, indexes, unlimited elements) already applied.
+Root auto-detection climbs to the outermost `project()` CMakeLists,
+so calling from a subdirectory still builds the top-level project.
 If switching from a Release cache: `rm -rf build` first.
 
 ## 2. Drive GDB (built-in abbreviations, typed in console)

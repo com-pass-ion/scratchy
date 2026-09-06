@@ -172,7 +172,9 @@ b / n / s / p                   # set bp, next, step, print (built-in abbreviati
 default: newest executable under =build/=), rebuilds with
 =cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build=,
 then launches =gdb -i=mi= with the §2 sets as =-ex= flags. No .gdbinit file,
-no compile-command, no shortcuts needed.
+no compile-command, no shortcuts needed. Root detection climbs to the
+outermost =CMakeLists.txt= with a =project()= call, so invoking from a
+subdirectory (e.g. =subproject/=) still builds the top-level project.
 
 * 7. Complete init.el Block
 
