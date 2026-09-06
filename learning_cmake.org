@@ -1,0 +1,179 @@
+* Phase 1: The Single-File Foundation
+Goal: Understand how to compile a single application without manual compiler commands.
+
+** Example 1.1: The Minimal Project Structure
+Files needed:
+- =CMakeLists.txt=
+- =main.cpp=
+
+#+BEGIN_SRC cmake
+# CMakeLists.txt
+cmake_minimum_required(VERSION 3.15)
+project(MyFirstApp CXX)
+
+add_executable(MyFirstApp main.cpp)
+#+END_SRC
+
+** Example 1.2: Modern Build Workflow
+Instead of old-school commands, use out-of-source builds via terminal:
+#+BEGIN_SRC bash
+cmake -B build
+cmake --build build
+#+END_SRC
+*(This automatically creates a =build/= directory, keeping your source folder clean).*
+
+---
+
+* Phase 2: Multi-File & Modular Layouts
+Goal: Learn how to split code into libraries and organize projects into sub-folders.
+
+** Example 2.1: Separating a Library Target
+#+BEGIN_SRC cmake
+# Inside a sub-folder's CMakeLists.txt
+add_library(MathLib STATIC
+    math.cpp
+    math.h
+)
+#+END_SRC
+
+** Example 2.2: Connecting Folders via Subdirectories
+Root =CMakeLists.txt=:
+#+BEGIN_SRC cmake
+cmake_minimum_required(VERSION 3.15)
+project(ModularApp CXX)
+
+# Delegate tasks to the libs folder
+add_subdirectory(libs/math)
+
+# Create the main app
+add_executable(ModularApp main.cpp)
+#+END_SRC
+
+---
+
+* Phase 3: Transitioning to Modern Scope
+Goal: Master target-centric design and eliminate global commands.
+
+** Example 3.1: Attaching Include Paths to Targets
+Instead of global include directories, bind paths directly to the target:
+#+BEGIN_SRC cmake
+add_library(MathLib math.cpp)
+
+# Tell CMake where MathLib's headers live
+target_include_directories(MathLib PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+#+END_SRC
+
+** Example 3.2: Scoped Linking in Action
+#+BEGIN_SRC cmake
+# Engine uses Logger internally (PRIVATE), but exposes MathLib publicly (PUBLIC)
+target_link_libraries(Engine
+    PRIVATE InternalLogger
+    PUBLIC MathLib
+)
+#+END_SRC
+
+---
+
+* Phase 4: Integrating External Dependencies
+Goal: Learn how to pull in third-party software packages seamlessly.
+
+** Example 4.1: Fetching a Dependency Automatically
+Using Modern CMake's =FetchContent= to grab a library like JSON:
+#+BEGIN_SRC cmake
+include(FetchContent)
+
+FetchContent_Declare(
+    nlohmann_json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+
+FetchContent_MakeAvailable(nlohmann_json)
+
+# Link it to your app target
+target_link_libraries(MyApp PRIVATE nlohmann_json::nlohmann_json)
+#+END_SRC
+
+---
+
+* Phase 5: Decoding State-of-the-Art (SotA)
+Goal: Open a complex open-source project and understand advanced idioms.
+
+** Example 5.1: Spotting Generator Expressions & Compiler Flags
+#+BEGIN_SRC cmake
+# Automatically apply strict warnings depending on the compiler ID
+target_compile_options(AuthLibrary PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
+)
+#+END_SRC
+
+** Example 5.2: Handling Build vs Install Paths
+#+BEGIN_SRC cmake
+target_include_directories(AuthLibrary
+    PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # Used while developing
+	$<INSTALL_INTERFACE:include>                            # Used when installed system-wide
+)
+#+END_SRC
+
+* Phase 6: Advanced Professional Workflows
+Goal: Elevate your projects to production-grade with presets, testing, and tooling.
+
+** Example 6.1: Standardizing with CMake Presets (=CMakePresets.json=)
+Create a root JSON file to avoid typing long terminal configurations repeatedly:
+#+BEGIN_SRC json
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default Release Build",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+	"CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}
+#+END_SRC
+*(Build seamlessly with: =cmake --preset default= and =cmake --build --preset default=)*
+
+** Example 6.2: Automated Testing with CTest
+Register and run unit tests natively through CMake:
+#+BEGIN_SRC cmake
+enable_testing()
+
+add_executable(UnitTests test_main.cpp)
+target_link_libraries(UnitTests PRIVATE MyLib GTest::gtest_main)
+
+# Tell CTest about the test executable
+add_test(NAME CoreUnitTests COMMAND UnitTests)
+#+END_SRC
+*(Run your entire test suite globally with: =ctest --test-dir build/release=)*
+
+** Example 6.3: Packaging and Installation (=install()=)
+Prepare your library so other developers can install and consume it via =find_package()=:
+#+BEGIN_SRC cmake
+install(TARGETS AuthLibrary
+    EXPORT AuthLibraryTargets
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+# Install public headers
+install(DIRECTORY include/ DESTINATION include)
+#+END_SRC
+
+** Example 6.4: Enforcing Code Quality with Sanitizers
+Hook developer safety tools directly into target configurations:
+#+BEGIN_SRC cmake
+# Automatically enable Address and Undefined Behavior Sanitizers in Debug mode
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(AuthLibrary PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+    target_link_options(AuthLibrary PRIVATE -fsanitize=address,undefined)
+endif()
+#+END_SRC
