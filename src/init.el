@@ -892,10 +892,11 @@ Returns nil when no CMake project is found above DIR."
   "Full `gdb' command line for BINARY with `my/gdb-init-args' as -ex flags.
 Uses double quotes (not shell escapes): gud splits the command line
 itself with `split-string-and-unquote', which keeps quoted groups intact
-but does not process backslash escapes."
+but does not process backslash escapes.  BINARY comes first so gud names
+the session buffer *gud-<binary>* (it takes the first non-dash word)."
   (let ((flags (mapconcat (lambda (s) (concat "-ex \"" s "\""))
 			  my/gdb-init-args " ")))
-    (concat "gdb -i=mi " flags " --args " (shell-quote-argument binary))))
+    (concat "gdb -i=mi \"" (expand-file-name binary) "\" " flags)))
 
 (defun my/cpp-debug (binary)
   "Build current project (Debug) and start GDB on BINARY.

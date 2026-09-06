@@ -740,6 +740,12 @@
 	(cl-assert (equal (my/cpp-cmake-root sub) (file-name-as-directory tmp)))
       (delete-directory tmp t))))
 
+(test--assert "23.6 my/cpp-debug-gdb-command puts binary before -ex flags"
+  (let ((cmd (my/cpp-debug-gdb-command "/tmp/demo")))
+    (cl-assert (string-match-p "\\`gdb -i=mi \"/tmp/demo\" -ex" cmd))
+    (cl-assert (not (string-match-p "--args" cmd)))
+    (cl-assert (string-match-p "-ex \"set auto-load safe-path /\"" cmd))))
+
 
 ;;; ==========================================================================
 ;;; SUMMARY
