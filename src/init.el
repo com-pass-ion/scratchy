@@ -30,6 +30,7 @@
 ;;  18. Session          — Desktop save
 ;;  19. Git Hooks        — Pre-commit
 ;;  20. DevOps           — Docker
+;;  21. Debug            — GDB (gud/gdb-mi, built-in)
 ;;
 
 ;;; Code:
@@ -785,6 +786,81 @@
   :mode "Dockerfile\\'"
   :config
   (setq dockerfile-use-projectile t))
+
+
+;;; ==========================================================================
+;;; 21. DEBUG — GDB (gud/gdb-mi, built-in only)
+;;; ==========================================================================
+
+;; Zero MELPA packages. Layout is set before `M-x gdb'; shortcuts use
+;; `C-c <letter>' (user-reserved) so typing in the *gud* console still works.
+;; Per-project compile command goes in .dir-locals.el, never global here.
+;; See testBeforeIntegration/gdb_setup.org and doc/workflows/cpp-debug-cheatsheet.md.
+
+;; --- Time-travel commands (named for clean unbind) -------------------------
+
+(defun my/gdb-record ()
+  "Start GDB `record' for reverse debugging."
+  (interactive)
+  (gud-basic-call "record"))
+
+(defun my/gdb-reverse-next ()
+  "Step backward over (`reverse-next')."
+  (interactive)
+  (gud-basic-call "reverse-next"))
+
+(defun my/gdb-reverse-step ()
+  "Step backward into (`reverse-step')."
+  (interactive)
+  (gud-basic-call "reverse-step"))
+
+(defun my/gdb-reverse-continue ()
+  "Continue backward to breakpoint (`reverse-continue')."
+  (interactive)
+  (gud-basic-call "reverse-continue"))
+
+;; --- Layout (applied before M-x gdb) ---------------------------------------
+
+(with-eval-after-load 'gdb-mi
+  (setq gdb-many-windows t   ;; source + stack + locals + breakpoints + IO
+	gdb-show-main t))    ;; show main source on startup
+
+;; --- Tooltips with dereferenced values -------------------------------------
+
+(with-eval-after-load 'gud
+  (add-hook 'gdb-mode-hook #'gud-tooltip-mode))
+
+;; --- Shortcuts (console-safe, no self-insert conflict) ---------------------
+;; Lowercase = forward (C-c r = run), uppercase = time-travel (C-c R = record).
+
+(with-eval-after-load 'gud
+  ;; GDB console buffer.
+  (define-key gud-mode-map (kbd "C-c n") #'gud-next)
+  (define-key gud-mode-map (kbd "C-c s") #'gud-step)
+  (define-key gud-mode-map (kbd "C-c c") #'gud-cont)
+  (define-key gud-mode-map (kbd "C-c b") #'gud-break)
+  (define-key gud-mode-map (kbd "C-c f") #'gud-finish)
+  (define-key gud-mode-map (kbd "C-c r") #'gud-run)
+  (define-key gud-mode-map (kbd "C-c p") #'gud-print)
+  (define-key gud-mode-map (kbd "C-c q") #'gud-quit)
+  ;; Source buffers while debugging.
+  (define-key gud-minor-mode-map (kbd "C-c n") #'gud-next)
+  (define-key gud-minor-mode-map (kbd "C-c s") #'gud-step)
+  (define-key gud-minor-mode-map (kbd "C-c c") #'gud-cont)
+  (define-key gud-minor-mode-map (kbd "C-c b") #'gud-break)
+  (define-key gud-minor-mode-map (kbd "C-c f") #'gud-finish)
+  (define-key gud-minor-mode-map (kbd "C-c r") #'gud-run)
+  (define-key gud-minor-mode-map (kbd "C-c p") #'gud-print)
+  (define-key gud-minor-mode-map (kbd "C-c q") #'gud-quit)
+  ;; Time-travel (GDB record).
+  (define-key gud-mode-map (kbd "C-c R") #'my/gdb-record)
+  (define-key gud-mode-map (kbd "C-c N") #'my/gdb-reverse-next)
+  (define-key gud-mode-map (kbd "C-c S") #'my/gdb-reverse-step)
+  (define-key gud-mode-map (kbd "C-c C") #'my/gdb-reverse-continue)
+  (define-key gud-minor-mode-map (kbd "C-c R") #'my/gdb-record)
+  (define-key gud-minor-mode-map (kbd "C-c N") #'my/gdb-reverse-next)
+  (define-key gud-minor-mode-map (kbd "C-c S") #'my/gdb-reverse-step)
+  (define-key gud-minor-mode-map (kbd "C-c C") #'my/gdb-reverse-continue))
 
 
 ;;; ==========================================================================

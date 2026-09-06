@@ -16,12 +16,11 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 - Started Sprint 12 (goal: creating a workflow to debug C++ efficiently)
 
 ### Changed
-- Test suite: module + integration + GDB workflow tiers (156 + 32 + 12 pass)
+- Test suite: module + integration + GDB workflow tiers (160 + 32 + 15 pass)
 - rr record SKIPs on aarch64 (architecture, not config); gdb record passes
-- init.el Sec.21 GDB block still pending (F-checks SKIP with TODO)
+- Implemented init.el Sec.21 GDB block (layout, C-c bindings, time-travel); F-checks now hard
 
 ### Blocked
-- init.el Sec.21 implementation (next step)
 - 3 commits ahead of origin/master, not yet pushed
 
 ### Next

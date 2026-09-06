@@ -7,8 +7,8 @@
 # Semantics:
 #   ok      — hard PASS
 #   not ok  — hard FAIL (script exits 1)
-#   SKIP    — arch-limited feature (gdb `record`, `rr` on aarch64) or
-#             pre-implementation check (init.el Sec.21). Never fails the suite.
+#   SKIP    — arch-limited feature (gdb `record`, `rr` on aarch64).
+#             Never fails the suite.
 #
 # Run with:
 #   bash test/test_gdb_workflow.sh
@@ -156,24 +156,23 @@ else
   skip "E.1 rr record" "rr or binary missing"
 fi
 
-# --- F. init.el Sec.21 expectations (WARN-only until implemented) ---
-# TODO: make these hard failures once the GDB block lands in src/init.el.
+# --- F. init.el Sec.21 expectations (hard failures) ---
 INIT_EL="$PROJECT_DIR/src/init.el"
 if [ -f "$INIT_EL" ]; then
   if grep -q 'gud-next' "$INIT_EL" && grep -q 'gud-minor-mode-map' "$INIT_EL"; then
     ok "F.1 init.el binds gud keys in console + source maps"
   else
-    skip "F.1 init.el binds gud keys in console + source maps" "TODO Sec.21 not yet in src/init.el"
+    fail "F.1 init.el binds gud keys in console + source maps" "Sec.21 must bind C-c letters in gud-mode-map + gud-minor-mode-map"
   fi
-  if grep -q 'my/gdb-record' "$INIT_EL"; then
+  if grep -q 'my/gdb-record' "$INIT_EL" && grep -q 'my/gdb-reverse-next' "$INIT_EL"; then
     ok "F.2 init.el defines time-travel commands"
   else
-    skip "F.2 init.el defines time-travel commands" "TODO Sec.21 not yet in src/init.el"
+    fail "F.2 init.el defines time-travel commands" "Sec.21 must define my/gdb-record, my/gdb-reverse-next/step/continue"
   fi
-  if grep -q 'gdb-many-windows' "$INIT_EL"; then
-    ok "F.3 init.el sets gdb-many-windows layout"
+  if grep -q 'gdb-many-windows' "$INIT_EL" && grep -q 'gud-tooltip-mode' "$INIT_EL"; then
+    ok "F.3 init.el sets gdb-many-windows layout + tooltips"
   else
-    skip "F.3 init.el sets gdb-many-windows layout" "TODO Sec.21 not yet in src/init.el"
+    fail "F.3 init.el sets gdb-many-windows layout + tooltips" "Sec.21 must set gdb-many-windows/gdb-show-main and gud-tooltip-mode"
   fi
   if grep -q 'setq compile-command "cmake -B build' "$INIT_EL"; then
     fail "F.4 init.el avoids global compile-command clobber" "Use .dir-locals.el per project"
