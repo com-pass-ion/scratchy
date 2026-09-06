@@ -341,6 +341,18 @@ All planned features, sorted by category.
    - Add audit logging for all bypass executions
    - Add tests for bypass functionality
 
+ ** TODO GDB Debug Workflow for C++
+    :PROPERTIES:
+    :Effort:   7
+    :Category: :debug:
+    :Sprint:   12
+    :END:
+    Review and implement testBeforeIntegration/gdb_setup.org — efficient C++ debugging.
+    Split 3+2+2 (core GDB + time-travel + docs/tests); exceeds 1-5 scale by user decision.
+    - Review gdb_setup.org, fix console-safe C-c bindings
+    - Add init.el Sec.21 DEBUG (gdb-mi layout, gud keybindings, time-travel)
+    - Add test/test_gdb_workflow.sh + cheat sheet, update dependencies (gdb, rr)
+
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
    :Effort:   2

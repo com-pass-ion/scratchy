@@ -3,6 +3,20 @@
 
 Current sprint, velocity, and retrospective.
 
+* Sprint 12
+
+** Sprint Goal
+Creating a workflow to debug C++ efficiently.
+
+** Kanban Board
+
+| TO DO | IN PROGRESS | DONE | BLOCKED |
+|-------+-------------+------+---------|
+|  | GDB Debug Workflow for C++ (7 SP) |  |  |
+
+** Planned Items
+- GDB Debug Workflow for C++ (7 SP): review + implement testBeforeIntegration/gdb_setup.org; init.el Sec.21, tests, cheat sheet, gdb/rr dependencies
+
 * Sprint 11
 
 ** Kanban Board

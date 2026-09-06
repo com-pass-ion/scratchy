@@ -5,6 +5,30 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
+## [2026-09-06] Session 9 — Sprint 12: GDB Debug Workflow (tests + docs + deps)
+
+### Done
+- Fixed testBeforeIntegration/gdb_setup.org (console-safe C-c bindings, .gdbinit, deref, record/rr, launch)
+- Added gdb + rr to install_emacs_config_dependencies.sh
+- Added test/test_gdb_workflow.sh (12 passed, 0 failed, 4 arch/TODO skips) and wired into test/run_tests.sh
+- Added doc/workflows/cpp-debug-cheatsheet.md for manual testing
+- Added BACKLOG item GDB Debug Workflow for C++ (7 SP, :debug:, Sprint 12)
+- Started Sprint 12 (goal: creating a workflow to debug C++ efficiently)
+
+### Changed
+- Test suite: module + integration + GDB workflow tiers (156 + 32 + 12 pass)
+- rr record SKIPs on aarch64 (architecture, not config); gdb record passes
+- init.el Sec.21 GDB block still pending (F-checks SKIP with TODO)
+
+### Blocked
+- init.el Sec.21 implementation (next step)
+- 3 commits ahead of origin/master, not yet pushed
+
+### Next
+- Implement init.el Sec.21, flip F-checks hard, re-run suite, push
+
+---
+
 ## [2026-09-01] Session 8 — Sprint 9: Org LaTeX + Mermaid + Safety Guard
 
 ### Done
