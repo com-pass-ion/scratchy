@@ -4,20 +4,20 @@
 
 * Overview
 
-Project-agnostic =.gdbinit= + builtin =gud/gdb-mi=.
+Project-agnostic GDB defaults (owned by init.el) + builtin =gud/gdb-mi=.
 
 GDB integration with zero external Emacs packages (MELPA). Works on
 Linux aarch64/x86_64 for forward debugging. Reverse debugging via =record=
-is best-effort; =rr= is x86_64 only. Includes pointer auto-deref,
-=C-c <letter>= keybindings (console-safe), and optional time-travel debugging.
+is best-effort; =rr= is x86_64 only. One entry point (=M-x my/cpp-debug=),
+built-in GDB abbreviations, values/arrays printed by default, no custom
+keys, no completions in GDB buffers.
 
 ** Files
 
 | File                     | Purpose                              |
 |--------------------------+--------------------------------------|
-| =.gdbinit=               | General GDB config (project-agnostic) |
-| =init.el= block          | Emacs config block (add to existing) |
-| =.dir-locals.el=         | Per-project compile command          |
+| =init.el= Sec.21 block   | All GDB config (defaults, entry point) |
+| =M-x my/cpp-debug=       | Build (Debug) + launch GDB on any project |
 
 * 1. Build - Debug Symbols
 
@@ -67,6 +67,8 @@ Note: =debug-file-directory= is intentionally left at its default
 (= /usr/lib/debug=) so system symbols still resolve. Do not set it to =.=.
 The old =define hook-quit / bt / end= auto-backtrace is omitted: it errors
 when no inferior is running.
+These sets are owned by =my/gdb-init-args= in init.el (§7) and passed as
+=-ex= flags — no .gdbinit file needed.
 
 * 3. Auto-Deref Pointers
 
@@ -106,47 +108,24 @@ Example target types (from =debug_cpp= demo, not general):
 (gdb) p std::get<std::string>(v)  # variant alternative by type
 #+END_EXAMPLE
 
-* 4. Keybindings (Approved)
+* 4. Driving GDB (Built-in Abbreviations Only)
 
-=C-c <letter>= shortcuts in =gud-mode-map= (GDB console) and
-=gud-minor-mode-map= (source buffers while debugging). Plain letters are
-intentionally avoided: single keys like =n/s/c/b= would shadow =self-insert=
-in the GDB console, making it impossible to type commands such as =run= or
-=print=. =C-c <letter>= is user-reserved, needs no Shift, and leaves console
-input intact.
+No custom keybindings. Type GDB's built-in abbreviations directly in the
+console — any unambiguous prefix works, so single letters suffice. (Custom
+single-key bindings were removed: they shadow =self-insert= in the console;
+=C-c <letter>= bindings were removed: they added no value over typing.)
 
-| Key     | Command      | GDB Equivalent | Notes           |
-|---------+--------------+----------------+-----------------|
-| =C-c n= | =gud-next=   | next           | Step over       |
-| =C-c s= | =gud-step=   | step           | Step into       |
-| =C-c c= | =gud-cont=   | continue       | Resume          |
-| =C-c b= | =gud-break=  | break          | Set breakpoint  |
-| =C-c f= | =gud-finish= | finish         | Step out        |
-| =C-c r= | =gud-run=    | run            | Restart program |
-| =C-c p= | =gud-print=  | print          | Print at point  |
-| =C-c q= | =gud-quit=   | quit           | Quit debugger   |
-
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'gud
-  ;; GDB console buffer.
-  (define-key gud-mode-map (kbd "C-c n") #'gud-next)
-  (define-key gud-mode-map (kbd "C-c s") #'gud-step)
-  (define-key gud-mode-map (kbd "C-c c") #'gud-cont)
-  (define-key gud-mode-map (kbd "C-c b") #'gud-break)
-  (define-key gud-mode-map (kbd "C-c f") #'gud-finish)
-  (define-key gud-mode-map (kbd "C-c r") #'gud-run)
-  (define-key gud-mode-map (kbd "C-c p") #'gud-print)
-  (define-key gud-mode-map (kbd "C-c q") #'gud-quit)
-  ;; Source buffers while debugging.
-  (define-key gud-minor-mode-map (kbd "C-c n") #'gud-next)
-  (define-key gud-minor-mode-map (kbd "C-c s") #'gud-step)
-  (define-key gud-minor-mode-map (kbd "C-c c") #'gud-cont)
-  (define-key gud-minor-mode-map (kbd "C-c b") #'gud-break)
-  (define-key gud-minor-mode-map (kbd "C-c f") #'gud-finish)
-  (define-key gud-minor-mode-map (kbd "C-c r") #'gud-run)
-  (define-key gud-minor-mode-map (kbd "C-c p") #'gud-print)
-  (define-key gud-minor-mode-map (kbd "C-c q") #'gud-quit))
-#+END_SRC
+| Type | Command    | Notes           |
+|------+------------+-----------------|
+| =n=  | next       | Step over       |
+| =s=  | step       | Step into       |
+| =c=  | continue   | Resume          |
+| =b=  | break      | Set breakpoint  |
+| =f=  | finish     | Step out        |
+| =r=  | run        | Restart program |
+| =p=  | print      | Print value     |
+| =bt= | backtrace  | Call stack      |
+| =q=  | quit       | Quit debugger   |
 
 Fallback: stock GUD keys =C-x C-a C-n/s/c/b/...= (from =gud-def=) always work.
 
@@ -160,37 +139,14 @@ Option B or plain forward debugging.
 
 #+BEGIN_EXAMPLE
 (gdb) record                    # start recording
-(gdb) reverse-next (rn)         # step backward over
-(gdb) reverse-step (rs)         # step backward into
-(gdb) reverse-continue (rc)     # continue backward to breakpoint
+(gdb) rn  (reverse-next)        # step backward over
+(gdb) rs  (reverse-step)        # step backward into
+(gdb) rc  (reverse-continue)    # continue backward to breakpoint
 (gdb) record stop               # stop recording
 #+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
-;; Named commands (autoload-safe, unbindable). C-c + Shift-letter is
-;; distinct from C-c + lowercase (e.g. C-c r = run vs C-c R = record).
-(defun my/gdb-record () (interactive) (gud-basic-call "record"))
-(defun my/gdb-reverse-next () (interactive) (gud-basic-call "reverse-next"))
-(defun my/gdb-reverse-step () (interactive) (gud-basic-call "reverse-step"))
-(defun my/gdb-reverse-continue () (interactive) (gud-basic-call "reverse-continue"))
-
-(with-eval-after-load 'gud
-  (define-key gud-mode-map (kbd "C-c R") #'my/gdb-record)
-  (define-key gud-mode-map (kbd "C-c N") #'my/gdb-reverse-next)
-  (define-key gud-mode-map (kbd "C-c S") #'my/gdb-reverse-step)
-  (define-key gud-mode-map (kbd "C-c C") #'my/gdb-reverse-continue)
-  (define-key gud-minor-mode-map (kbd "C-c R") #'my/gdb-record)
-  (define-key gud-minor-mode-map (kbd "C-c N") #'my/gdb-reverse-next)
-  (define-key gud-minor-mode-map (kbd "C-c S") #'my/gdb-reverse-step)
-  (define-key gud-minor-mode-map (kbd "C-c C") #'my/gdb-reverse-continue))
-#+END_SRC
-
-| Key     | Reverse Command | Forward Equivalent |
-|---------+-----------------+--------------------|
-| =C-c R= | =record=        | (start)            |
-| =C-c N= | =reverse-next=  | =C-c n=            |
-| =C-c S= | =reverse-step=  | =C-c s=            |
-| =C-c C= | =reverse-continue= | =C-c c=         |
+Type the abbreviations; no Elisp involved. Completions are disabled in GDB
+buffers by =my/gdb-no-completions=, so typing stays clean.
 
 ** Option B: rr (recommended if available)
 
@@ -205,36 +161,37 @@ Then in Emacs: =M-x gdb RET gdb -i=mi rr replay= (adjust for your rr version).
 
 * 6. Launch Workflow
 
-** From Emacs
-
-Set =(setq gdb-many-windows t)= before launching (toggling afterwards does
-not reliably relayout).
+One call from any project:
 
 #+BEGIN_EXAMPLE
-M-x compile                          # cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build
-M-x gdb RET gdb -i=mi --args ./build/<binary>   # launch debugger (replace <binary>)
-C-c b / C-c n / C-c s          # set bp, next, step
+M-x my/cpp-debug RET <binary>   # builds Debug, launches gdb -i=mi with init flags
+b / n / s / p                   # set bp, next, step, print (built-in abbreviations)
 #+END_EXAMPLE
 
-** From shell
-
-#+BEGIN_SRC sh
-cd /path/to/project
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build
-gdb --args ./build/<binary>
-#+END_SRC
-
-Note: =gdb_debug.sh= referenced in older drafts is not provided here; the
-shell snippet above is the canonical launcher. Do not add a project-specific
-launcher script to this agnostic doc.
+=my/cpp-debug= detects the project root, prompts for the binary (smart
+default: newest executable under =build/=), rebuilds with
+=cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build=,
+then launches =gdb -i=mi= with the §2 sets as =-ex= flags. No .gdbinit file,
+no compile-command, no shortcuts needed.
 
 * 7. Complete init.el Block
 
-Copy into =init.el= (batch-safe: no top-level =require=; no global
-=compile-command= override — use =.dir-locals.el= per project instead):
+Copy into =init.el= (=M-x my/cpp-debug= is the only entry point; no keys,
+no .gdbinit file — §2 sets travel as =-ex= flags):
 
 #+BEGIN_SRC emacs-lisp
 ;; --- GDB Built-in Setup (gud/gdb-mi) ---
+(defconst my/gdb-init-args
+  '("set print pretty on"
+    "set print array on"
+    "set print array-indexes on"
+    "set print elements 0"
+    "set print object on"
+    "set print address off"
+    "set pagination off"
+    "set breakpoint pending on"
+    "set confirm off"))
+
 ;; Layout (set before M-x gdb).
 (with-eval-after-load 'gdb-mi
   (setq gdb-many-windows t
@@ -244,43 +201,60 @@ Copy into =init.el= (batch-safe: no top-level =require=; no global
 (with-eval-after-load 'gud
   (add-hook 'gdb-mode-hook #'gud-tooltip-mode))
 
-;; Shortcuts (C-c <letter>: console-safe, no self-insert conflict).
+;; No completions in GDB buffers.
+(defun my/gdb-no-completions ()
+  (setq-local completion-at-point-functions
+              (remq 'tempel-expand completion-at-point-functions))
+  (setq-local corfu-auto nil)
+  (when (bound-and-true-p corfu-mode)
+    (corfu-mode -1)))
+
 (with-eval-after-load 'gud
-  (define-key gud-mode-map (kbd "C-c n") #'gud-next)
-  (define-key gud-mode-map (kbd "C-c s") #'gud-step)
-  (define-key gud-mode-map (kbd "C-c c") #'gud-cont)
-  (define-key gud-mode-map (kbd "C-c b") #'gud-break)
-  (define-key gud-mode-map (kbd "C-c f") #'gud-finish)
-  (define-key gud-mode-map (kbd "C-c r") #'gud-run)
-  (define-key gud-mode-map (kbd "C-c p") #'gud-print)
-  (define-key gud-mode-map (kbd "C-c q") #'gud-quit)
-  (define-key gud-minor-mode-map (kbd "C-c n") #'gud-next)
-  (define-key gud-minor-mode-map (kbd "C-c s") #'gud-step)
-  (define-key gud-minor-mode-map (kbd "C-c c") #'gud-cont)
-  (define-key gud-minor-mode-map (kbd "C-c b") #'gud-break)
-  (define-key gud-minor-mode-map (kbd "C-c f") #'gud-finish)
-  (define-key gud-minor-mode-map (kbd "C-c r") #'gud-run)
-  (define-key gud-minor-mode-map (kbd "C-c p") #'gud-print)
-  (define-key gud-minor-mode-map (kbd "C-c q") #'gud-quit)
-  ;; Time-travel (GDB record).
-  (define-key gud-mode-map (kbd "C-c R") #'my/gdb-record)
-  (define-key gud-mode-map (kbd "C-c N") #'my/gdb-reverse-next)
-  (define-key gud-mode-map (kbd "C-c S") #'my/gdb-reverse-step)
-  (define-key gud-mode-map (kbd "C-c C") #'my/gdb-reverse-continue)
-  (define-key gud-minor-mode-map (kbd "C-c R") #'my/gdb-record)
-  (define-key gud-minor-mode-map (kbd "C-c N") #'my/gdb-reverse-next)
-  (define-key gud-minor-mode-map (kbd "C-c S") #'my/gdb-reverse-step)
-  (define-key gud-minor-mode-map (kbd "C-c C") #'my/gdb-reverse-continue))
+  (add-hook 'gdb-mode-hook #'my/gdb-no-completions))
 
-(defun my/gdb-record () (interactive) (gud-basic-call "record"))
-(defun my/gdb-reverse-next () (interactive) (gud-basic-call "reverse-next"))
-(defun my/gdb-reverse-step () (interactive) (gud-basic-call "reverse-step"))
-(defun my/gdb-reverse-continue () (interactive) (gud-basic-call "reverse-continue"))
-#+END_SRC
+;; One entry point: build (Debug) + launch GDB.
+(defun my/cpp-debug-root ()
+  (require 'project nil t)
+  (let ((proj (and (fboundp 'project-current)
+                   (condition-case nil (project-current) (error nil)))))
+    (if (and proj (fboundp 'project-root))
+        (project-root proj)
+      default-directory)))
 
-Per-project compile command (=.dir-locals.el=, not global):
-#+BEGIN_SRC emacs-lisp
-((c++-mode . ((compile-command . "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build"))))
+(defun my/cpp-debug-default-binary (root)
+  (let ((dir (expand-file-name "build" root))
+        best best-time)
+    (when (file-directory-p dir)
+      (dolist (f (directory-files-recursively
+                  dir ".*$" nil
+                  (lambda (d) (not (string-match-p "CMakeFiles\\|_deps" d)))))
+        (when (and (file-regular-p f) (file-executable-p f)
+                   (not (string-match-p "\\.\\(o\\|a\\|so\\|cmake\\|txt\\|mk\\)$" f)))
+          (let ((mtime (file-attribute-modification-time (file-attributes f))))
+            (when (or (null best-time) (time-less-p best-time mtime))
+              (setq best f best-time mtime))))))
+    best))
+
+(defun my/cpp-debug (binary)
+  (interactive
+   (let ((root (my/cpp-debug-root)))
+     (list (read-file-name "Debug binary: "
+                           (expand-file-name "build" root)
+                           (my/cpp-debug-default-binary root) t))))
+  (let* ((root (my/cpp-debug-root))
+         (binary (expand-file-name binary))
+         (build-cmd (format "cmake -S %s -B %s/build -DCMAKE_BUILD_TYPE=Debug && cmake --build %s/build"
+                            (shell-quote-argument root)
+                            (shell-quote-argument root)
+                            (shell-quote-argument root)))
+         (flags (mapconcat (lambda (s) (concat "-ex " (shell-quote-argument s)))
+                           my/gdb-init-args " "))
+         (default-directory root))
+    (unless (zerop (call-process-shell-command
+                    build-cmd nil "*my-cpp-debug-build*" t))
+      (pop-to-buffer "*my-cpp-debug-build*")
+      (error "Debug build failed; fix errors before debugging"))
+    (gdb (concat "gdb -i=mi " flags " --args " (shell-quote-argument binary)))))
 #+END_SRC
 
 * 8. Troubleshooting
@@ -290,8 +264,7 @@ Per-project compile command (=.dir-locals.el=, not global):
 | No symbols                   | Rebuild with =-g -O0=, =-DCMAKE_BUILD_TYPE=Debug=; =rm -rf build= if cache is Release |
 | Pretty-print missing         | Enable libstdc++ pretty-printers (e.g. =libstdc++6-*-dbg= / gdb python printers); check =info pretty-printer= |
 | =record= slow / errors        | Expected on syscalls/AVX/large I/O; =record stop= and use forward debug or =rr= (x86_64 only) |
-| Tooltip shows address        | =set print address off= in .gdbinit      |
-| Keys type instead of stepping | Expected in console; use =C-c n/s/c/...= prefix, never plain letters |
-| =C-c r= vs =C-c R= confusion  | Lowercase = run, uppercase = record; use =which-key= to confirm |
-| GDB prompt asks for command  | Launch as =gdb -i=mi --args ./build/<binary>=, not bare =--args= |
-| Layout is single window      | Set =(setq gdb-many-windows t)= before =M-x gdb= |
+| Tooltip shows address        | =set print address off= (in =my/gdb-init-args=) |
+| Completions pop up in console | =my/gdb-no-completions= disables them in GDB buffers |
+| GDB prompt asks for command  | Use =M-x my/cpp-debug=; it builds the full =gdb -i=mi= command |
+| Layout is single window      | =my/cpp-debug= sets layout before launch; plain =M-x gdb= needs =(setq gdb-many-windows t)= first |

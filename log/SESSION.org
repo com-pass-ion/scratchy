@@ -14,6 +14,9 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 - Added doc/workflows/cpp-debug-cheatsheet.md for manual testing
 - Added BACKLOG item GDB Debug Workflow for C++ (7 SP, :debug:, Sprint 12)
 - Started Sprint 12 (goal: creating a workflow to debug C++ efficiently)
+- Simplified per feedback: dropped all GDB keybindings (built-in aliases only),
+  disabled completions in GDB buffers, single M-x my/cpp-debug entry with
+  integrated -ex flags (no .gdbinit file); tutorial rewritten
 
 ### Changed
 - Test suite: module + integration + GDB workflow tiers (160 + 32 + 15 pass)

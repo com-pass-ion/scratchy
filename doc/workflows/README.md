@@ -77,14 +77,13 @@ Sample files to test and verify Scratchy's workflow configurations.
 - [ ] Type `for` — For loop snippet works
 
 ### C++ Debug
-- `cpp-debug-cheatsheet.md` — GDB debugging workflow, keybindings, deref recipes
+- `cpp-debug-cheatsheet.md` — GDB debugging workflow (one entry point, abbreviations, deref recipes)
 
 **Usability Checklist:**
-- [ ] Build demo with `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug`
-- [ ] Press `M-x gdb RET gdb -i=mi --args ./build/<binary>` — 4-window layout opens
-- [ ] Press `C-c b` — Breakpoint set
-- [ ] Press `C-c n`/`C-c s` — Step over/into works
-- [ ] Type `print res` in `*gud*` — Text inserts (no command fires)
+- [ ] Press `M-x my/cpp-debug` — Debug build runs, GDB opens with 4-window layout
+- [ ] Type `b` — Breakpoint set
+- [ ] Type `n`/`s` — Step over/into works
+- [ ] Type `p res` — Value prints, no completions pop up
 
 ## Verification Summary
 

@@ -105,7 +105,7 @@ To modify agent behavior:
 | 18  | Session      | — (built-in)         | Desktop save (session persistence)                   |
 | 19  | Git Hooks    | —                    | Pre-commit test runner                               |
 | 20  | DevOps       | docker, dockerfile-mode | Docker container management                      |
-| 21  | Debug        | — (gud/gdb-mi built-in) | GDB layout, C-c keybindings, record time-travel |
+| 21  | Debug        | — (gud/gdb-mi built-in) | my/cpp-debug entry, print defaults, no keys |
 
 ** Keybinding Reference
 
@@ -219,7 +219,7 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 | 18. Session   |     3 | desktop-save-mode, auto-save-timeout, desktop-save    |
 | 19. Git Hooks |     3 | Pre-commit script, executable, function definition    |
 | 20. DevOps    |     5 | Docker command, keybinding, dockerfile-mode, projectile|
-| 21. Debug     |     4 | my/gdb-* commands, C-c keybindings, gdb-many-windows   |
+| 21. Debug     |     4 | my/cpp-debug, no-completions, no keys, gdb-many-windows |
 | 22. Coverage  |     3 | Coverage script, integration tests, templates         |
 
 *** Integration Test Coverage
