@@ -18,7 +18,7 @@
 - *Built-in first*: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
 - *Minimal packages*: Only add packages that provide clear, measurable value
 - *Single-file config*: Everything in =src/init.el=, no modular splitting
-- *Testable*: Every feature has an automated test (143 module + 32 integration + 12 GDB workflow tests, TAP format)
+- *Testable*: Every feature has an automated test (162 module + 32 integration + 17 GDB workflow checks, TAP format)
 - *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
 - *Documented*: Documentation lives in ./doc as WORKFLOWS.org & SCRUM.org
 - *Session-tracked*: Scrum-style changelog in log/SESSION.org
@@ -34,13 +34,14 @@
 #+begin_example
 emacs_from_scratch/
 ├── src/
-│   └── init.el                          # Main config (756 lines, 24 KB)
+│   └── init.el                          # Main config (972 lines, 36 KB)
 ├── test/
-│   ├── test_init.el                     # Module tests (667 lines, 20 KB, 143 tests)
-│   ├── test_integration.el              # Integration tests (157 lines, 5 KB, 32 tests)
-│   ├── test_gdb_workflow.sh             # GDB workflow tests (deps, build, gdb batch, record, rr)
+│   ├── test_init.el                     # Module tests (756 lines, 36 KB, 162 tests)
+│   ├── test_integration.el              # Integration tests (268 lines, 12 KB, 32 tests)
+│   ├── test_gdb_workflow.sh             # GDB workflow tests (deps, build, gdb batch, record, rr; 17 checks)
+│   ├── fixtures/debug_cpp/              # Hermetic GDB demo (no network; ~/debug_cpp used when present)
 │   ├── run_tests.sh                     # Test runner (module + integration + GDB workflow)
-│   └── coverage.sh                      # Coverage report (55 lines, 1.5 KB)
+│   └── coverage.sh                      # Coverage report
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
 │   ├── WORKFLOWS.org                    # Keybinding cheat sheet
@@ -190,9 +191,9 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 - *Format*: TAP (Test Anything Protocol)
 - *Runner*: =./test/run_tests.sh= (runs module + integration + GDB workflow)
 - *Exit Code*: 0 = pass, 1 = fail
-- *Module Tests*: 143
+- *Module Tests*: 162
 - *Integration Tests*: 32
-- *GDB Workflow Tests*: 12 pass + arch/TODO skips (=test/test_gdb_workflow.sh=)
+- *GDB Workflow Tests*: 17 checks (hard PASS/FAIL + arch SKIPs, =test/test_gdb_workflow.sh=)
 - *Coverage*: =./test/coverage.sh=
 
 *** Coverage by Section
@@ -212,15 +213,16 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 | 11. Terminal  |     2 | Eat command, keybinding                               |
 | 12. Project   |     3 | Project.el config, scaffolding function               |
 | 13. Build & Run |   12 | All functions, keybindings, compile settings          |
-| 14. Org-Mode  |     1 | Babel shell integration                               |
+| 14. Org-Mode  |     9 | Babel (5 langs), no-confirm, templates, cdlatex, preview |
 | 15. Language Modes |  12 | markdown, yaml, json, toml, nix, dockerfile           |
 | 16. Media & Documents | 7 | PDF tools, images, mermaid, SVG                |
 | 17. Tree-sitter |   3 | treesit-auto-install, global-treesit-auto-mode        |
 | 18. Session   |     3 | desktop-save-mode, auto-save-timeout, desktop-save    |
 | 19. Git Hooks |     3 | Pre-commit script, executable, function definition    |
-| 20. DevOps    |     5 | Docker command, keybinding, dockerfile-mode, projectile|
+| 20. DevOps    |     4 | Docker command, keybinding, dockerfile-mode           |
 | 21. Debug     |     6 | my/cpp-debug, no-completions, no keys, gdb-many-windows, cmake-root, gdb-command |
-| 22. Coverage  |     3 | Coverage script, integration tests, templates         |
+| 30. Meta: Coverage | 3 | Coverage script, templates                      |
+| 31. Meta: Safety Guard | 5 | validate script, RULES/WORKFLOW/PROMPT existence |
 
 *** Integration Test Coverage
 
@@ -238,7 +240,7 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 | Docker            |     2 | Docker command + dockerfile-mode                  |
 | Tree-sitter       |     2 | treesit-auto-install + global-treesit-auto-mode   |
 | Session           |     2 | Desktop-save-mode + desktop settings              |
-| C++ Debug (GDB)   |    12 | Deps, Debug build, deref, record, rr, Sec.21 binds |
+| C++ Debug (GDB)   |    17 | Deps, Debug build, deref, record, rr, Sec.21 binds |
 
 ** Dependencies
 

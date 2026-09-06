@@ -97,7 +97,7 @@ All planned features, sorted by category.
    - Add test for org-babel Shell
    - Add test for org-babel Emacs Lisp
 
-** TODO Org-mode LaTeX support
+** DONE Org-mode LaTeX support
    :PROPERTIES:
    :Effort:   2
    :Category: :lang:
@@ -167,7 +167,6 @@ All planned features, sorted by category.
    :Category:   :ai:
    :Sprint:   11
    :END:
-   :END:
    Research Open Code's architecture to understand minimal agentic workflow implementation.
    - Study Open Code's core architecture and design patterns
    - Analyze agent lifecycle management approach
@@ -179,7 +178,6 @@ All planned features, sorted by category.
    :Effort:   5
    :Category: :ai:
    :Sprint:   10
-   :END:
    :END:
    Research agentic workflow patterns for emulating SOA agents with full control in the agents module.
    - Research SOA (Service-Oriented Architecture) agent patterns
@@ -207,7 +205,7 @@ All planned features, sorted by category.
    :END:
    Created doc/workflows/ folder with sample files for each workflow.
 
-** TODO Scrum Document Safety Guard
+** DONE Scrum Document Safety Guard
    :PROPERTIES:
    :Effort:   1
    :Category: :process:

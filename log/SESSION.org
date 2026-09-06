@@ -5,6 +5,30 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
+## [2026-09-06] Session 10 — Sprint 12: Review fixes (correctness + hermetic GDB + docs)
+
+### Done
+- Fixed my/project-new: drop .projectile marker (project.el uses .git), git CLI init/add/commit instead of magit transient; shell-quote venv path
+- Unified my/cpp-run binary lookup on my/cpp-debug-default-binary; shell-quote all cmake/binary paths; shell-quote my/bash-run
+- Fixed GC comment lie: restore to 2MB on emacs-startup-hook; guard desktop-save-mode with noninteractive for batch tests
+- Portability: arch-independent poppler check (x86_64/aarch64/pkg-config), one-shot pdf-tools-install guard, mmdc via executable-find, drop dockerfile-use-projectile
+- Made my/git-pre-commit-hook nil-safe outside projects
+- Vendored hermetic GDB fixture test/fixtures/debug_cpp (line-aligned 100/139, variant, optional); test falls back to fixture when ~/debug_cpp absent; absolute DEMO_DIR; GCC14 variant regex
+- Renumbered module tests: Debug 23.x -> 21.x (mirrors init.el Sec.21), Coverage/Safety -> 30/31 meta; batch-safe desktop (18.1/12.1) and DevOps 20.5 tests; exact counts in coverage.sh; gitignore fixture build/
+- Docs: BACKLOG duplicate :END: removed, LaTeX + Safety Guard TODO -> DONE (Sprint 9 per retrospective); refreshed counts (162+32+17, 972-line init.el); DOD byte-compile instead of lint/type
+
+### Changed
+- Test suite: 162 module + 32 integration + 16 GDB passed, 1 SKIP (rr on aarch64), 0 failed; fixture run also 16 passed
+- Byte-compile: no errors (warnings only)
+
+### Blocked
+- (none)
+
+### Next
+- Sprint 12 review + retrospective; push commits
+
+---
+
 ## [2026-09-06] Session 9 — Sprint 12: GDB Debug Workflow (tests + docs + deps)
 
 ### Done

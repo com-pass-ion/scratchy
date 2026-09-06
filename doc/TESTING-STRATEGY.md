@@ -34,7 +34,7 @@ Three-tier testing approach: **Module**, **Integration**, and **Usability**.
 - Use `bound-and-true-p` to verify modes are enabled
 - Use `string-match-p` on source for critical configs (font, keybindings)
 
-**Current Coverage**: 143 module tests + 32 integration tests + 12 GDB workflow tests
+**Current Coverage**: 162 module tests + 32 integration tests + 17 GDB workflow checks
 
 **Example Tests**:
 ```elisp
@@ -135,9 +135,9 @@ Three-tier testing approach: **Module**, **Integration**, and **Usability**.
 
 | Tier | Current | Target | Status |
 |------|---------|--------|--------|
-| Module | 143 tests | 150+ | On track |
+| Module | 162 tests | 150+ | Done |
 | Integration | 32 tests | 10+ | Done |
-| GDB Workflow | 12 tests (+ arch/TODO skips) | 10+ | Done (rr/record SKIP on aarch64) |
+| GDB Workflow | 17 checks (+ arch SKIPs) | 10+ | Done (rr/record SKIP on aarch64; hermetic fixture in test/fixtures/debug_cpp) |
 | Usability | Manual | Checklist | Done (incl. cpp-debug-cheatsheet.md) |
 
 ## Future Enhancements

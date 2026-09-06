@@ -7,10 +7,9 @@ All code must satisfy these criteria before merging.
 | # | Criterion | Command | Status |
 |---|-----------|---------|--------|
 | 1 | Tests pass | `./test/run_tests.sh` | ✅ |
-| 2 | No lint errors | Elisp lint | ✅ |
-| 3 | No type errors | Elisp type check | ✅ |
-| 4 | No secrets | Security scan | ✅ |
-| 5 | Docs updated | Manual review | ✅ |
+| 2 | No byte-compile errors | `emacs --batch --eval '(byte-compile-file "src/init.el")'` (no `Error:` output) | ✅ |
+| 3 | No secrets | `grep -rni "password\|secret\|api.key" src/ test/ \|\| echo "No secrets found"` | ✅ |
+| 4 | Docs updated | Manual review | ✅ |
 
 ## Usage
 
@@ -20,11 +19,12 @@ Run all checks before commit:
 # 1. Run tests
 ./test/run_tests.sh
 
-# 2. Lint (if configured)
-emacs --batch -l init.el --eval '(check-declare-file "src/init.el")'
+# 2. Byte-compile (catches syntax/forward-ref errors; warnings OK, errors fail)
+emacs --batch --eval '(setq byte-compile-error-on-warn nil)' -f batch-byte-compile src/init.el
+rm -f src/init.elc
 
 # 3. Security scan (check for hardcoded secrets)
-grep -rn "password\|secret\|api.key\|token" src/init.el || echo "No secrets found"
+grep -rni "password\|secret\|api.key" src/ test/ || echo "No secrets found"
 ```
 
 ## Notes
