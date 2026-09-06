@@ -622,8 +622,11 @@
 ;;; 18. SESSION TESTS
 ;;; ==========================================================================
 
-(test--assert "18.1 desktop-save-mode is enabled"
-  (cl-assert (bound-and-true-p desktop-save-mode)))
+(test--assert "18.1 desktop-save-mode is enabled (or guarded in batch)"
+  (if noninteractive
+      ;; In --batch, session restore is intentionally off; verify source instead.
+      (cl-assert (string-match-p "desktop-save-mode 1" (test--get-init-el)))
+    (cl-assert (bound-and-true-p desktop-save-mode))))
 
 (test--assert "18.2 desktop-auto-save-timeout is 300"
   (cl-assert (= desktop-auto-save-timeout 300)))
@@ -664,71 +667,29 @@
 (test--assert "20.4 dockerfile-mode is installed"
   (cl-assert (package-installed-p 'dockerfile-mode)))
 
-(test--assert "20.5 dockerfile-use-projectile is configured"
-  (cl-assert (string-match-p "dockerfile-use-projectile" (test--get-init-el))))
+(test--assert "20.5 dockerfile-mode uses project.el (no projectile var)"
+  (cl-assert (not (string-match-p "dockerfile-use-projectile" (test--get-init-el)))))
 
 
 ;;; ==========================================================================
-;;; 21. COVERAGE REPORT TESTS
+;;; 21. DEBUG (GDB) TESTS — mirrors init.el Sec.21
 ;;; ==========================================================================
 
-(test--assert "21.1 coverage script exists"
-  (cl-assert (file-exists-p (expand-file-name "test/coverage.sh"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "21.2 coverage script is executable"
-  (cl-assert (file-executable-p (expand-file-name "test/coverage.sh"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "21.3 templates file exists"
-  (cl-assert (file-exists-p (expand-file-name "src/templates"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-
-;;; ==========================================================================
-;;; 22. SCRUM DOCUMENT SAFETY GUARD TESTS
-;;; ==========================================================================
-
-(test--assert "22.1 validate_process_files.sh exists"
-  (cl-assert (file-exists-p (expand-file-name "test/validate_process_files.sh"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "22.2 validate_process_files.sh is executable"
-  (cl-assert (file-executable-p (expand-file-name "test/validate_process_files.sh"
-                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "22.3 RULES.md exists"
-  (cl-assert (file-exists-p (expand-file-name "scrum/RULES.md"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "22.4 SCRUM-WORKFLOW.md exists"
-  (cl-assert (file-exists-p (expand-file-name "scrum/SCRUM-WORKFLOW.md"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "22.5 PROMPT.md exists"
-  (cl-assert (file-exists-p (expand-file-name "scrum/PROMPT.md"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-
-;;; ==========================================================================
-;;; 23. DEBUG (GDB) TESTS
-;;; ==========================================================================
-
-(test--assert "23.1 my/cpp-debug is defined"
+(test--assert "21.1 my/cpp-debug is defined"
   (cl-assert (fboundp 'my/cpp-debug)))
 
-(test--assert "23.2 my/gdb-no-completions is defined"
+(test--assert "21.2 my/gdb-no-completions is defined"
   (cl-assert (fboundp 'my/gdb-no-completions)))
 
-(test--assert "23.3 no custom GDB keybindings (built-in aliases only)"
+(test--assert "21.3 no custom GDB keybindings (built-in aliases only)"
   (cl-assert (not (string-match-p "gud-mode-map (kbd" (test--get-init-el))))
   (cl-assert (not (string-match-p "gud-minor-mode-map (kbd" (test--get-init-el)))))
 
-(test--assert "23.4 gdb-many-windows layout is configured"
+(test--assert "21.4 gdb-many-windows layout is configured"
   (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el)))
   (cl-assert (string-match-p "auto-load safe-path" (test--get-init-el))))
 
-(test--assert "23.5 my/cpp-cmake-root finds outermost CMake project"
+(test--assert "21.5 my/cpp-cmake-root finds outermost CMake project"
   (let* ((tmp (make-temp-file "dbgroot" t))
 	 (sub (expand-file-name "sub" tmp)))
     (make-directory sub t)
@@ -740,11 +701,53 @@
 	(cl-assert (equal (my/cpp-cmake-root sub) (file-name-as-directory tmp)))
       (delete-directory tmp t))))
 
-(test--assert "23.6 my/cpp-debug-gdb-command puts binary before -ex flags"
+(test--assert "21.6 my/cpp-debug-gdb-command puts binary before -ex flags"
   (let ((cmd (my/cpp-debug-gdb-command "/tmp/demo")))
     (cl-assert (string-match-p "\\`gdb -i=mi \"/tmp/demo\" -ex" cmd))
     (cl-assert (not (string-match-p "--args" cmd)))
     (cl-assert (string-match-p "-ex \"set auto-load safe-path /\"" cmd))))
+
+
+;;; ==========================================================================
+;;; 30. META: COVERAGE REPORT TESTS (test-only, not an init.el section)
+;;; ==========================================================================
+
+(test--assert "30.1 coverage script exists"
+  (cl-assert (file-exists-p (expand-file-name "test/coverage.sh"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "30.2 coverage script is executable"
+  (cl-assert (file-executable-p (expand-file-name "test/coverage.sh"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "30.3 templates file exists"
+  (cl-assert (file-exists-p (expand-file-name "src/templates"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+
+;;; ==========================================================================
+;;; 31. META: SCRUM DOCUMENT SAFETY GUARD TESTS (test-only)
+;;; ==========================================================================
+
+(test--assert "31.1 validate_process_files.sh exists"
+  (cl-assert (file-exists-p (expand-file-name "test/validate_process_files.sh"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "31.2 validate_process_files.sh is executable"
+  (cl-assert (file-executable-p (expand-file-name "test/validate_process_files.sh"
+                                                   (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "31.3 RULES.md exists"
+  (cl-assert (file-exists-p (expand-file-name "scrum/RULES.md"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "31.4 SCRUM-WORKFLOW.md exists"
+  (cl-assert (file-exists-p (expand-file-name "scrum/SCRUM-WORKFLOW.md"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
+
+(test--assert "31.5 PROMPT.md exists"
+  (cl-assert (file-exists-p (expand-file-name "scrum/PROMPT.md"
+                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 
 ;;; ==========================================================================

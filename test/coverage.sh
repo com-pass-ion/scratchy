@@ -21,20 +21,24 @@ echo "=== Module Tests per Section ==="
 grep -o "[0-9]*\.[0-9]*" "$TEST_FILE" | sort -t. -k1,1n -k2,2n | uniq -c | awk '{printf "Section %s: %s tests\n", $2, $1}'
 echo ""
 
-# Total module tests
-TOTAL_TESTS=$(grep -c "test--assert" "$TEST_FILE")
+# Total module tests (exact: count test invocations, not the macro definition)
+TOTAL_TESTS=$(grep -c '(test--assert "' "$TEST_FILE")
 echo "=== Total Module Tests: $TOTAL_TESTS ==="
 echo ""
 
 # Total integration tests
-INT_TESTS=$(grep -c "inttest--assert" "$INTEGRATION_FILE")
+INT_TESTS=$(grep -c '(inttest--assert "' "$INTEGRATION_FILE")
 echo "=== Total Integration Tests: $INT_TESTS ==="
 echo ""
 
-# Sections with/without tests
+# GDB workflow checks live in test/test_gdb_workflow.sh (shell TAP).
+echo "=== GDB Workflow Checks: see test/test_gdb_workflow.sh ==="
+echo ""
+
+# Sections with/without tests (1-21 mirror init.el; 30-31 are test-only meta tiers)
 echo "=== Module Section Coverage ==="
-for i in $(seq 1 21); do
-    COUNT=$(grep -o "${i}\.[0-9]*" "$TEST_FILE" | wc -l)
+for i in $(seq 1 21) 30 31; do
+    COUNT=$(grep -o "\"${i}\.[0-9]*" "$TEST_FILE" | wc -l)
     if [ "$COUNT" -gt 0 ]; then
         echo "  Section $i: $COUNT tests"
     else

@@ -1,8 +1,8 @@
 #!/bin/bash
 # test_gdb_workflow.sh — automated basic functionality test for the C++ GDB workflow.
 #
-# Demo project: ~/debug_cpp (in-place rebuild, per user approval).
-# Override with: GDB_DEMO_DIR=/path/to/demo ./test/run_tests.sh
+# Demo project: test/fixtures/debug_cpp (hermetic, no network).
+# ~/debug_cpp is used when present; override with GDB_DEMO_DIR.
 #
 # Semantics:
 #   ok      — hard PASS
@@ -17,7 +17,20 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-DEMO_DIR="${GDB_DEMO_DIR:-$HOME/debug_cpp}"
+# Hermetic default: in-repo fixture; ~/debug_cpp used when present (dev machine).
+# Override with: GDB_DEMO_DIR=/path/to/demo ./test/run_tests.sh
+if [ -n "${GDB_DEMO_DIR:-}" ]; then
+  DEMO_DIR="$GDB_DEMO_DIR"
+elif [ -d "$HOME/debug_cpp" ]; then
+  DEMO_DIR="$HOME/debug_cpp"
+else
+  DEMO_DIR="$PROJECT_DIR/test/fixtures/debug_cpp"
+fi
+# Absolute paths: the script cd's into DEMO_DIR later, so relative
+# GDB_DEMO_DIR values must not break -f "$BINARY" checks.
+if [ -d "$DEMO_DIR" ]; then
+  DEMO_DIR="$(cd "$DEMO_DIR" && pwd)"
+fi
 BINARY="$DEMO_DIR/build/debug_demo"
 
 PASS=0
@@ -120,10 +133,10 @@ if [ -f "$BINARY" ] && have gdb; then
     "$BINARY" \
     -ex 'break demonstrate_variant' -ex run -ex 'next' \
     -ex 'print v' -ex 'continue' -ex quit
-  if grep -q '\[0\] = "variant demo"' /tmp/gdb-c2.log; then
-    ok 'C.2 variant inspect (print v shows [0] = "variant demo")'
+  if grep -qE '\[0\] = "variant demo"|\[index 0\] = \{"variant demo"\}' /tmp/gdb-c2.log; then
+    ok 'C.2 variant inspect (print v shows active string alternative)'
   else
-    fail 'C.2 variant inspect (print v shows [0] = "variant demo")' "See /tmp/gdb-c2.log"
+    fail 'C.2 variant inspect (print v shows active string alternative)' "See /tmp/gdb-c2.log"
   fi
 
   run_to 120 /tmp/gdb-c3.log gdb -batch \

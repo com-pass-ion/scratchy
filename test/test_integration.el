@@ -251,8 +251,10 @@
 ;;; ==========================================================================
 ;; Desktop-save-mode provides session persistence.
 
-(inttest--assert "12.1 Desktop-save-mode is active"
-  (cl-assert (bound-and-true-p desktop-save-mode)))
+(inttest--assert "12.1 Desktop-save-mode is active (or guarded in batch)"
+  (if noninteractive
+      (cl-assert (string-match-p "desktop-save-mode 1" (inttest--get-init-el)))
+    (cl-assert (bound-and-true-p desktop-save-mode))))
 
 (inttest--assert "12.2 Desktop settings are configured"
   (cl-assert (= desktop-auto-save-timeout 300))
