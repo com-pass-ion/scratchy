@@ -12,10 +12,27 @@ Creating a workflow to debug C++ efficiently.
 
 | TO DO | IN PROGRESS | DONE | BLOCKED |
 |-------+-------------+------+---------|
-|  | GDB Debug Workflow for C++ (7 SP) |  |  |
+|  |  | GDB Debug Workflow for C++ (7 SP) |  |
 
 ** Planned Items
 - GDB Debug Workflow for C++ (7 SP): review + implement testBeforeIntegration/gdb_setup.org; init.el Sec.21, tests, cheat sheet, gdb/rr dependencies
+
+** Review
+
+*** Delivered
+- init.el Sec.21 DEBUG (built-in gud/gdb-mi only): my/gdb-init-args (-ex flags, no .gdbinit file), my/cpp-debug entry (Debug rebuild + launch), gdb-many-windows + gdb-show-main layout, gud-tooltip-mode, my/gdb-no-completions, outermost-CMake-root detection, newest-executable default, binary-first gdb command
+- Tests: 162 module (Sec.21: 6) + 32 integration + 17 GDB workflow checks — 16 passed, 1 SKIP (rr record on aarch64, architecture not config), 0 failed
+- Hermetic fixture test/fixtures/debug_cpp (no network; ~/debug_cpp used when present)
+- Tutorial testBeforeIntegration/gdb_setup.org rewritten (built-in aliases only, no custom keys) + doc/workflows/cpp-debug-cheatsheet.md
+- Deps: gdb + rr in install_emacs_config_dependencies.sh
+- Review fixes (Session 10): project-new git flow, unified cpp-run lookup, shell-quoting, GC restore, desktop batch guard, arch-independent poppler/mmdc, test renumbering (Debug 21.x, meta 30/31), doc count refresh
+
+*** Test report
+- ./test/run_tests.sh: 162 passed / 0 failed (module), 32 passed / 0 failed (integration), 16 passed / 0 failed / 1 skipped (GDB workflow)
+- Byte-compile src/init.el: no errors (warnings only)
+
+*** Commits
+- Sprint branch work pushed through 70dd58a (Sprint 12 start + GDB implementation + tutorial simplification + root/command fixes + review-fix sweep), working tree clean, master in sync with origin/master
 
 * Sprint 11
 

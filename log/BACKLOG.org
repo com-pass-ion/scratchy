@@ -339,7 +339,7 @@ All planned features, sorted by category.
    - Add audit logging for all bypass executions
    - Add tests for bypass functionality
 
- ** TODO GDB Debug Workflow for C++
+  ** DONE GDB Debug Workflow for C++
     :PROPERTIES:
     :Effort:   7
     :Category: :debug:
