@@ -26,3 +26,8 @@ emacs --batch -l "$SCRIPT_DIR/test_init.el"
 echo ""
 echo "--- Integration Tests ---"
 emacs --batch -l "$SCRIPT_DIR/test_integration.el"
+
+# Run GDB workflow tests (requires ~/debug_cpp demo; rr/record failures are SKIP on ARM)
+echo ""
+echo "--- GDB Workflow Tests ---"
+bash "$SCRIPT_DIR/test_gdb_workflow.sh"
