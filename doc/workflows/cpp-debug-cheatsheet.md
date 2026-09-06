@@ -87,5 +87,7 @@ On aarch64 a failure is architecture (suspect #1), not config.
 | Pretty-print missing | `info pretty-printer` in gdb |
 | Layout is single window | use `M-x my/cpp-debug` (sets layout first) |
 | Completions appear in `*gud*` | `my/gdb-no-completions` should be on `gdb-mode-hook` |
+| Raw `<No data fields>` values | pretty-printers blocked: check `show auto-load safe-path` is `/` (relaunch via `my/cpp-debug`) |
+| Second launch errors | kill old `*gud*` buffers first (a live session blocks relaunch) |
 
 See `testBeforeIntegration/gdb_setup.org` for the full reference.

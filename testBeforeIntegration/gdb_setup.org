@@ -177,6 +177,9 @@ then launches =gdb -i=mi= with the §2 sets as =-ex= flags. No .gdbinit file,
 no compile-command, no shortcuts needed. Root detection climbs to the
 outermost =CMakeLists.txt= with a =project()= call, so invoking from a
 subdirectory (e.g. =subproject/=) still builds the top-level project.
+The session lands in =*gud-<binary>*= (gud names it from the binary).
+Kill old =*gud*= buffers before relaunching: a live session makes a second
+launch error out ("already being debugged"), leaving the stale buffer behind.
 
 * 7. Complete init.el Block
 
@@ -185,8 +188,14 @@ no .gdbinit file — §2 sets travel as =-ex= flags):
 
 #+BEGIN_SRC emacs-lisp
 ;; --- GDB Built-in Setup (gud/gdb-mi) ---
+;; One entry point (M-x my/cpp-debug); no keys, no .gdbinit file.
+;; Double quotes (not shell escapes): gud splits the command line itself.
+;; BINARY first so gud names the session *gud-<binary>*.
 (defconst my/gdb-init-args
-  '("set print pretty on"
+  '(;; A project .gdbinit in cwd would otherwise narrow safe-path and
+    ;; block the libstdc++ pretty-printers (`print *unique_ptr' fails).
+    "set auto-load safe-path /"
+    "set print pretty on"
     "set print array on"
     "set print array-indexes on"
     "set print elements 0"
@@ -216,16 +225,36 @@ no .gdbinit file — §2 sets travel as =-ex= flags):
 (with-eval-after-load 'gud
   (add-hook 'gdb-mode-hook #'my/gdb-no-completions))
 
-;; One entry point: build (Debug) + launch GDB.
+;; Root detection: outermost CMakeLists.txt with project(), else
+;; project.el, else default-directory (so subdirs still build the top).
+(defun my/cpp-cmake-has-project (cmake-file)
+  (when (file-readable-p cmake-file)
+    (with-temp-buffer
+      (insert-file-contents cmake-file)
+      (goto-char (point-min))
+      (re-search-forward "^[ \t]*project[ \t]*(" nil t))))
+
+(defun my/cpp-cmake-root (dir)
+  (let ((dir (file-name-as-directory (expand-file-name dir)))
+        best)
+    (while (and dir (file-exists-p (expand-file-name "CMakeLists.txt" dir)))
+      (when (my/cpp-cmake-has-project (expand-file-name "CMakeLists.txt" dir))
+        (setq best dir))
+      (let ((parent (file-name-directory (directory-file-name dir))))
+        (setq dir (unless (equal parent dir) (file-name-as-directory parent)))))
+    best))
+
 (defun my/cpp-debug-root ()
   (require 'project nil t)
-  (let ((proj (and (fboundp 'project-current)
-                   (condition-case nil (project-current) (error nil)))))
-    (if (and proj (fboundp 'project-root))
-        (project-root proj)
-      default-directory)))
+  (let* ((proj (and (fboundp 'project-current)
+                    (condition-case nil (project-current) (error nil))))
+         (start (if (and proj (fboundp 'project-root))
+                    (project-root proj)
+                  default-directory)))
+    (or (my/cpp-cmake-root start) start)))
 
 (defun my/cpp-debug-default-binary (root)
+  "Newest executable under ROOT/build, or nil."
   (let ((dir (expand-file-name "build" root))
         best best-time)
     (when (file-directory-p dir)
@@ -239,6 +268,11 @@ no .gdbinit file — §2 sets travel as =-ex= flags):
               (setq best f best-time mtime))))))
     best))
 
+(defun my/cpp-debug-gdb-command (binary)
+  (let ((flags (mapconcat (lambda (s) (concat "-ex \"" s "\""))
+                          my/gdb-init-args " ")))
+    (concat "gdb -i=mi \"" (expand-file-name binary) "\" " flags)))
+
 (defun my/cpp-debug (binary)
   (interactive
    (let ((root (my/cpp-debug-root)))
@@ -247,18 +281,17 @@ no .gdbinit file — §2 sets travel as =-ex= flags):
                            (my/cpp-debug-default-binary root) t))))
   (let* ((root (my/cpp-debug-root))
          (binary (expand-file-name binary))
-         (build-cmd (format "cmake -S %s -B %s/build -DCMAKE_BUILD_TYPE=Debug && cmake --build %s/build"
+         (build (expand-file-name "build" root))
+         (build-cmd (format "cmake -S %s -B %s -DCMAKE_BUILD_TYPE=Debug && cmake --build %s"
                             (shell-quote-argument root)
-                            (shell-quote-argument root)
-                            (shell-quote-argument root)))
-         (flags (mapconcat (lambda (s) (concat "-ex " (shell-quote-argument s)))
-                           my/gdb-init-args " "))
+                            (shell-quote-argument build)
+                            (shell-quote-argument build)))
          (default-directory root))
     (unless (zerop (call-process-shell-command
                     build-cmd nil "*my-cpp-debug-build*" t))
       (pop-to-buffer "*my-cpp-debug-build*")
       (error "Debug build failed; fix errors before debugging"))
-    (gdb (concat "gdb -i=mi " flags " --args " (shell-quote-argument binary)))))
+    (gdb (my/cpp-debug-gdb-command binary))))
 #+END_SRC
 
 * 8. Troubleshooting

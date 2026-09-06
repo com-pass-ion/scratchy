@@ -219,7 +219,7 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 | 18. Session   |     3 | desktop-save-mode, auto-save-timeout, desktop-save    |
 | 19. Git Hooks |     3 | Pre-commit script, executable, function definition    |
 | 20. DevOps    |     5 | Docker command, keybinding, dockerfile-mode, projectile|
-| 21. Debug     |     5 | my/cpp-debug, no-completions, no keys, gdb-many-windows, cmake-root |
+| 21. Debug     |     6 | my/cpp-debug, no-completions, no keys, gdb-many-windows, cmake-root, gdb-command |
 | 22. Coverage  |     3 | Coverage script, integration tests, templates         |
 
 *** Integration Test Coverage

@@ -17,6 +17,10 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 - Simplified per feedback: dropped all GDB keybindings (built-in aliases only),
   disabled completions in GDB buffers, single M-x my/cpp-debug entry with
   integrated -ex flags (no .gdbinit file); tutorial rewritten
+- Fixed void project-project-root (my/cpp-build, my/cpp-run now use my/cpp-debug-root)
+- Fixed wrong-root builds (outermost CMake project detection) and GDB launch
+  (double-quoted -ex flags, binary-first command, safe-path reopened for
+  pretty-printers); fixed ~/.gdbinit safe-path (was narrowed to one file)
 
 ### Changed
 - Test suite: module + integration + GDB workflow tiers (160 + 32 + 15 pass)
