@@ -539,7 +539,7 @@
 (defun my/cpp-build ()
   "Build the current C++ project using CMake."
   (interactive)
-  (let ((root (project-project-root)))
+  (let ((root (my/cpp-debug-root)))
     (if root
 	(let ((build-cmd (format "cmake -S %s -B %s/build && cmake --build %s/build" root root root)))
 	  (compile build-cmd))
@@ -548,7 +548,7 @@
 (defun my/cpp-run ()
   "Build and run the current C++ project using CMake."
   (interactive)
-  (let ((root (project-project-root)))
+  (let ((root (my/cpp-debug-root)))
     (if root
 	(let* ((build-dir (expand-file-name "build" root))
 	       (files (when (file-exists-p build-dir)
