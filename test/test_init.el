@@ -714,15 +714,15 @@
 ;;; 23. DEBUG (GDB) TESTS
 ;;; ==========================================================================
 
-(test--assert "23.1 my/gdb-record is defined"
-  (cl-assert (fboundp 'my/gdb-record)))
+(test--assert "23.1 my/cpp-debug is defined"
+  (cl-assert (fboundp 'my/cpp-debug)))
 
-(test--assert "23.2 my/gdb-reverse-continue is defined"
-  (cl-assert (fboundp 'my/gdb-reverse-continue)))
+(test--assert "23.2 my/gdb-no-completions is defined"
+  (cl-assert (fboundp 'my/gdb-no-completions)))
 
-(test--assert "23.3 gud console-safe keybindings are configured"
-  (cl-assert (string-match-p "(kbd \"C-c n\")" (test--get-init-el)))
-  (cl-assert (string-match-p "gud-minor-mode-map" (test--get-init-el))))
+(test--assert "23.3 no custom GDB keybindings (built-in aliases only)"
+  (cl-assert (not (string-match-p "gud-mode-map (kbd" (test--get-init-el))))
+  (cl-assert (not (string-match-p "gud-minor-mode-map (kbd" (test--get-init-el)))))
 
 (test--assert "23.4 gdb-many-windows layout is configured"
   (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el))))

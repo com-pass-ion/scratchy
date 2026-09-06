@@ -159,25 +159,30 @@ fi
 # --- F. init.el Sec.21 expectations (hard failures) ---
 INIT_EL="$PROJECT_DIR/src/init.el"
 if [ -f "$INIT_EL" ]; then
-  if grep -q 'gud-next' "$INIT_EL" && grep -q 'gud-minor-mode-map' "$INIT_EL"; then
-    ok "F.1 init.el binds gud keys in console + source maps"
+  if grep -q "(defun my/cpp-debug " "$INIT_EL" && grep -q 'my/gdb-init-args' "$INIT_EL"; then
+    ok "F.1 init.el defines my/cpp-debug with integrated gdb flags"
   else
-    fail "F.1 init.el binds gud keys in console + source maps" "Sec.21 must bind C-c letters in gud-mode-map + gud-minor-mode-map"
+    fail "F.1 init.el defines my/cpp-debug with integrated gdb flags" "Sec.21 must define my/cpp-debug + my/gdb-init-args"
   fi
-  if grep -q 'my/gdb-record' "$INIT_EL" && grep -q 'my/gdb-reverse-next' "$INIT_EL"; then
-    ok "F.2 init.el defines time-travel commands"
+  if grep -q "(defun my/gdb-no-completions " "$INIT_EL"; then
+    ok "F.2 init.el disables completions in GDB buffers"
   else
-    fail "F.2 init.el defines time-travel commands" "Sec.21 must define my/gdb-record, my/gdb-reverse-next/step/continue"
+    fail "F.2 init.el disables completions in GDB buffers" "Sec.21 must define my/gdb-no-completions"
+  fi
+  if ! grep -q 'gud-mode-map (kbd' "$INIT_EL" && ! grep -q 'gud-minor-mode-map (kbd' "$INIT_EL"; then
+    ok "F.3 init.el has no custom GDB keybindings (built-in aliases only)"
+  else
+    fail "F.3 init.el has no custom GDB keybindings" "Sec.21 must not bind gud-mode-map/gud-minor-mode-map"
   fi
   if grep -q 'gdb-many-windows' "$INIT_EL" && grep -q 'gud-tooltip-mode' "$INIT_EL"; then
-    ok "F.3 init.el sets gdb-many-windows layout + tooltips"
+    ok "F.4 init.el sets gdb-many-windows layout + tooltips"
   else
-    fail "F.3 init.el sets gdb-many-windows layout + tooltips" "Sec.21 must set gdb-many-windows/gdb-show-main and gud-tooltip-mode"
+    fail "F.4 init.el sets gdb-many-windows layout + tooltips" "Sec.21 must set gdb-many-windows/gdb-show-main and gud-tooltip-mode"
   fi
   if grep -q 'setq compile-command "cmake -B build' "$INIT_EL"; then
-    fail "F.4 init.el avoids global compile-command clobber" "Use .dir-locals.el per project"
+    fail "F.5 init.el avoids global compile-command clobber" "Build command lives in my/cpp-debug, not global"
   else
-    ok "F.4 init.el avoids global compile-command clobber"
+    ok "F.5 init.el avoids global compile-command clobber"
   fi
 else
   skip "F. init.el checks" "src/init.el not found"
