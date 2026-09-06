@@ -5,6 +5,27 @@ Scrum-style changelog. Each session gets a dated entry. Newest on top.
 
 ---
 
+## [2026-09-06] Session 11 — Sprint 12 close + strategy backlog item
+
+### Done
+- Sprint 12 review: GDB item IN PROGRESS -> DONE, delivered scope + test report recorded, BACKLOG item closed (a767659)
+- Sprint 12 retrospective: lessons, action items, all 8 follow-up answers; velocity recomputed 6.6 -> 6.1, Sprint 12 row 7/7 (9142522)
+- Pushed review + retrospective to origin/master
+- Added BACKLOG item: Elisp vs Shell vs Config implementation strategy (2 SP suggested, :process:, awaiting estimate confirmation) with GDB-derived decision matrix (d3b3428)
+- End-of-session cleanup: removed generated test/fixtures/debug_cpp/build/
+
+### Changed
+- Phase: in-progress -> review -> retrospective (current_state.org)
+- Sprint 12 fully closed; Sprint 13 ballot proposed (Skill System 3 + Agent Bypass 2 + Time-box 2, or Mermaid alternative 3 + docs audit 2 + context 1)
+
+### Blocked
+- Sprint 13 selection awaiting user pick; strategy item SP unconfirmed; d3b3428 not yet pushed
+
+### Next
+- Planning-poker (confirm SP) -> sprint-planning (select Sprint 13) -> push d3b3428 with next batch
+
+---
+
 ## [2026-09-06] Session 10 — Sprint 12: Review fixes (correctness + hermetic GDB + docs)
 
 ### Done
