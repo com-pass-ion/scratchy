@@ -40,8 +40,11 @@
 ;;; ==========================================================================
 
 ;; Increase GC threshold to 16MB for faster startup.
-;; Normal threshold is restored after init via `startup-friendly-gc'.
+;; Restored to a modest value after init so interactive use stays responsive.
 (setq gc-cons-threshold (* 8 1024 1024 2))
+(add-hook 'emacs-startup-hook
+	  (lambda ()
+	    (setq gc-cons-threshold (* 2 1024 1024))))
 
 ;; --- Package system -------------------------------------------------------
 
@@ -461,6 +464,8 @@
 ;; --- New project scaffolding ----------------------------------------------
 ;; `M-x my/project-new' creates a C++ or Python project in ~/Projects/
 ;; with Git init, .gitignore, and appropriate boilerplate.
+;; project.el detects the project via the `.git/' directory created below,
+;; so no extra marker file is needed.
 
 (defun my/project-new ()
   "Create a new C++ or Python project with Git and Venv integration."
@@ -472,11 +477,6 @@
 	(error "Project directory already exists!")
       (progn
 	(make-directory proj-root t)
-
-	;; Create marker file for project.el detection.
-	(with-current-buffer (find-file-noselect (expand-file-name ".projectile" proj-root))
-	  (insert "")
-	  (save-buffer))
 
 	(cond
 	 ;; --- C++ project ------------------------------------------------
@@ -516,16 +516,20 @@
 	      (save-buffer))
 
 	    ;; Create virtualenv.
-	    (shell-command (format "python3 -m venv %s/.venv" proj-root))
+	    (shell-command (format "python3 -m venv %s"
+				   (shell-quote-argument (expand-file-name ".venv" proj-root))))
 
 	    (find-file main-py))))
 
-	;; Git init + initial commit.
-	(require 'magit)
+	;; Git init + initial commit via git CLI (non-interactive).
+	;; `magit-commit' opens a transient popup and cannot take a message
+	;; argument, so use plain git here.  The commit is best-effort:
+	;; it fails gracefully when user.name/user.email are unset.
 	(let ((default-directory proj-root))
-	  (magit-init)
-	  (magit-stage-all)
-	  (magit-commit "Initial commit"))
+	  (when (zerop (call-process "git" nil nil nil "init"))
+	    (call-process "git" nil nil nil "add" "-A")
+	    (ignore-errors
+	      (call-process "git" nil nil nil "commit" "-m" "Initial commit"))))
 
 	(message "Project %s created successfully!" name)))))
 
@@ -542,23 +546,32 @@
   (let* ((root (my/cpp-debug-root))
 	 (build (expand-file-name "build" root)))
     (if root
-	(let ((build-cmd (format "cmake -S %s -B %s && cmake --build %s" root build build)))
+	(let ((build-cmd (format "cmake -S %s -B %s && cmake --build %s"
+				 (shell-quote-argument root)
+				 (shell-quote-argument build)
+				 (shell-quote-argument build))))
 	  (compile build-cmd))
       (message "No project root found!"))))
 
 (defun my/cpp-run ()
-  "Build and run the current C++ project using CMake."
+  "Build and run the current C++ project using CMake.
+Uses `my/cpp-debug-default-binary' (newest executable under build/),
+the same lookup as `my/cpp-debug', so build and debug agree."
   (interactive)
   (let* ((root (my/cpp-debug-root)))
     (if root
 	(let* ((build-dir (expand-file-name "build" root))
-	       (files (when (file-exists-p build-dir)
-			 (directory-files build-dir t "^[a-zA-Z0-9_-]+$")))
-	       (binary (when files (car files)))
+	       (binary (my/cpp-debug-default-binary root))
 	       (run-cmd (if binary
 			    (format "cmake -S %s -B %s && cmake --build %s && %s"
-				    root build-dir build-dir (expand-file-name binary build-dir))
-			  (format "cmake -S %s -B %s && cmake --build %s" root build-dir build-dir))))
+				    (shell-quote-argument root)
+				    (shell-quote-argument build-dir)
+				    (shell-quote-argument build-dir)
+				    (shell-quote-argument binary))
+			  (format "cmake -S %s -B %s && cmake --build %s"
+				  (shell-quote-argument root)
+				  (shell-quote-argument build-dir)
+				  (shell-quote-argument build-dir)))))
 	  (compile run-cmd))
       (message "No project root found!"))))
 
@@ -579,7 +592,7 @@
   (interactive)
   (let ((file (buffer-file-name)))
     (if file
-	(compile (concat "bash " file))
+	(compile (concat "bash " (shell-quote-argument file)))
       (message "No file to run!"))))
 
 ;; --- Unified run command --------------------------------------------------
@@ -687,12 +700,33 @@
 ;; --- PDF Tools (pdf-tools) ------------------------------------------------
 ;; View, annotate, and search PDFs inside Emacs.
 ;; Requires: sudo apt install libpoppler-glib-dev libpoppler-private-dev
+;; Arch-independent guard: checks several known libpoppler locations
+;; (x86_64, aarch64) plus pkg-config, so RaspiOS works too.
+
+(defun my/pdf-poppler-available-p ()
+  "Non-nil when poppler dev libraries look installed."
+  (or (file-exists-p "/usr/lib/x86_64-linux-gnu/libpoppler-glib.so")
+      (file-exists-p "/usr/lib/aarch64-linux-gnu/libpoppler-glib.so")
+      (file-exists-p "/usr/lib/libpoppler-glib.so")
+      (and (executable-find "pkg-config")
+	   (zerop (call-process "pkg-config" nil nil nil
+				"--exists" "poppler-glib")))))
+
+(defun my/pdf-server-built-p ()
+  "Non-nil when the pdf-tools epdfinfo server is already compiled."
+  (ignore-errors
+    (let ((lib (locate-library "pdf-tools")))
+      (and lib
+	   (file-exists-p (expand-file-name "build/server/epdfinfo"
+					    (file-name-directory lib)))))))
 
 (use-package pdf-tools
-  :if (file-exists-p "/usr/lib/x86_64-linux-gnu/libpoppler-glib.so")
+  :if (my/pdf-poppler-available-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :config
-  (pdf-tools-install)
+  ;; One-shot server install: skip when already compiled.
+  (unless (my/pdf-server-built-p)
+    (pdf-tools-install))
   (setq pdf-view-display-size 'fit-width)
   (setq pdf-view-resize-factor 1.1))
 
@@ -709,11 +743,14 @@
 
 ;; --- Mermaid Mode ---------------------------------------------------------
 ;; Edit and preview Mermaid diagrams.
+;; mmdc location varies (npm -g bin); `executable-find' covers
+;; /usr/local/bin, /usr/bin, ~/.npm-global/bin via PATH.
 
 (use-package mermaid-mode
   :mode ("\\.mmd\\'" . mermaid-mode)
   :config
-  (setq mermaid-cli-path "/usr/local/bin/mmdc"))
+  (setq mermaid-cli-path (or (executable-find "mmdc")
+			     "/usr/local/bin/mmdc")))
 
 ;; --- SVG Tag Mode ---------------------------------------------------------
 ;; Render SVG images inline in Org-Mode.
@@ -745,8 +782,10 @@
 ;;; ==========================================================================
 
 ;; Save and restore sessions (files, buffers, windows) across restarts.
+;; Disabled in batch/noninteractive mode so tests never write .desktop files.
 
-(desktop-save-mode 1)
+(unless noninteractive
+  (desktop-save-mode 1))
 (setq desktop-auto-save-timeout 300)  ;; auto-save every 5 minutes
 (setq desktop-dirname user-emacs-directory)
 (setq desktop-base-file-name ".desktop")
@@ -759,15 +798,18 @@
 ;;; ==========================================================================
 
 ;; Run tests before each commit via git hook.
+;; Nil-safe: no-op outside a project or without the test runner.
 
 (defun my/git-pre-commit-hook ()
   "Run tests before git commit."
-  (let ((default-directory (project-root (project-current))))
+  (let* ((proj (ignore-errors (project-current)))
+	 (root (when proj (ignore-errors (project-root proj))))
+	 (default-directory (or root default-directory)))
     (when (file-exists-p "test/run_tests.sh")
       (message "Running pre-commit tests...")
       (if (zerop (call-process "bash" nil nil nil "test/run_tests.sh"))
-          (message "Pre-commit tests passed!")
-        (error "Pre-commit tests failed! Commit aborted.")))))
+	  (message "Pre-commit tests passed!")
+	(error "Pre-commit tests failed! Commit aborted.")))))
 
 ;; Note: To activate, symlink or copy to .git/hooks/pre-commit:
 ;;   ln -sf ../../test/git-pre-commit .git/hooks/pre-commit
@@ -784,9 +826,7 @@
   :bind ("C-c d" . docker))
 
 (use-package dockerfile-mode
-  :mode "Dockerfile\\'"
-  :config
-  (setq dockerfile-use-projectile t))
+  :mode "Dockerfile\\'")
 
 
 ;;; ==========================================================================
