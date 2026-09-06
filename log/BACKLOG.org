@@ -339,6 +339,20 @@ All planned features, sorted by category.
    - Add audit logging for all bypass executions
    - Add tests for bypass functionality
 
+** TODO Elisp vs Shell vs Config implementation strategy
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :process:
+   :END:
+   Decide where each capability lives: Elisp in init.el, external config file, or shell script.
+   GDB workflow showed the choice unlocks capabilities (data-driven -ex flags, shell builds, zero .gdbinit).
+   - Document criteria: Emacs state/interaction/entry points -> Elisp; subprocess/pipeline/outside-Emacs -> shell script; tool-native settings -> config file
+   - Codify GDB lessons: Elisp owns data (my/gdb-init-args) + entry points (my/cpp-debug); shell owns builds (cmake via compile); one owner per behavior
+   - Document negative cases: .gdbinit vs -ex flags (safe-path fight), .projectile ignored by project.el; positive case: src/templates read natively by tempel
+   - Define tests per layer: Elisp via test_init.el, shell via TAP scripts, config via existence/content checks
+   - Write doc/IMPLEMENTATION-STRATEGY.md with decision table and examples
+   - Propose rule reference in scrum/RULES.md (needs explicit approval per project rules)
+
   ** DONE GDB Debug Workflow for C++
     :PROPERTIES:
     :Effort:   7
