@@ -539,25 +539,26 @@
 (defun my/cpp-build ()
   "Build the current C++ project using CMake."
   (interactive)
-  (let ((root (my/cpp-debug-root)))
+  (let* ((root (my/cpp-debug-root))
+	 (build (expand-file-name "build" root)))
     (if root
-	(let ((build-cmd (format "cmake -S %s -B %s/build && cmake --build %s/build" root root root)))
+	(let ((build-cmd (format "cmake -S %s -B %s && cmake --build %s" root build build)))
 	  (compile build-cmd))
       (message "No project root found!"))))
 
 (defun my/cpp-run ()
   "Build and run the current C++ project using CMake."
   (interactive)
-  (let ((root (my/cpp-debug-root)))
+  (let* ((root (my/cpp-debug-root)))
     (if root
 	(let* ((build-dir (expand-file-name "build" root))
 	       (files (when (file-exists-p build-dir)
 			 (directory-files build-dir t "^[a-zA-Z0-9_-]+$")))
 	       (binary (when files (car files)))
 	       (run-cmd (if binary
-			    (format "cmake -S %s -B %s/build && cmake --build %s/build && %s"
-				    root root root (expand-file-name binary build-dir))
-			  (format "cmake -S %s -B %s/build && cmake --build %s/build" root root root))))
+			    (format "cmake -S %s -B %s && cmake --build %s && %s"
+				    root build-dir build-dir (expand-file-name binary build-dir))
+			  (format "cmake -S %s -B %s && cmake --build %s" root build-dir build-dir))))
 	  (compile run-cmd))
       (message "No project root found!"))))
 
@@ -839,14 +840,35 @@
 
 ;; --- One entry point: build (Debug) + launch GDB -----------------------------
 
+(defun my/cpp-cmake-has-project (cmake-file)
+  "Non-nil if CMAKE-FILE contains a top-level project() call."
+  (when (file-readable-p cmake-file)
+    (with-temp-buffer
+      (insert-file-contents cmake-file)
+      (goto-char (point-min))
+      (re-search-forward "^[ \t]*project[ \t]*(" nil t))))
+
+(defun my/cpp-cmake-root (dir)
+  "Outermost ancestor of DIR (including DIR) with a project() CMakeLists.txt.
+Returns nil when no CMake project is found above DIR."
+  (let ((dir (file-name-as-directory (expand-file-name dir)))
+	best)
+    (while (and dir (file-exists-p (expand-file-name "CMakeLists.txt" dir)))
+      (when (my/cpp-cmake-has-project (expand-file-name "CMakeLists.txt" dir))
+	(setq best dir))
+      (let ((parent (file-name-directory (directory-file-name dir))))
+	(setq dir (unless (equal parent dir) (file-name-as-directory parent)))))
+    best))
+
 (defun my/cpp-debug-root ()
-  "Project root via project.el, or `default-directory'."
+  "Best build root: outermost CMake project, else project.el, else `default-directory'."
   (require 'project nil t)
-  (let ((proj (and (fboundp 'project-current)
-		   (condition-case nil (project-current) (error nil)))))
-    (if (and proj (fboundp 'project-root))
-	(project-root proj)
-      default-directory)))
+  (let* ((proj (and (fboundp 'project-current)
+		    (condition-case nil (project-current) (error nil))))
+	 (start (if (and proj (fboundp 'project-root))
+		    (project-root proj)
+		  default-directory)))
+    (or (my/cpp-cmake-root start) start)))
 
 (defun my/cpp-debug-default-binary (root)
   "Newest executable under ROOT/build, or nil if none found."
@@ -875,10 +897,11 @@ abbreviations (n/s/c/b/p, rn/rs/rc) in the console."
 			   (my/cpp-debug-default-binary root) t))))
   (let* ((root (my/cpp-debug-root))
 	 (binary (expand-file-name binary))
-	 (build-cmd (format "cmake -S %s -B %s/build -DCMAKE_BUILD_TYPE=Debug && cmake --build %s/build"
+	 (build (expand-file-name "build" root))
+	 (build-cmd (format "cmake -S %s -B %s -DCMAKE_BUILD_TYPE=Debug && cmake --build %s"
 			    (shell-quote-argument root)
-			    (shell-quote-argument root)
-			    (shell-quote-argument root)))
+			    (shell-quote-argument build)
+			    (shell-quote-argument build)))
 	 (flags (mapconcat (lambda (s) (concat "-ex " (shell-quote-argument s)))
 			   my/gdb-init-args " "))
 	 (default-directory root))

@@ -727,6 +727,18 @@
 (test--assert "23.4 gdb-many-windows layout is configured"
   (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el))))
 
+(test--assert "23.5 my/cpp-cmake-root finds outermost CMake project"
+  (let* ((tmp (make-temp-file "dbgroot" t))
+	 (sub (expand-file-name "sub" tmp)))
+    (make-directory sub t)
+    (with-temp-file (expand-file-name "CMakeLists.txt" tmp)
+      (insert "cmake_minimum_required(VERSION 3.15)\nproject(Demo)\n"))
+    (with-temp-file (expand-file-name "CMakeLists.txt" sub)
+      (insert "add_library(foo foo.cpp)\n"))
+    (unwind-protect
+	(cl-assert (equal (my/cpp-cmake-root sub) (file-name-as-directory tmp)))
+      (delete-directory tmp t))))
+
 
 ;;; ==========================================================================
 ;;; SUMMARY
