@@ -2,8 +2,8 @@
 
 * Status
   :PROPERTIES:
-  :Phase:    retrospective
-  :Sprint:   12
+  :Phase:    backlog
+  :Sprint:   13
   :Updated:  2026-09-06
   :END:
 
