@@ -725,7 +725,8 @@
   (cl-assert (not (string-match-p "gud-minor-mode-map (kbd" (test--get-init-el)))))
 
 (test--assert "23.4 gdb-many-windows layout is configured"
-  (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el))))
+  (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el)))
+  (cl-assert (string-match-p "auto-load safe-path" (test--get-init-el))))
 
 (test--assert "23.5 my/cpp-cmake-root finds outermost CMake project"
   (let* ((tmp (make-temp-file "dbgroot" t))

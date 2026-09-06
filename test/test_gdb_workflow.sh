@@ -90,55 +90,64 @@ if [ -d "$DEMO_DIR" ]; then
   fi
 fi
 
-# --- C. CLI gdb batch (fixed-doc recipes, -nx isolates demo .gdbinit drift) ---
+# Stages C/D mirror real usage: gud runs gdb with cwd=project root and no
+# -nx, so a project .gdbinit narrows safe-path unless our -ex flags reopen it.
+# Flag order mirrors my/gdb-init-args in src/init.el.
+if [ -d "$DEMO_DIR" ]; then
+  cd "$DEMO_DIR" || { fail "chdir to demo" "$DEMO_DIR"; }
+fi
+
+# --- C. CLI gdb batch (fixed-doc recipes) ---
+# NOTE: assertions check log content, not gdb's exit code: a project .gdbinit
+# (e.g. hook-quit -> bt) can poison batch exit status while debugging works.
 if [ -f "$BINARY" ] && have gdb; then
-  if run_to 120 /tmp/gdb-c1.log gdb -nx -batch \
+  run_to 120 /tmp/gdb-c1.log gdb -batch \
+    -ex 'set auto-load safe-path /' \
     -ex 'set pagination off' -ex 'set confirm off' -ex 'set breakpoint pending on' \
     -ex 'set print pretty on' -ex 'set print object on' \
     "$BINARY" \
     -ex 'break src/main.cpp:100' -ex run -ex 'next' \
-    -ex 'print *res' -ex 'continue' -ex quit; then
-    if grep -q 'id_ = 42' /tmp/gdb-c1.log; then
-      ok "C.1 deref unique_ptr (*res shows id_ = 42)"
-    else
-      fail "C.1 deref unique_ptr (*res shows id_ = 42)" "See /tmp/gdb-c1.log"
-    fi
+    -ex 'print *res' -ex 'continue' -ex quit
+  if grep -q 'id_ = 42' /tmp/gdb-c1.log; then
+    ok "C.1 deref unique_ptr (*res shows id_ = 42)"
   else
-    fail "C.1 deref unique_ptr" "gdb batch failed; see /tmp/gdb-c1.log"
+    fail "C.1 deref unique_ptr (*res shows id_ = 42)" "See /tmp/gdb-c1.log"
   fi
 
-  if run_to 120 /tmp/gdb-c2.log gdb -nx -batch \
+  run_to 120 /tmp/gdb-c2.log gdb -batch \
+    -ex 'set auto-load safe-path /' \
     -ex 'set pagination off' -ex 'set confirm off' -ex 'set breakpoint pending on' \
     "$BINARY" \
-    -ex 'break main' -ex run \
-    -ex 'print std::get<0>(v)' -ex 'continue' -ex quit; then
-    if grep -q 'variant demo' /tmp/gdb-c2.log; then
-      ok "C.2 variant inspect (std::get<0>(v) shows variant demo)"
-    else
-      fail "C.2 variant inspect" "See /tmp/gdb-c2.log"
-    fi
+    -ex 'break demonstrate_variant' -ex run -ex 'next' \
+    -ex 'print v' -ex 'continue' -ex quit
+  if grep -q '\[0\] = "variant demo"' /tmp/gdb-c2.log; then
+    ok 'C.2 variant inspect (print v shows [0] = "variant demo")'
   else
-    fail "C.2 variant inspect" "gdb batch failed; see /tmp/gdb-c2.log"
+    fail 'C.2 variant inspect (print v shows [0] = "variant demo")' "See /tmp/gdb-c2.log"
   fi
 
-  if run_to 120 /tmp/gdb-c3.log gdb -nx -batch \
+  run_to 120 /tmp/gdb-c3.log gdb -batch \
+    -ex 'set auto-load safe-path /' \
     -ex 'set pagination off' -ex 'set confirm off' -ex 'set breakpoint pending on' \
     "$BINARY" \
     -ex 'break src/main.cpp:139' -ex run -ex 'next' \
-    -ex 'print safe_null' -ex 'continue' -ex quit; then
-    ok "C.3 optional inspect (safe_null printable without crash)"
+    -ex 'print safe_null' -ex 'continue' -ex quit
+  if grep -q 'std::optional' /tmp/gdb-c3.log; then
+    ok "C.3 optional inspect (safe_null prints as std::optional)"
   else
-    fail "C.3 optional inspect" "gdb batch failed; see /tmp/gdb-c3.log"
+    fail "C.3 optional inspect (safe_null prints as std::optional)" "See /tmp/gdb-c3.log"
   fi
 fi
 
 # --- D. gdb record smoke (best-effort; arch failures are SKIP) ---
 if [ -f "$BINARY" ] && have gdb; then
-  if run_to 60 /tmp/gdb-record.log gdb -nx -batch \
+  run_to 60 /tmp/gdb-record.log gdb -batch \
+    -ex 'set auto-load safe-path /' \
     -ex 'set pagination off' -ex 'set confirm off' \
     "$BINARY" \
     -ex 'break main' -ex run -ex record -ex 'next' \
-    -ex reverse-next -ex 'record stop' -ex continue -ex quit; then
+    -ex reverse-next -ex 'record stop' -ex continue -ex quit
+  if grep -q 'Reached end of recorded history' /tmp/gdb-record.log; then
     ok "D.1 gdb record reverse-step works"
   else
     skip "D.1 gdb record reverse-step" "Best-effort only; fails on some syscalls/AVX/aarch64. See /tmp/gdb-record.log"

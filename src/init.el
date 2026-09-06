@@ -802,7 +802,10 @@
 ;; --- GDB defaults, passed as `-ex' flags (no .gdbinit needed) ---------------
 
 (defconst my/gdb-init-args
-  '("set print pretty on"
+  '(;; Allow libstdc++ pretty-printers: a project .gdbinit in cwd would
+    ;; otherwise narrow safe-path and break `print *unique_ptr'.
+    "set auto-load safe-path /"
+    "set print pretty on"
     "set print array on"
     "set print array-indexes on"
     "set print elements 0"
@@ -885,6 +888,15 @@ Returns nil when no CMake project is found above DIR."
 	      (setq best f best-time mtime))))))
     best))
 
+(defun my/cpp-debug-gdb-command (binary)
+  "Full `gdb' command line for BINARY with `my/gdb-init-args' as -ex flags.
+Uses double quotes (not shell escapes): gud splits the command line
+itself with `split-string-and-unquote', which keeps quoted groups intact
+but does not process backslash escapes."
+  (let ((flags (mapconcat (lambda (s) (concat "-ex \"" s "\""))
+			  my/gdb-init-args " ")))
+    (concat "gdb -i=mi " flags " --args " (shell-quote-argument binary))))
+
 (defun my/cpp-debug (binary)
   "Build current project (Debug) and start GDB on BINARY.
 Prompts for BINARY with the newest executable under build/ as default.
@@ -902,15 +914,13 @@ abbreviations (n/s/c/b/p, rn/rs/rc) in the console."
 			    (shell-quote-argument root)
 			    (shell-quote-argument build)
 			    (shell-quote-argument build)))
-	 (flags (mapconcat (lambda (s) (concat "-ex " (shell-quote-argument s)))
-			   my/gdb-init-args " "))
 	 (default-directory root))
     (message "Building Debug: %s" build-cmd)
     (unless (zerop (call-process-shell-command
 		    build-cmd nil "*my-cpp-debug-build*" t))
       (pop-to-buffer "*my-cpp-debug-build*")
       (error "Debug build failed; fix errors before debugging"))
-    (gdb (concat "gdb -i=mi " flags " --args " (shell-quote-argument binary)))))
+    (gdb (my/cpp-debug-gdb-command binary))))
 
 
 ;;; ==========================================================================
