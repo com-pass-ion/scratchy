@@ -34,6 +34,38 @@ Creating a workflow to debug C++ efficiently.
 *** Commits
 - Sprint branch work pushed through 70dd58a (Sprint 12 start + GDB implementation + tutorial simplification + root/command fixes + review-fix sweep), working tree clean, master in sync with origin/master
 
+** Retrospective
+
+*** What went well
+- GDB workflow works on aarch64 with zero MELPA packages (built-in gud/gdb-mi only)
+- Hermetic fixture removed the ~/debug_cpp external dependency for fresh clones
+- Review-fix sweep caught real bugs (magit transient misuse, unquoted paths, batch-mode desktop) before release
+- Atomic commits, test-before-commit, all tiers green at every commit
+
+*** What could improve
+- 7 SP exceeded the 1-5 planning-poker scale (split 3+2+2 was planned but shipped as one item)
+- Doc counts (lines, test totals, average velocity) drifted stale across three files
+- Module test numbering (21/22/23) collided with init.el section numbers
+- GCC 14 variant pretty-printer format ([index 0]) differed from the documented ([0]) recipe
+
+*** Action items
+- Keep counts fresh via test/coverage.sh exact-count mode (done this sprint)
+- Verify package/tool availability during planning poker (lesson from org-mermaid + mmdc path)
+- Split oversized items before sprint start (no >5 SP items in Sprint 13)
+
+*** Follow-up Questions
+
+| Question | Answer |
+|----------|--------|
+| Did we meet the sprint goal? | Yes - C++ can be built (Debug) and debugged from one command with tutorial, tests, and cheat sheet |
+| What was the biggest blocker? | None blocking - GDB record/rr limits on aarch64 are architecture constraints, handled as SKIP |
+| What should we start doing? | Check tool/package availability and line-number-sensitive fixtures during planning |
+| What should we stop doing? | Shipping items larger than the 1-5 SP scale as a single backlog entry |
+| What should we continue doing? | Atomic commits, test-before-commit, hermetic fixtures, review-fix sweeps |
+| Any technical debt to address? | Sprint 5 empty follow-ups and Sprints 3/4 missing retrospectives remain historical gaps (left as-is) |
+| Any process improvements? | coverage.sh now counts exact invocations and covers meta tiers 30/31 |
+| Should we adjust velocity? | No - 7 SP delivered; rolling average recomputed to 6.1 SP/sprint |
+
 * Sprint 11
 
 ** Kanban Board
@@ -378,8 +410,9 @@ Creating a workflow to debug C++ efficiently.
 | 9      | 2026-09-01 | 6       | 3         | Org LaTeX + Safety Guard (Mermaid blocked) |
 | 10     | 2026-09-01 | 5       | 5         | Research agentic workflows for SOA agents  |
 | 11     | 2026-09-01 | 5       | 5         | Research Open Code architecture            |
+| 12     | 2026-09-06 | 7       | 7         | GDB Debug Workflow for C++                 |
 
-*Average*: 6.6 SP/Sprint
+*Average*: 6.1 SP/Sprint
 
 * Retrospective
 
