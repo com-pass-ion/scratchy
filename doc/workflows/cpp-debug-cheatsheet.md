@@ -45,8 +45,7 @@ Deref recipes:
 (gdb) p *res
 (gdb) p *res2
 (gdb) p safe_null
-(gdb) p std::get<0>(v)
-(gdb) p std::get<std::string>(v)
+(gdb) p v                 # shows active alternative: [0] = "variant demo"
 ```
 
 ## 3. CLI sanity (no Emacs, same behavior)

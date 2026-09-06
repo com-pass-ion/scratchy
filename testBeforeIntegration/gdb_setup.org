@@ -104,9 +104,11 @@ Example target types (from =debug_cpp= demo, not general):
 (gdb) p *ref_count_       # deref shared_ptr target
 (gdb) p safe_null         # inspect optional first; only deref if engaged
 (gdb) p **safe_null       # only if safe_null holds non-null int*
-(gdb) p std::get<0>(v)    # variant alternative by index
-(gdb) p std::get<std::string>(v)  # variant alternative by type
+(gdb) p v                 # pretty printers show active alternative ([0] = "variant demo")
 #+END_EXAMPLE
+
+Note: =std::get<0>(v)= / =std::get<T>(v)= only work if that specialization
+was instantiated in the binary; plain =p v= always works with pretty-printers.
 
 * 4. Driving GDB (Built-in Abbreviations Only)
 
