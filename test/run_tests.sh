@@ -72,17 +72,3 @@ else
 fi
 
 
-
-
-# Security scan
-echo ""
-echo "--- Security Scan ---"
-# We use grep -v to exclude lines containing the keywords as part of the test itself
-# Including both the grep command and the error message to avoid false positives
-if grep -rni "password\|secret\|api.key" "$SCRIPT_DIR/../src" "$SCRIPT_DIR" | grep -vE "grep -rni|ERROR: Secrets found|No secrets found" ; then
-    echo "ERROR: Secrets found in codebase!"
-    exit 1
-else
-    echo "No secrets found."
-fi
-

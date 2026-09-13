@@ -64,7 +64,7 @@ emacs_from_scratch/
 │   ├── BACKLOG.org                      # Product Backlog
 │   ├── SPRINT.org                       # Sprint Board, Velocity, Retrospective
 │   └── SESSION.org                      # Session changelog
-├── current_state.org                    # Current Scrum phase status
+├── sprint_<N>_backlog_<DD_MM_YYYY>.scrum  # Current sprint phase status
 ├── opencode.json                        # OpenCode agent config
 ├── install_emacs_config_dependencies.sh # System deps installer (44 lines, 800 B)
 ├── .gitignore                           # Git ignore rules

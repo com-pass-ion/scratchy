@@ -9,7 +9,7 @@ See [RULES.md](RULES.md) for the complete ruleset.
 Key rules (summary):
 - English only, no features without approval
 - Test before commit, commit after every step, atomic commits
-- Update `current_state.org` on phase changes
+- Update the current sprint's `.scrum` file on phase changes
 - Update `log/SESSION.org` before each new session
 - On token limits: STOP, commit, log state, start fresh
 - Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without approval
@@ -101,14 +101,14 @@ Key rules (summary):
 
 ## File Structure
 
-- `current_state.org` - Current Scrum phase status (update on every phase change)
+- `sprint_<N>_backlog_<DD_MM_YYYY>.scrum` - Current sprint phase status (update on every phase change)
 - `log/BACKLOG.org` - Product backlog with all planned items
 - `log/SPRINT.org` - Current sprint, velocity, and retrospective
 - `log/SESSION.org` - Session-by-session changelog
 
 ## Phase Changes
 
-Update `current_state.org` when transitioning between phases:
+Update the current sprint's `.scrum` file when transitioning between phases:
 
 | Event                  | Phase                | Action                                          |
 |------------------------|----------------------|------------------------------------------------|

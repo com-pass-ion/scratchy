@@ -28,8 +28,8 @@ Quick reference of all rules to follow when working on this project.
 ## Agent Safety
 
 - **Context Limits**: If session runs out of tokens or context becomes too large, STOP. Do not continue with partial work. Commit what exists, log state in SESSION.org, and start fresh in a new session.
-- **Session Restart Protocol**: On session restart, read `current_state.org` first. Do not re-read all project files. Only read files needed for the current task.
-- **Minimal Reads**: When resuming work, read only: `current_state.org`, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
+- **Session Restart Protocol**: On session restart, read the current sprint's `.scrum` file first. Do not re-read all project files. Only read files needed for the current task.
+- **Minimal Reads**: When resuming work, read only: the current sprint's `.scrum` file, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
 - **Prompt Complexity**: Keep prompts simple and direct. Complex multi-step prompts fail on smaller models (32B). Break work into atomic units with clear stop conditions.
 - **Fail-Safe Commits**: If any operation fails (edit, test, commit), stop immediately. Do not attempt workarounds that bypass the fail-safe. Commit partial progress and report.
 - **Scrum Document Safety**: Never modify `scrum/RULES.md`, `scrum/SCRUM-WORKFLOW.md`, or `scrum/PROMPT.md` without explicit user approval. These are process-defining files that affect all future sessions. Propose changes first, wait for confirmation.
@@ -43,7 +43,7 @@ Quick reference of all rules to follow when working on this project.
 - **Sprint Goal**: Each sprint must have a clear, measurable goal
 - **User Selects Items**: The user must explicitly select which backlog items to include in each sprint. The agent may suggest items, but must wait for user approval before finalizing sprint planning.
 - **Capacity**: 2-4 hours per session
-- **Phase Tracking**: Update `current_state.org` on every phase change
+- **Phase Tracking**: Update the current sprint's `.scrum` file on every phase change
 - **Sprint Updates**: Update `log/SPRINT.org` during sprint (velocity, kanban, retrospective)
 - **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
 - **Actionable Retros**: Every point in "What could improve" must be converted into a backlog task or a concrete rule change. No "improvement" remains just a thought.
@@ -62,7 +62,7 @@ Quick reference of all rules to follow when working on this project.
 
 | File | Purpose |
 |------|---------|
-| `current_state.org` | Current Scrum phase (update on phase change) |
+| `sprint_<N>_backlog_<DD_MM_YYYY>.scrum` | Current sprint phase status (update on phase change) |
 | `log/BACKLOG.org` | Product backlog with all planned items |
 | `log/SPRINT.org` | Current sprint, velocity, retrospective |
 | `log/SESSION.org` | Session-by-session changelog |

@@ -213,7 +213,6 @@
 ;; --- Highlight current line ------------------------------------------------
 
 (defvar hl-line-sticky-flag)
-(defvar hl-line-sticky-flag)
 (global-hl-line-mode 1)
 (setq hl-line-sticky-flag nil)
   ;; only highlight in active window
