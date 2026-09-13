@@ -9,7 +9,6 @@ Quick reference of all rules to follow when working on this project.
 ## Features
 
 - **No Features Without Approval**: Only implement features when explicitly approved. Only add new items to backlog with confirmation.
-- **Planning Poker**: Estimation before sprint planning for new items. Agent suggests SP estimates for each item, user confirms or suggests own estimates. Final estimation requires consensus.
 - **Backlog Tasks: DONE not Deleted**: Tasks removed from backlog must be marked as DONE, not deleted
 
 ## Quality
@@ -42,17 +41,34 @@ Quick reference of all rules to follow when working on this project.
 - **Sprint Goal**: Each sprint must have a clear, measurable goal
 - **User Selects Items**: The user must explicitly select which backlog items to include in each sprint. The agent may suggest items, but must wait for user approval before finalizing sprint planning.
 - **Capacity**: 2-4 hours per session
-- **Commit Convention**: Use `<type>(<scope>): <desc> [S<N>] [Xsp] [#item]` format
-- **Sprint Updates**: Update `scrum/SPRINT.org` during sprint (velocity)
-- **Sprint Completion**: When sprint is done, update velocity table and add retrospective before starting next sprint
-- **Actionable Retros**: Every point in "What could improve" must be converted into a backlog task or a concrete rule change. No "improvement" remains just a thought.
-- **Follow-up Questions**: After every sprint, discuss findings with user and add action items to `scrum/BACKLOG.org`
+- **Review Findings**: After sprint review, discuss findings with user and add action items to `scrum/BACKLOG.org`
+
+## Commit Convention
+
+Extend conventional commits with sprint metadata:
+```
+<type>(<scope>): <description> [S<N>] [Xsp] [#item]
+```
+
+- `[S<N>]` — Sprint number (required for sprint tracking)
+- `[Xsp]` — Story point estimate (optional)
+- `[#item]` — Backlog item reference (optional)
+
+Examples:
+```
+feat(lsp): add eglot for nix-mode [S13] [3sp] [#nix-lsp]
+fix(debug): correct gdb binary path [S13] [1sp]
+chore(deps): add ripgrep to installer [S13] [1sp]
+docs(scrum): remove kanban process [S13] [1sp]
+```
 
 ## File Locations
 
 | File | Purpose |
 |------|---------|
 | `scrum/BACKLOG.org` | Product backlog with all planned items |
-| `scrum/SPRINT.org` | Velocity tracking |
+| `scrum/SPRINT.org` | Velocity tracking (historical) |
 | `doc/SCRUM.org` | Technical specification and workflow |
 | `scrum/SCRUM-WORKFLOW.md` | Generic Scrum process documentation |
+| `scrum/RULES.md` | This file — all project rules |
+| `scrum/PROMPT.md` | Agent entry prompt (auto-loaded) |
