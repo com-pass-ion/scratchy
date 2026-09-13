@@ -10,17 +10,17 @@ You are working on an Emacs configuration project called "Scratchy".
 
 - `src/init.el` - Main config (single file)
 - `test/` - Tests (run with `./test/run_tests.sh`)
-- `doc/` - Documentation (SCRUM.org, WORKFLOWS.org)
+- `doc/` - Documentation (SCRUM.org)
 - `log/` - Sprint logs (BACKLOG.org, SPRINT.org, SESSION.org)
 - `scrum/` - Generic Scrum process
-- `current_state.org` - Current phase status
+- `sprint_13_backlog_06_09_2026.scrum` - Current phase status
 
 ## Rules
 
 1. English only in all documentation
 2. No features without explicit approval
 3. Test before commit (`./test/run_tests.sh`)
-4. Update `current_state.org` on phase changes
+4. Update `sprint_13_backlog_06_09_2026.scrum` on phase changes
 5. Commit after every step with descriptive message
 6. Atomic commits: one logical change per commit, never mix unrelated changes
 7. Update `log/SESSION.org` with session summary before each new session
@@ -28,7 +28,7 @@ You are working on an Emacs configuration project called "Scratchy".
 9. Test strategy: verify functionality, not just code presence
 10. When adding packages with system deps, update `install_emacs_config_dependencies.sh`
 11. On token/context limits: STOP, commit, log state, start fresh
-12. On restart: read `current_state.org` only, not all project files
+12. On restart: read `sprint_13_backlog_06_09_2026.scrum` only, not all project files
 13. Keep prompts simple for 32B models — break work into atomic units
 14. Never modify RULES.md, SCRUM-WORKFLOW.md, or PROMPT.md without explicit approval
 15. User selects sprint items — agent suggests, user approves
@@ -40,10 +40,10 @@ backlog → planning-poker → sprint-planning → in-progress → review → re
 
 ## Current State
 
-Read `current_state.org` to check current phase and sprint.
+Read `sprint_13_backlog_06_09_2026.scrum` to check current phase and sprint.
 
 ## Key Commands
 
 - Run tests: `./test/run_tests.sh`
 - Open config: `src/init.el`
-- Check status: `current_state.org`
+- Check status: `sprint_13_backlog_06_09_2026.scrum`
