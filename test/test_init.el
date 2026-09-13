@@ -628,11 +628,11 @@
       (cl-assert (string-match-p "desktop-save-mode 1" (test--get-init-el)))
     (cl-assert (bound-and-true-p desktop-save-mode))))
 
-(test--assert "18.2 desktop-auto-save-timeout is 300"
-  (cl-assert (= desktop-auto-save-timeout 300)))
+(test--assert "18.2 desktop-auto-save-timeout is nil"
+  (cl-assert (eq desktop-auto-save-timeout nil)))
 
-(test--assert "18.3 desktop-save is t"
-  (cl-assert (eq desktop-save t)))
+(test--assert "18.3 desktop-save is ask"
+  (cl-assert (eq desktop-save 'ask)))
 
 
 ;;; ==========================================================================

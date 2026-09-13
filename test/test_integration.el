@@ -257,8 +257,8 @@
     (cl-assert (bound-and-true-p desktop-save-mode))))
 
 (inttest--assert "12.2 Desktop settings are configured"
-  (cl-assert (= desktop-auto-save-timeout 300))
-  (cl-assert (eq desktop-save t)))
+  (cl-assert (eq desktop-auto-save-timeout nil))
+  (cl-assert (eq desktop-save 'ask)))
 
 
 ;;; ==========================================================================

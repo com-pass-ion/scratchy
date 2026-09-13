@@ -49,11 +49,11 @@
 ;; --- Package system -------------------------------------------------------
 
 (require 'package)
+(package-initialize) ;; Initialize early to synchronize package state
 (setq package-archives
       '(("nongnu" . "https://elpa.nongnu.org/nongnu/")   ;; nongnu ELPA
 	("elpa"   . "https://elpa.gnu.org/packages/")     ;; GNU ELPA
 	("melpa"  . "https://melpa.org/packages/")))      ;; MELPA
-(package-initialize)
 
 ;; Bootstrap use-package if not installed.
 (unless (package-installed-p 'use-package)
@@ -75,9 +75,12 @@
       inhibit-startup-echo-area-message t
       use-file-dialog nil)
 
+(setq use-dialog-box nil)          ;; force yes-or-no to minibuffer echo area
+(setq use-short-answers t)         ;; y/n instead of yes/no
 (menu-bar-mode -1)       ;; no menu bar
 (tool-bar-mode -1)       ;; no tool bar
 (scroll-bar-mode -1)     ;; no scroll bar
+(tab-bar-mode -1)        ;; no tab bar
 (tooltip-mode -1)        ;; no tooltips
 
 ;; --- Font -----------------------------------------------------------------
@@ -137,7 +140,9 @@
 ;; `C-x C-r' opens a list of recently opened files.
 
 (recentf-mode)
-(setq recentf-max-saved-items 100)
+(defvar recentf-max-saved-items)
+(with-eval-after-load 'recentf
+  (setq recentf-max-saved-items 100))
 (global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
 ;; --- Which function -------------------------------------------------------
@@ -184,6 +189,7 @@
 ;; --- Theme ----------------------------------------------------------------
 ;; modus-vivendi is built-in. Colors are overridden to match Tokyo Night.
 
+(defvar modus-themes-common-palette-overrides)
 (setq modus-themes-common-palette-overrides
       '((bg-main  "#1a1b26")   ;; dark background
 	(fg-main  "#c0caf5")   ;; light foreground
@@ -206,8 +212,11 @@
 
 ;; --- Highlight current line ------------------------------------------------
 
+(defvar hl-line-sticky-flag)
+(defvar hl-line-sticky-flag)
 (global-hl-line-mode 1)
-(setq hl-line-sticky-flag nil)  ;; only highlight in active window
+(setq hl-line-sticky-flag nil)
+  ;; only highlight in active window
 
 ;; --- Paren matching -------------------------------------------------------
 
@@ -267,6 +276,13 @@
   (corfu-auto-delay 0.1)    ;; show after 100ms
   (corfu-auto-prefix 1)     ;; start after 1 char
   :init (global-corfu-mode))
+
+;; For terminal Emacs (non-GUI), corfu needs a backend that renders in the
+;; same frame rather than a separate child frame.
+(unless (display-graphic-p)
+  (use-package corfu-terminal
+    :ensure t
+    :init (corfu-terminal-mode +1)))
 
 ;; --- Completion backends (Cape) ------------------------------------------
 ;; Adds more completion sources to completion-at-point.
@@ -357,6 +373,7 @@
 ;; Eglot connects to language servers for code intelligence.
 ;; Servers: pyright (Python), clangd (C/C++), jdtls (Java), bash-ls.
 
+(defvar eglot-autoshutdown)
 (setq eglot-autoshutdown t)  ;; kill server when last buffer closes
 
 ;; --- Python (pyright) -----------------------------------------------------
@@ -398,6 +415,7 @@
 ;; M-n / M-p to jump between errors/warnings.
 
 (with-eval-after-load 'flymake
+  (defvar flymake-mode-map)
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
 
@@ -431,10 +449,10 @@
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 
 ;; Community snippet collection (more IDE templates beyond our custom set).
-
-(use-package tempel-collection
-  :ensure t
-  :after tempel)
+;; Disabled: requires Emacs 31.1+
+;; (use-package tempel-collection
+;;   :ensure t
+;;   :after tempel)
 
 
 ;;; ==========================================================================
@@ -447,7 +465,10 @@
   :ensure t
   :commands eat
   :config
-  (setq eat-shell "/bin/bash"))
+  (defvar eat-shell)
+  (setq eat-shell "/bin/bash")
+  (defvar eat-enable-auto-line-mode)
+  (setq eat-enable-auto-line-mode t))
 
 (define-key global-map (kbd "C-c t n") 'eat)
 
@@ -458,7 +479,9 @@
 
 ;; Project.el: built-in project management (like projectile, but lighter).
 
+(defvar project-switch-commands)
 (setq project-switch-commands 'project-find-dir)
+(defvar project-list-files-gap)
 (setq project-list-files-gap 0)
 
 ;; --- New project scaffolding ----------------------------------------------
@@ -637,9 +660,11 @@ the same lookup as `my/cpp-debug', so build and debug agree."
                                (shell . t)))
 
 ;; Don't ask for confirmation when evaluating code blocks.
+(defvar org-confirm-babel-evaluate)
 (setq org-confirm-babel-evaluate nil)
 
 ;; Enable structure templates (e.g., <el, <py, <sh).
+(defvar org-structure-template-alist)
 (setq org-structure-template-alist
       '(("el" . "src emacs-lisp")
         ("py" . "src python")
@@ -654,6 +679,7 @@ the same lookup as `my/cpp-debug', so build and debug agree."
   :ensure t
   :hook ((org-mode . org-cdlatex-mode))
   :config
+  (defvar cdlatex-use-dollar-signs)
   (setq cdlatex-use-dollar-signs t))
 
 ;; Enable LaTeX fragment preview in Org-mode.
@@ -661,7 +687,9 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 
 ;; LaTeX export backend.
 (with-eval-after-load 'ox-latex
+  (defvar org-latex-packages-alist)
   (add-to-list 'org-latex-packages-alist '("" "listings" t))
+  (defvar org-latex-listings)
   (setq org-latex-listings t))
 
 
@@ -749,6 +777,7 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 (use-package mermaid-mode
   :mode ("\\.mmd\\'" . mermaid-mode)
   :config
+  (defvar mermaid-cli-path)
   (setq mermaid-cli-path (or (executable-find "mmdc")
 			     "/usr/local/bin/mmdc")))
 
@@ -774,7 +803,10 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 (use-package treesit-auto
   :config
   (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode))
+  ;; Use funcall to silence "might not be defined at runtime" byte-compile warning
+  (condition-case nil
+      (funcall (symbol-function 'global-treesit-auto-mode))
+    (error nil)))
 
 
 ;;; ==========================================================================
@@ -783,14 +815,34 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 
 ;; Save and restore sessions (files, buffers, windows) across restarts.
 ;; Disabled in batch/noninteractive mode so tests never write .desktop files.
+;; Frame parameters (bars, font, transparency) are excluded via
+;; frameset-filter-alist to prevent desktop-save from overriding init.el.
+
+(push '(menu-bar-lines  . :never) frameset-filter-alist)
+(push '(tool-bar-lines  . :never) frameset-filter-alist)
+(push '(tab-bar-lines   . :never) frameset-filter-alist)
+(push '(font             . :never) frameset-filter-alist)
+(push '(alpha            . :never) frameset-filter-alist)
+(push '(alpha-background . :never) frameset-filter-alist)
+(push '(fullscreen       . :never) frameset-filter-alist)
 
 (unless noninteractive
   (desktop-save-mode 1))
-(setq desktop-auto-save-timeout 300)  ;; auto-save every 5 minutes
-(setq desktop-dirname user-emacs-directory)
+
+(defvar desktop-save)
+(setq desktop-save 'ask)                        ;; prompt before saving
+(defvar desktop-auto-save-timeout)
+(setq desktop-auto-save-timeout nil)            ;; disable auto-save
+(defvar desktop-path)
+(setq desktop-path '("."))                      ;; only local .desktop
+(defvar desktop-base-file-name)
 (setq desktop-base-file-name ".desktop")
+(defvar desktop-base-lock-name)
 (setq desktop-base-lock-name ".desktop.lock")
-(setq desktop-save t)  ;; save without asking
+(defvar desktop-restore-eager)
+(setq desktop-restore-eager 10)                 ;; restore 10 buffers immediately
+(defvar desktop-load-locked-desktop)
+(setq desktop-load-locked-desktop nil)          ;; don't load if locked
 
 
 ;;; ==========================================================================
@@ -859,6 +911,8 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 ;; --- Layout (applied before M-x gdb) ---------------------------------------
 
 (with-eval-after-load 'gdb-mi
+  (defvar gdb-many-windows)
+  (defvar gdb-show-main)
   (setq gdb-many-windows t   ;; source + stack + locals + breakpoints + IO
 	gdb-show-main t))    ;; show main source on startup
 
@@ -904,8 +958,10 @@ Returns nil when no CMake project is found above DIR."
     best))
 
 (defun my/cpp-debug-root ()
-  "Best build root: outermost CMake project, else project.el, else `default-directory'."
+  "Best build root: outermost CMake project, else project.el, else
+`default-directory'."
   (require 'project nil t)
+
   (let* ((proj (and (fboundp 'project-current)
 		    (condition-case nil (project-current) (error nil))))
 	 (start (if (and proj (fboundp 'project-root))
@@ -930,10 +986,9 @@ Returns nil when no CMake project is found above DIR."
 
 (defun my/cpp-debug-gdb-command (binary)
   "Full `gdb' command line for BINARY with `my/gdb-init-args' as -ex flags.
-Uses double quotes (not shell escapes): gud splits the command line
-itself with `split-string-and-unquote', which keeps quoted groups intact
-but does not process backslash escapes.  BINARY comes first so gud names
-the session buffer *gud-<binary>* (it takes the first non-dash word)."
+Gud splits the command line itself with `split-string-and-unquote', which
+keeps quoted groups intact but does not process backslash escapes.
+BINARY comes first so gud names the session buffer *gud-<binary>*."
   (let ((flags (mapconcat (lambda (s) (concat "-ex \"" s "\""))
 			  my/gdb-init-args " ")))
     (concat "gdb -i=mi \"" (expand-file-name binary) "\" " flags)))

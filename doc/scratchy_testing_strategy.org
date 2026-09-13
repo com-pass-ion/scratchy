@@ -1,0 +1,37 @@
+#+TITLE: Testing Strategy for Scratchy
+
+* Testing Philosophy
+Move from "checking if things exist" to "verifying how things behave." Prefer effect verification over source matching.
+
+* Three-Tier Testing Approach
+** Module Tests (Unit)
+- Purpose: Verify individual package installation and basic configuration.
+- Tools: =ERT= (Emacs Regression Testing), =fboundp=, =package-installed-p=, =bound-and-true-p=.
+- Rule: No source-string matching; verify the resulting state of the Emacs environment.
+
+** Integration Tests (Behavioral)
+- Purpose: Verify package interactions via workflow chains (e.g., LSP + Completion).
+- Approach: Simulate command sequences (e.g., using =execute-kbd=) in headless buffers to verify functional outcomes.
+
+** Usability Tests (Manual)
+- Purpose: Human-in-the-loop verification of real-world scenarios, UX, and ergonomics.
+- Tool: Reference =doc/WORKFLOWS.org= scenarios.
+
+* Keybinding Integrity
+** Global Sanctity
+- Purpose: Ensure core Emacs navigation and essential global keys remain untouched.
+- Approach: Verify a "Gold Standard" list of protected global bindings.
+
+** Mode Contracts
+- Purpose: Verify that mode-local keys behave as defined by the mode's primary specification.
+- Approach: Validate that critical mode-specific keys trigger the expected functions.
+
+* Performance Guardrails
+- Startup Budget: Automated check to ensure =init.el= loading time stays below a predefined threshold.
+- Regression: Monitor for significant performance degradation when adding new packages.
+
+* Execution
+- Core Rule: Run =./test/run_tests.sh= before every commit.
+- Tooling: Use =ERT= for standardized failure reporting.
+
+

@@ -36,7 +36,7 @@ sudo apt install -y ripgrep
 # C++ debugging (gdb + rr for the GDB workflow)
 # NOTE: rr is x86_64-focused; on aarch64 the package installs but
 # record/replay may fail at runtime. Tests treat those as SKIP, not FAIL.
-sudo apt install -y gdb rr
+sudo apt install -y gdb rr docker.io
 
 # Install LSP servers via npm
 sudo npm install -g pyright
