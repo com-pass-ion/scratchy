@@ -1,0 +1,19 @@
+#+TITLE: Sprint Velocity
+#+STARTUP: overview
+
+| Sprint |       Date | Planned | Delivered | Notes                                            |
+|--------+------------+---------+-----------+--------------------------------------------------|
+|      1 | 2026-04-28 |       — |         8 | Setup + Refactor                                 |
+|      2 | 2026-08-30 |       — |         8 | Quick Wins                                       |
+|      3 | 2026-08-30 |       2 |         2 | More Modes + DoD                                 |
+|      4 | 2026-08-30 |       9 |         9 | Media & Documents                                |
+|      5 | 2026-08-30 |       8 |         8 | Tree-sitter, Desktop, Git, Docker                |
+|      6 | 2026-08-30 |       4 |         4 | Tempel + Coverage Report                         |
+|      7 | 2026-08-31 |       9 |         9 | Testing Strategy + tempel-collection + Workflows |
+|      8 | 2026-08-31 |       5 |         5 | Org-babel + Research org-roam                    |
+|      9 | 2026-09-01 |       6 |         3 | Org LaTeX + Safety Guard (Mermaid blocked)       |
+|     10 | 2026-09-01 |       5 |         5 | Research agentic workflows for SOA agents        |
+|     11 | 2026-09-01 |       5 |         5 | Research Open Code architecture                  |
+|     12 | 2026-09-06 |       7 |         7 | GDB Debug Workflow for C++                       |
+
+*Average*: 6.1 SP/Sprint

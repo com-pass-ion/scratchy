@@ -15,7 +15,7 @@ Move from "checking if things exist" to "verifying how things behave." Prefer ef
 
 ** Usability Tests (Manual)
 - Purpose: Human-in-the-loop verification of real-world scenarios, UX, and ergonomics.
-- Tool: Reference =doc/WORKFLOWS.org= scenarios.
+- Tool: Reference =doc/SCRUM.org= workflow sections.
 
 * Keybinding Integrity
 ** Global Sanctity

@@ -888,7 +888,6 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 ;; built-in abbreviations in the console (n/s/c/b/p/bt, rn/rs/rc).
 ;; One entry point: `M-x my/cpp-debug' builds (Debug) and launches GDB.
 ;; GDB pretty-printing lives here as `-ex' flags, not in a .gdbinit file.
-;; See testBeforeIntegration/gdb_setup.org and doc/workflows/cpp-debug-cheatsheet.md.
 
 ;; --- GDB defaults, passed as `-ex' flags (no .gdbinit needed) ---------------
 

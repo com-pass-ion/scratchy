@@ -75,7 +75,7 @@ All planned features, sorted by category.
    :Category: :docs:
    :Sprint:   6
    :END:
-   Not needed — SESSION.org provides detailed changelog. Git log for commit history.
+    Not needed — git log provides commit history.
 
 ** DONE Org-babel (all configured languages)
    :PROPERTIES:
@@ -218,17 +218,16 @@ All planned features, sorted by category.
    - Create test case in test/test_document_guard.sh
    - Document usage in doc/ or README
 
-** TODO Phase-specific commands and next steps rules
+** TODO Commit convention documentation
    :PROPERTIES:
-   :Effort:   2
+   :Effort:   1
    :Category: :process:
    :END:
-   Define which commands and next steps are appropriate in each Scrum phase.
-   - Document allowed commands per phase (backlog, planning-poker, sprint-planning, in-progress, review, retrospective)
-   - Define valid phase transitions
-   - Document what file modifications are allowed per phase
-   - Add validation rules for phase-appropriate actions
-   - Create reference table in SCRUM-WORKFLOW.md or RULES.md
+   Document the commit convention: type(scope): description [S<N>] [Xsp] [#item].
+   - Define allowed types (feat, fix, chore, docs, refactor, test)
+   - Document scope conventions
+   - Add examples for each type
+   - Reference in scrum/RULES.md
 
 ** TODO Minimize context window per sprint
    :PROPERTIES:
@@ -242,15 +241,13 @@ All planned features, sorted by category.
    - Keep prompts simple and atomic for 32B models
    - Document context minimization guidelines
 
-** TODO Review sprint documentation
+** TODO Audit scrum documentation
    :PROPERTIES:
    :Effort:   2
    :Category: :docs:
    :END:
-   Audit sprint docs for true append-only compliance, reformatting only, no text changes, canonical files.
-   - Audit SPRINT.org - verify append-only entries
-   - Audit BACKLOG.org - verify status changes only
-   - Audit SESSION.org - verify structure compliance
+   Audit scrum docs for consistency and accuracy.
+   - Verify BACKLOG.org status changes are correct
    - Check for duplicate rules across files
    - Fix any violations found
    - Document audit results
@@ -353,13 +350,83 @@ All planned features, sorted by category.
    - Write doc/IMPLEMENTATION-STRATEGY.md with decision table and examples
    - Propose rule reference in scrum/RULES.md (needs explicit approval per project rules)
 
-  ** DONE GDB Debug Workflow for C++
-    :PROPERTIES:
-    :Effort:   7
-    :Category: :debug:
-    :Sprint:   12
-    :END:
-    Review and implement testBeforeIntegration/gdb_setup.org — efficient C++ debugging.
+** TODO Clarify specs for all backlog items
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :process:
+   :END:
+   Review and clarify acceptance criteria for TODO items lacking clear specifications.
+
+** TODO Script to install newest emacs version
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :devops:
+   :END:
+   Automate installation of the latest Emacs version from source or PPA.
+
+** TODO Clean templates for Scrum process
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :process:
+   :END:
+   Standardize templates for sprint planning, review, and retrospective.
+
+** TODO Separate agents and tools by role
+   :PROPERTIES:
+   :Effort:   3
+   :Category: :ai:
+   :END:
+   Clearly separate agents and tools for: research, scrum roles, planning discussion etc.
+
+** TODO Track token limits, task complexity, and output quality
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :process:
+   :END:
+   Establish metrics for token usage, task complexity scoring, and output quality assessment.
+
+** TODO Prompt templates for smaller models
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :ai:
+   :END:
+   Create optimized prompt templates for 32B models with atomic instructions.
+
+** TODO Simplify documentation for agent
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :docs:
+   :END:
+   Remove redundancy and cognitive load from agent-facing documentation.
+
+** TODO Short-doc for every implemented workflow
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :docs:
+   :END:
+   Create concise documentation for each workflow (LSP, build, debug, git, etc.).
+
+** TODO Explore self-documentation via agent and shell history
+   :PROPERTIES:
+   :Effort:   2
+   :Category: :ai:
+   :END:
+   Research auto-documentation from agent interactions and shell command history.
+
+** TODO Definition of Done
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :process:
+   :END:
+   Establish clear Definition of Done criteria for all work items.
+
+** DONE GDB Debug Workflow for C++
+   :PROPERTIES:
+   :Effort:   7
+   :Category: :debug:
+   :Sprint:   12
+   :END:
+    Implement efficient C++ debugging with built-in gud/gdb-mi.
     Split 3+2+2 (core GDB + time-travel + docs/tests); exceeds 1-5 scale by user decision.
     - Review gdb_setup.org, fix console-safe C-c bindings
     - Add init.el Sec.21 DEBUG (gdb-mi layout, gud keybindings, time-travel)

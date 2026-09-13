@@ -20,65 +20,40 @@
 - *Single-file config*: Everything in =src/init.el=, no modular splitting
 - *Testable*: Every feature has an automated test (162 module + 32 integration + 17 GDB workflow checks, TAP format)
 - *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
-- *Documented*: Documentation lives in ./doc as WORKFLOWS.org & SCRUM.org
-- *Session-tracked*: Scrum-style changelog in log/SESSION.org
+- *Documented*: Documentation lives in ./doc as SCRUM.org
+- *Commit-driven*: Sprint tracking via conventional commits with `[S<N>]` markers
 
 ** Development Workflow
 
 - *Commit after every step*: After completing each task or feature, commit the changes immediately with a descriptive message
 - *Test before commit*: Run =./test/run_tests.sh= to verify all tests pass before committing
-- *Update log/SESSION.org*: Log completed work in the scrum-style changelog before committing
 
 ** File Structure
 
 #+begin_example
 emacs_from_scratch/
 ├── src/
-│   └── init.el                          # Main config (972 lines, 36 KB)
+│   └── init.el                          # Main config (1026 lines)
 ├── test/
-│   ├── test_init.el                     # Module tests (756 lines, 36 KB, 162 tests)
-│   ├── test_integration.el              # Integration tests (268 lines, 12 KB, 32 tests)
-│   ├── test_gdb_workflow.sh             # GDB workflow tests (deps, build, gdb batch, record, rr; 17 checks)
-│   ├── fixtures/debug_cpp/              # Hermetic GDB demo (no network; ~/debug_cpp used when present)
-│   ├── run_tests.sh                     # Test runner (module + integration + GDB workflow)
+│   ├── test_init.el                     # Module tests (162 tests)
+│   ├── test_integration.el              # Integration tests (32 tests)
+│   ├── test_gdb_workflow.sh             # GDB workflow tests (17 checks)
+│   ├── fixtures/debug_cpp/              # Hermetic GDB demo
+│   ├── run_tests.sh                     # Test runner
 │   └── coverage.sh                      # Coverage report
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
-│   ├── WORKFLOWS.org                    # Keybinding cheat sheet
-│   ├── TESTING-STRATEGY.md              # Three-tier testing strategy
-│   ├── workflows/                       # Workflow test samples
-│   │   ├── README.md                    # Usability checklists
-│   │   ├── python-lsp.py               # LSP + Completion test
-│   │   ├── cpp-build.cpp               # Build + Run test
-│   │   ├── bash-terminal.sh            # Terminal test
-│   │   ├── elisp-test.el               # Eval + Debug test
-│   │   ├── git-test.py                 # Git + Diff test
-│   │   └── snippet-test.py             # Snippets test
-│   │   ├── cpp-debug-cheatsheet.md     # C++ GDB debug cheat sheet
-│   └── DOD.md                           # Definition of Done
+│   └── agent-research/                  # Research documents
 ├── scrum/
 │   ├── PROMPT.md                        # Agent entry prompt (auto-loaded)
 │   ├── RULES.md                         # Scrum rules
-│   └── SCRUM-WORKFLOW.md                # Generic Scrum process
-├── log/
+│   ├── SCRUM-WORKFLOW.md                # Generic Scrum process
 │   ├── BACKLOG.org                      # Product Backlog
-│   ├── SPRINT.org                       # Sprint Board, Velocity, Retrospective
-│   └── SESSION.org                      # Session changelog
-├── sprint_<N>_backlog_<DD_MM_YYYY>.scrum  # Current sprint phase status
-├── opencode.json                        # OpenCode agent config
-├── install_emacs_config_dependencies.sh # System deps installer (44 lines, 800 B)
+│   └── SPRINT.org                       # Velocity tracking
+├── install_emacs_config_dependencies.sh # System deps installer
 ├── .gitignore                           # Git ignore rules
 └── .git/                                # Git repository
 #+end_example
-
-** Agent Configuration
-
-OpenCode is configured to automatically load =scrum/PROMPT.md= at session start. This file contains project context, rules, and key commands for the AI agent.
-
-To modify agent behavior:
-- Edit =scrum/PROMPT.md= for session instructions
-- Edit =opencode.json= to change which files are loaded
-- Restart OpenCode after config changes
 
 ** Architecture
 
@@ -107,24 +82,6 @@ To modify agent behavior:
 | 19  | Git Hooks    | —                    | Pre-commit test runner                               |
 | 20  | DevOps       | docker, dockerfile-mode | Docker container management                      |
 | 21  | Debug        | — (gud/gdb-mi built-in) | my/cpp-debug entry, print defaults, no keys |
-
-** Keybinding Reference
-
-See [[file:../doc/WORKFLOWS.org][doc/WORKFLOWS.org]] for the complete keybinding reference.
-
-** Workflow Patterns
-
-See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentation.
-
-*** Quick Edit
-1. =C-x C-r= — open recent file
-2. Edit with electric-pair + corfu auto-completion
-3. =C-c l r= — run (mode-specific)
-4. =M-n= / =M-p= — navigate errors
-
-*** New Project
-1. =M-x my/project-new= — scaffold C++ or Python project
-2. Auto: git init, .gitignore, boilerplate, venv (Python)
 
 ** Language-Specific Workflows
 
@@ -292,7 +249,6 @@ See [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] for detailed workflow documentatio
 See the following files for the complete Scrum process:
 - [[file:../scrum/RULES.md][scrum/RULES.md]] — All project rules
 - [[file:../scrum/SCRUM-WORKFLOW.md][scrum/SCRUM-WORKFLOW.md]] — Process flow, Planning Poker, Story Points
-- [[file:WORKFLOWS.org][doc/WORKFLOWS.org]] — Keybinding reference
 
 * Review Log
 
