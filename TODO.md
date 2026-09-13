@@ -92,8 +92,8 @@ Update:
 - [x] `scrum/BACKLOG.org` — stale testBeforeIntegration ref
 
 ### Step 9: Verify
-- [ ] Run `./test/run_tests.sh`
-- [ ] Check for any remaining references to deleted files
+- [x] Run `./test/run_tests.sh`
+- [x] Check for any remaining references to deleted files
 
 ### Step 10: Commit
 Atomic commits per step, conventional format:
