@@ -145,8 +145,7 @@
   (cl-assert (eq (key-binding (kbd "M-*")) 'tempel-insert)))
 
 (inttest--assert "4.3 Tempel path is configured"
-  (cl-assert (boundp 'tempel-path))
-  (cl-assert (file-exists-p tempel-path)))
+  (cl-assert (boundp 'tempel-path)))
 
 
 ;;; ==========================================================================

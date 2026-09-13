@@ -433,14 +433,13 @@
 ;;; ==========================================================================
 
 ;; Tempel provides lightweight template expansion with full Elisp support.
-;; Templates defined in ~/.emacs.d/templates (single file).
+;; Templates loaded from ~/.emacs.d/templates (user-managed).
 ;; Usage: type snippet name, then M-+ (tempel-complete) or M-* (tempel-insert).
 
 (use-package tempel
   :bind (("M-+" . tempel-complete)
          ("M-*" . tempel-insert))
   :init
-  (setq tempel-path (expand-file-name "templates" (file-name-directory load-file-name)))
   (defun tempel-setup-capf ()
     (setq-local completion-at-point-functions
                 (cons #'tempel-expand completion-at-point-functions)))

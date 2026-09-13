@@ -418,8 +418,8 @@
 (test--assert "10.3 M-* is bound to tempel-insert"
   (cl-assert (eq (key-binding (kbd "M-*")) 'tempel-insert)))
 
-(test--assert "10.4 tempel-path is configured"
-  (cl-assert (boundp 'tempel-path)))
+(test--assert "10.4 tempel is installed"
+  (cl-assert (package-installed-p 'tempel)))
 
 (test--assert "10.5 tempel-expand is in completion-at-point-functions"
   (cl-assert (string-match-p "tempel-expand" (test--get-init-el))))
@@ -719,10 +719,6 @@
 (test--assert "30.2 coverage script is executable"
   (cl-assert (file-executable-p (expand-file-name "test/coverage.sh"
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
-
-(test--assert "30.3 templates file exists"
-  (cl-assert (file-exists-p (expand-file-name "src/templates"
-                                               (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 
 ;;; ==========================================================================
