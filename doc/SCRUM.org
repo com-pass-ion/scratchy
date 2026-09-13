@@ -246,9 +246,10 @@ emacs_from_scratch/
 
 * Scrum Workflow
 
-See the following files for the complete Scrum process:
+See the following files for the Scrum process:
 - [[file:../scrum/RULES.md][scrum/RULES.md]] — All project rules
-- [[file:../scrum/SCRUM-WORKFLOW.md][scrum/SCRUM-WORKFLOW.md]] — Process flow, Planning Poker, Story Points
+- [[file:../scrum/SCRUM-WORKFLOW.md][scrum/SCRUM-WORKFLOW.md]] — Commit-driven workflow
+- [[file:../scrum/PROMPT.md][scrum/PROMPT.md]] — Agent entry prompt
 
 * Review Log
 
