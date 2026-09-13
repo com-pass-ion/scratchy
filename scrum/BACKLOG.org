@@ -218,16 +218,17 @@ All planned features, sorted by category.
    - Create test case in test/test_document_guard.sh
    - Document usage in doc/ or README
 
-** TODO Commit convention documentation
+** DONE Commit convention documentation
    :PROPERTIES:
    :Effort:   1
    :Category: :process:
+   :Sprint:   13
    :END:
-   Document the commit convention: type(scope): description [S<N>] [Xsp] [#item].
-   - Define allowed types (feat, fix, chore, docs, refactor, test)
-   - Document scope conventions
-   - Add examples for each type
-   - Reference in scrum/RULES.md
+    Document the commit convention: type(scope): description [S<N>] [Xsp] [#item].
+    - Define allowed types (feat, fix, chore, docs, refactor, test)
+    - Document scope conventions
+    - Add examples for each type
+    - Reference in scrum/RULES.md
 
 ** TODO Minimize context window per sprint
    :PROPERTIES:
