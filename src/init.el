@@ -390,21 +390,13 @@
 	    (local-set-key (kbd "C-c C-c") 'python-shell-send-buffer)
 	    (eglot-ensure)))
 
-;; --- C++ (clangd) ---------------------------------------------------------
+;; --- C/C++ (clangd) -------------------------------------------------------
+;; Compile flags come from the CMake-generated build/compile_commands.json,
+;; not hardcoded fallback flags. A project `.clangd' points clangd at the
+;; compile database (see doc/IMPLEMENTATION-STRATEGY.md).
 
-(add-hook 'c++-mode-hook
-	  (lambda ()
-	    (setq-local eglot-workspace-configuration
-			'(:clangd (:fallbackFlags ["-std=c++17"])))
-	    (eglot-ensure)))
-
-;; --- C (clangd) -----------------------------------------------------------
-
-(add-hook 'c-mode-hook
-	  (lambda ()
-	    (setq-local eglot-workspace-configuration
-			'(:clangd (:fallbackFlags ["-std=c11"])))
-	    (eglot-ensure)))
+(add-hook 'c++-mode-hook #'eglot-ensure)
+(add-hook 'c-mode-hook #'eglot-ensure)
 
 ;; --- Java (jdtls) ---------------------------------------------------------
 ;; Vanilla eglot — jdtls is auto-detected.

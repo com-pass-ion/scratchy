@@ -385,11 +385,11 @@
 (test--assert "9.2 python-mode-hook has eglot setup"
   (cl-assert (and python-mode-hook (listp python-mode-hook))))
 
-(test--assert "9.3 c++-mode-hook has eglot setup"
-  (cl-assert (and c++-mode-hook (listp c++-mode-hook))))
+(test--assert "9.3 c++-mode-hook runs eglot"
+  (cl-assert (memq 'eglot-ensure c++-mode-hook)))
 
-(test--assert "9.4 c-mode-hook has eglot setup"
-  (cl-assert (and c-mode-hook (listp c-mode-hook))))
+(test--assert "9.4 c-mode-hook runs eglot"
+  (cl-assert (memq 'eglot-ensure c-mode-hook)))
 
 (test--assert "9.5 eglot-ensure is in java-mode-hook"
   (cl-assert (memq 'eglot-ensure java-mode-hook)))
@@ -403,6 +403,14 @@
       (cl-assert (facep 'flymake-error))
     ;; Fallback: verify source code
     (cl-assert (string-match-p "flymake-error" (test--get-init-el)))))
+
+(test--assert "9.8 clangd relies on compile_commands.json, no hardcoded flags"
+  (cl-assert (not (string-match-p "fallbackFlags" (test--get-init-el))))
+  (cl-assert (file-exists-p
+	      (expand-file-name
+	       "test/fixtures/debug_cpp/.clangd"
+	       (file-name-directory
+		(directory-file-name (file-name-directory load-file-name)))))))
 
 
 ;;; ==========================================================================
