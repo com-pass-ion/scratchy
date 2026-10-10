@@ -15,8 +15,10 @@ sudo apt install -y \
     curl \
     wget
 
-# C++ Language Server
-sudo apt install -y clangd
+# C++ Language Server + toolchain extras
+# clang-format : format-on-save (uses the nearest project .clang-format)
+# bear         : generate compile_commands.json for non-CMake (legacy) projects
+sudo apt install -y clangd clang-format bear
 
 # Java Language Server
 sudo apt install -y jdtls
