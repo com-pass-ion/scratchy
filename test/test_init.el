@@ -424,8 +424,12 @@
 (test--assert "10.5 tempel-expand is in completion-at-point-functions"
   (cl-assert (string-match-p "tempel-expand" (test--get-init-el))))
 
-(test--assert "10.6 tempel-collection is installed"
-  (cl-assert (package-installed-p 'tempel-collection)))
+(test--assert "10.6 tempel-collection gated on Emacs 31.1+"
+  ;; tempel-collection requires Emacs 31.1+ and is disabled in init.el below
+  ;; that version, so verify the resulting state rather than a fixed assumption.
+  (if (version<= "31.1" emacs-version)
+      (cl-assert (package-installed-p 'tempel-collection))
+    (cl-assert (not (package-installed-p 'tempel-collection)))))
 
 
 ;;; ==========================================================================
