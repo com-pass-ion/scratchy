@@ -168,6 +168,8 @@
 ;; --- Visual Undo -----------------------------------------------------------
 ;; `C-c u' opens a visual undo tree. Navigate with arrow keys, RET to jump.
 
+(defvar vundo-glyph-alist)
+(defvar vundo-unicode-symbols)
 (use-package vundo
   :commands vundo
   :config
@@ -179,6 +181,7 @@
 (use-package ace-window
   :bind ("M-o" . ace-window)
   :config
+  (defvar aw-keys)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 
@@ -361,6 +364,8 @@
   :hook ((prog-mode . diff-hl-mode)
 	 (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
+  (defvar diff-hl-side)
+  (defvar diff-hl-margin-mode)
   (setq diff-hl-side 'left)
   (setq diff-hl-margin-mode nil))
 
@@ -687,8 +692,8 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 (with-eval-after-load 'ox-latex
   (defvar org-latex-packages-alist)
   (add-to-list 'org-latex-packages-alist '("" "listings" t))
-  (defvar org-latex-listings)
-  (setq org-latex-listings t))
+  (defvar org-latex-src-block-backend)
+  (setq org-latex-src-block-backend 'listings))
 
 
 ;;; ==========================================================================
@@ -750,6 +755,9 @@ the same lookup as `my/cpp-debug', so build and debug agree."
   :if (my/pdf-poppler-available-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :config
+  (declare-function pdf-tools-install "pdf-tools" (&optional noupdate))
+  (defvar pdf-view-display-size)
+  (defvar pdf-view-resize-factor)
   ;; One-shot server install: skip when already compiled.
   (unless (my/pdf-server-built-p)
     (pdf-tools-install))
@@ -763,6 +771,9 @@ the same lookup as `my/cpp-debug', so build and debug agree."
   :ensure t
   :after image-dired
   :config
+  (defvar image-dired-thumb-size)
+  (defvar image-dired-thumb-margin)
+  (defvar image-dired-thumb-relief)
   (setq image-dired-thumb-size 150)
   (setq image-dired-thumb-margin 10)
   (setq image-dired-thumb-relief 3))
@@ -785,6 +796,7 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 (use-package svg-tag-mode
   :hook (org-mode . svg-tag-mode)
   :config
+  (defvar svg-tag-tags)
   (setq svg-tag-tags
         '(("info" . "◉")
           ("warning" . "⚠")
@@ -800,6 +812,7 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 
 (use-package treesit-auto
   :config
+  (defvar treesit-auto-install)
   (setq treesit-auto-install 'prompt)
   ;; Use funcall to silence "might not be defined at runtime" byte-compile warning
   (condition-case nil
@@ -849,6 +862,9 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 
 ;; Run tests before each commit via git hook.
 ;; Nil-safe: no-op outside a project or without the test runner.
+
+(declare-function project-root "project" (project))
+(declare-function project-current "project" (&optional maybe-prompt))
 
 (defun my/git-pre-commit-hook ()
   "Run tests before git commit."
