@@ -41,6 +41,7 @@
 
 ;; Increase GC threshold to 16MB for faster startup.
 ;; Restored to a modest value after init so interactive use stays responsive.
+(defvar gc-cons-threshold)
 (setq gc-cons-threshold (* 8 1024 1024 2))
 (add-hook 'emacs-startup-hook
 	  (lambda ()
@@ -70,12 +71,18 @@
 
 ;; --- Disable UI chrome ----------------------------------------------------
 
+(defvar inhibit-startup-message)
+(defvar inhibit-startup-screen)
+(defvar inhibit-startup-echo-area-message)
+(defvar use-file-dialog)
 (setq inhibit-startup-message t
       inhibit-startup-screen t
       inhibit-startup-echo-area-message t
       use-file-dialog nil)
 
+(defvar use-dialog-box)
 (setq use-dialog-box nil)          ;; force yes-or-no to minibuffer echo area
+(defvar use-short-answers)
 (setq use-short-answers t)         ;; y/n instead of yes/no
 (menu-bar-mode -1)       ;; no menu bar
 (tool-bar-mode -1)       ;; no tool bar
@@ -85,6 +92,7 @@
 
 ;; --- Font -----------------------------------------------------------------
 
+(defvar default-face)
 (set-face-attribute 'default nil
 		    :font "Noto Sans Mono"
 		    :weight 'normal
@@ -92,27 +100,36 @@
 
 ;; --- Transparency ---------------------------------------------------------
 
+(defvar alpha-background)
 (set-frame-parameter (selected-frame) 'alpha-background 90)
+(defvar default-frame-alist)
 (add-to-list 'default-frame-alist '(alpha-background . 90))
 
 ;; --- Frame title -----------------------------------------------------------
 ;; Show buffer name and path in the frame title.
 
+(defvar frame-title-format)
 (setq frame-title-format
       '(:eval (if (buffer-file-name)
 		  (abbreviate-file-name (buffer-file-name))
 		"%b")))
 
-;; --- Visual comfort -------------------------------------------------------
+;; --- Global Visual Line Mode -----------------------------------------------
+(defvar global-visual-line-mode)
+(global-visual-line-mode 1)
 
-(global-visual-line-mode 1)      ;; soft line wrap (no hard wrap)
+;; --- Fringe & Line Spacing ---------------------------------------------------
+(defvar set-fringe-mode)
 (set-fringe-mode '(12 . 0))      ;; left fringe 12px, right 0
+(defvar line-spacing)
 (setq-default line-spacing 0.15) ;; breathing room between lines
 
 ;; --- Bell -----------------------------------------------------------------
 ;; Visual bell flashes the mode-line instead of beeping.
 
+(defvar visible-bell)
 (setq visible-bell t)
+(defvar ring-bell-function)
 (setq ring-bell-function
       (lambda ()
 	(let ((orig-bg (face-background 'mode-line)))
@@ -129,27 +146,34 @@
 ;; --- Keybinding discoverability -------------------------------------------
 ;; Shows available keys after a prefix in a popup.
 
-(which-key-mode)
+(use-package which-key
+  :init (which-key-mode))
 
 ;; --- Persistent state across sessions -------------------------------------
 
-(save-place-mode)    ;; remember cursor position per file
-(savehist-mode)      ;; persist minibuffer history (M-x, etc.)
+(save-place-mode 1)
+
+(use-package savehist
+  :init (savehist-mode))
 
 ;; --- Recent files ---------------------------------------------------------
 ;; `C-x C-r' opens a list of recently opened files.
 
-(recentf-mode)
+(use-package recentf
+  :init (recentf-mode))
 
 ;; --- Which function -------------------------------------------------------
 ;; Display current function/block name in the mode-line.
 
-(which-function-mode)
+(which-function-mode 1)
 
 ;; --- Whitespace cleanup ---------------------------------------------------
 ;; Remove trailing whitespace and normalize blank lines on save.
 
-(add-hook 'before-save-hook 'whitespace-cleanup)
+(defun cleanup-whitespace ()
+  (whitespace-cleanup))
+
+(add-hook 'before-save-hook #'cleanup-whitespace)
 
 ;; --- Delete selection mode --------------------------------------------------
 ;; Typing replaces the selected region (like modern editors).
@@ -159,6 +183,7 @@
 ;; --- Narrowing enabled ----------------------------------------------------
 ;; Allow `C-x n n' (narrow-to-region) without confirmation.
 
+(defvar narrow-to-region)
 (put 'narrow-to-region 'disabled nil)
 
 ;; --- Visual Undo -----------------------------------------------------------
@@ -175,6 +200,7 @@
 ;; `M-o' shows numbers over each window. Type the number to jump there.
 
 (use-package ace-window
+  :bind ("M-o" . ace-window)
   :config
 
   (defvar aw-keys)
@@ -199,15 +225,20 @@
 
 ;; --- Line numbers ---------------------------------------------------------
 
+(defvar column-number-mode)
 (column-number-mode t)                ;; show column in mode-line
+(defvar global-display-line-numbers-mode)
 (global-display-line-numbers-mode t)  ;; enable line numbers everywhere
 
 ;; Disable line numbers in specific modes where they don't make sense.
+(defun disable-line-numbers ()
+  (display-line-numbers-mode 0))
+
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		eshell-mode-hook
 		shell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (add-hook mode #'disable-line-numbers))
 
 ;; --- Highlight current line ------------------------------------------------
 
@@ -218,22 +249,31 @@
 
 ;; --- Paren matching -------------------------------------------------------
 
+(defvar show-paren-mode)
 (show-paren-mode 1)
+(defvar show-paren-style)
+(defvar show-paren-when-point-inside-paren)
 (setq show-paren-style 'mixed
       show-paren-when-point-inside-paren t)
 
 ;; --- Electric pair ---------------------------------------------------------
 ;; Auto-close brackets, quotes, etc.
 
+(defvar electric-pair-mode)
 (electric-pair-mode 1)
 
 ;; --- Cursor ----------------------------------------------------------------
 
+(defvar cursor-type)
 (setq-default cursor-type 'bar)  ;; thin bar cursor
+(defvar blink-cursor-mode)
 (blink-cursor-mode -1)           ;; no blinking
 
 ;; --- Scrolling ------------------------------------------------------------
 
+(defvar scroll-margin)
+(defvar scroll-conservatively)
+(defvar scroll-preserve-screen-position)
 (setq scroll-margin 3
       scroll-conservatively 101
       scroll-preserve-screen-position t)
@@ -328,7 +368,6 @@
 ;; Helpful replaces *Help* buffer with a more informative version.
 
 (use-package helpful
-  :ensure t
   :custom
   (helpful-switch-buffer-function #'helpful--switch-buffer)
   :bind
@@ -366,42 +405,41 @@
   (setq diff-hl-margin-mode nil))
 
 
-;;; ==========================================================================
-;;; 9. LSP — Eglot (built-in Language Server Protocol)
-;;; ==========================================================================
+;; --- LSP — Eglot (built-in Language Server Protocol)
+;; ==========================================================================
 
 ;; Eglot connects to language servers for code intelligence.
 ;; Servers: pyright (Python), clangd (C/C++), jdtls (Java), bash-ls.
 
-(defvar eglot-autoshutdown)
-(setq eglot-autoshutdown t)  ;; kill server when last buffer closes
+(use-package eglot
+  :hook ((python-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+         (java-mode . eglot-ensure)
+         (sh-mode . eglot-ensure))
+  :config
+  (defvar eglot-autoshutdown)
+  (setq eglot-autoshutdown t)) ;; kill server when last buffer closes
 
 ;; --- Python (pyright) -----------------------------------------------------
 ;; Type checking in "basic" mode, run buffer with C-c C-c.
 
-(add-hook 'python-mode-hook
-	  (lambda ()
-	    (setq-local eglot-workspace-configuration
-			'((:pyright . (:typeCheckingMode "basic"))))
-	    (local-set-key (kbd "C-c C-c") 'python-shell-send-buffer)
-	    (eglot-ensure)))
+(defun eglot-setup-python ()
+  (setq-local eglot-workspace-configuration
+	          '((:pyright . (:typeCheckingMode "basic"))))
+  (local-set-key (kbd "C-c C-c") 'python-shell-send-buffer))
+
+(add-hook 'python-mode-hook #'eglot-setup-python)
 
 ;; --- C/C++ (clangd) -------------------------------------------------------
 ;; Compile flags come from the CMake-generated build/compile_commands.json,
 ;; not hardcoded fallback flags. A project `.clangd' points clangd at the
 ;; compile database (see doc/IMPLEMENTATION-STRATEGY.md).
 
-(add-hook 'c++-mode-hook #'eglot-ensure)
-(add-hook 'c-mode-hook #'eglot-ensure)
-
 ;; --- Java (jdtls) ---------------------------------------------------------
 ;; Vanilla eglot — jdtls is auto-detected.
 
-(add-hook 'java-mode-hook 'eglot-ensure)
-
 ;; --- Bash (bash-language-server) ------------------------------------------
-
-(add-hook 'sh-mode-hook 'eglot-ensure)
 
 ;; --- Flymake navigation (built-in) ----------------------------------------
 ;; M-n / M-p to jump between errors/warnings.
@@ -453,7 +491,6 @@
 ;; Eat: lightweight terminal inside Emacs. `C-c t n' to open.
 
 (use-package eat
-  :ensure t
   :commands eat
   :config
   (defvar eat-shell)
@@ -468,30 +505,32 @@
 ;;; 12. PROJECT — Project.el + Templates
 ;;; ==========================================================================
 
-;; Project.el: built-in project management (like projectile, but lighter).
+;; --- Project.el: built-in project management (like projectile, but lighter).
 
-(defvar project-switch-commands)
-(setq project-switch-commands 'project-find-dir)
-(defvar project-list-files-gap)
-(setq project-list-files-gap 0)
+(use-package project
+  :config
+  (defvar project-switch-commands)
+  (setq project-switch-commands 'project-find-dir)
+  (defvar project-list-files-gap)
+  (setq project-list-files-gap 0))
 
 ;; --- C/C++ project adoption -----------------------------------------------
 ;; `M-x adopt-cpp-project' runs the repo's scaffold/adopt-cpp-project.sh
 ;; in the current directory to add only what's missing (build system if none
 ;; exists, .clangd, .gitignore, .clang-format unless --no-format).
 
-(defvar my/repo-root
+(defvar repo-root
   (file-name-directory (directory-file-name (file-name-directory (or load-file-name buffer-file-name "."))))
   "Absolute path to the Scratchy repository root.")
 
-(defun my/adopt-script-path ()
-  (expand-file-name "scaffold/adopt-cpp-project.sh" my/repo-root))
+(defun adopt-script-path ()
+  (expand-file-name "scaffold/adopt-cpp-project.sh" repo-root))
 
 (defun adopt-cpp-project ()
   "Adopt the current directory into the C/C++ workflow (confirmation first)."
   (interactive)
   (let ((dir default-directory)
-        (script (my/adopt-script-path)))
+        (script (adopt-script-path)))
     (unless (file-executable-p script)
       (error "adopt script not found or not executable: %s" script))
     (when (y-or-n-p (format "Adopt %s into the C/C++ workflow? " dir))
@@ -507,7 +546,7 @@
 ;; code keeps its own style. No-op when clang-format is not installed or no
 ;; `.clang-format' is found above the file.
 
-(defun my/clang-format-config-root (dir)
+(defun clang-format-config-root (dir)
   "Return the nearest ancestor of DIR containing a `.clang-format' file.
 DIR is expanded first. Returns nil when none is found."
   (let ((dir (file-name-as-directory (expand-file-name dir)))
@@ -520,14 +559,14 @@ DIR is expanded first. Returns nil when none is found."
 		      (file-name-as-directory parent))))))
     found))
 
-(defun my/clang-format-buffer ()
+(defun clang-format-buffer ()
   "Format the current C/C++ buffer with `clang-format' using `-style=file'.
 Does nothing unless clang-format is installed and a `.clang-format' file is
 found above `default-directory'."
   (interactive)
   (let ((exe (executable-find "clang-format"))
 	(file (buffer-file-name)))
-    (when (and exe file (my/clang-format-config-root default-directory))
+    (when (and exe file (clang-format-config-root default-directory))
       (let ((temp (generate-new-buffer " *clang-format*")))
 	(unwind-protect
 	    (let ((exit (call-process-region (point-min) (point-max)
@@ -552,10 +591,10 @@ found above `default-directory'."
 ;; --- Unified run command --------------------------------------------------
 ;; `C-c l r' runs the file based on the current major mode.
 
-(declare-function project-compile "project" ())
-
-;; Auto-scroll compile output buffer.
+(defvar compilation-scroll-output)
 (setq compilation-scroll-output t)
+
+(declare-function project-compile "project" ())
 
 ;; --- CLI-style command aliases -----------------------------------------------
 ;; These provide a "shell-like" interface via M-x, mirroring the project Makefile.
@@ -578,39 +617,39 @@ found above `default-directory'."
 (defun make-format ()
   "Format the current C/C++ buffer with `clang-format'."
   (interactive)
-  (my/clang-format-buffer))
+  (clang-format-buffer))
 
 
 ;;; ==========================================================================
 ;;; 14. ORG-MODE — Babel integration, LaTeX, Mermaid
 ;;; ==========================================================================
 
-;; Enable code block execution for configured languages.
-(org-babel-do-load-languages 'org-babel-load-languages
-                             '((emacs-lisp . t)
-                               (python . t)
-                               (C . t)
-                               (java . t)
-                               (shell . t)))
+;; --- Org-Mode ----------------------------------------------------------------
 
-;; Don't ask for confirmation when evaluating code blocks.
-(defvar org-confirm-babel-evaluate)
-(setq org-confirm-babel-evaluate nil)
+(use-package org
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t)
+                                (python . t)
+                                (C . t)
+                                (java . t)
+                                (shell . t)))
 
-;; Enable structure templates (e.g., <el, <py, <sh).
-(defvar org-structure-template-alist)
-(setq org-structure-template-alist
-      '(("el" . "src emacs-lisp")
-        ("py" . "src python")
-        ("sh" . "src shell")
-        ("java" . "src java")
-        ("c" . "src C")))
+  (defvar org-confirm-babel-evaluate)
+  (setq org-confirm-babel-evaluate nil)
+
+  (defvar org-structure-template-alist)
+  (setq org-structure-template-alist
+        '(("el" . "src emacs-lisp")
+          ("py" . "src python")
+          ("sh" . "src shell")
+          ("java" . "src java")
+          ("c" . "src C"))))
 
 ;; --- LaTeX Support (cdlatex) -----------------------------------------------
 ;; Enable LaTeX editing and preview in Org-mode.
 
 (use-package cdlatex
-  :ensure t
   :hook ((org-mode . org-cdlatex-mode))
   :config
   (defvar cdlatex-use-dollar-signs)
@@ -665,7 +704,7 @@ found above `default-directory'."
 ;; Arch-independent guard: checks several known libpoppler locations
 ;; (x86_64, aarch64) plus pkg-config, so RaspiOS works too.
 
-(defun my/pdf-poppler-available-p ()
+(defun pdf-poppler-available-p ()
   "Non-nil when poppler dev libraries look installed."
   (or (file-exists-p "/usr/lib/x86_64-linux-gnu/libpoppler-glib.so")
       (file-exists-p "/usr/lib/aarch64-linux-gnu/libpoppler-glib.so")
@@ -674,7 +713,7 @@ found above `default-directory'."
 	   (zerop (call-process "pkg-config" nil nil nil
 				"--exists" "poppler-glib")))))
 
-(defun my/pdf-server-built-p ()
+(defun pdf-server-built-p ()
   "Non-nil when the pdf-tools epdfinfo server is already compiled."
   (ignore-errors
     (let ((lib (locate-library "pdf-tools")))
@@ -683,14 +722,14 @@ found above `default-directory'."
 					    (file-name-directory lib)))))))
 
 (use-package pdf-tools
-  :if (my/pdf-poppler-available-p)
+  :if (pdf-poppler-available-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :config
   (declare-function pdf-tools-install "pdf-tools" (&optional noupdate))
   (defvar pdf-view-display-size)
   (defvar pdf-view-resize-factor)
   ;; One-shot server install: skip when already compiled.
-  (unless (my/pdf-server-built-p)
+  (unless (pdf-server-built-p)
     (pdf-tools-install))
   (setq pdf-view-display-size 'fit-width)
   (setq pdf-view-resize-factor 1.1))
@@ -755,11 +794,10 @@ found above `default-directory'."
 ;;; 18. SESSION — Desktop Save
 ;;; ==========================================================================
 
-;; Save and restore sessions (files, buffers, windows) across restarts.
-;; Disabled in batch/noninteractive mode so tests never write .desktop files.
-;; Frame parameters (bars, font, transparency) are excluded via
-;; frameset-filter-alist to prevent desktop-save from overriding init.el.
+;; --- Session — Desktop Save
+;; ==========================================================================
 
+(defvar frameset-filter-alist)
 (push '(menu-bar-lines  . :never) frameset-filter-alist)
 (push '(tool-bar-lines  . :never) frameset-filter-alist)
 (push '(tab-bar-lines   . :never) frameset-filter-alist)
@@ -772,19 +810,19 @@ found above `default-directory'."
   (desktop-save-mode 1))
 
 (defvar desktop-save)
-(setq desktop-save 'ask)                        ;; prompt before saving
+(setq desktop-save 'ask)
 (defvar desktop-auto-save-timeout)
-(setq desktop-auto-save-timeout nil)            ;; disable auto-save
+(setq desktop-auto-save-timeout nil)
 (defvar desktop-path)
-(setq desktop-path '("."))                      ;; only local .desktop
+(setq desktop-path '("."))
 (defvar desktop-base-file-name)
 (setq desktop-base-file-name ".desktop")
 (defvar desktop-base-lock-name)
 (setq desktop-base-lock-name ".desktop.lock")
 (defvar desktop-restore-eager)
-(setq desktop-restore-eager 10)                 ;; restore 10 buffers immediately
+(setq desktop-restore-eager 10)
 (defvar desktop-load-locked-desktop)
-(setq desktop-load-locked-desktop nil)          ;; don't load if locked
+(setq desktop-load-locked-desktop nil)
 
 
 ;;; ==========================================================================
@@ -797,7 +835,7 @@ found above `default-directory'."
 (declare-function project-root "project" (project))
 (declare-function project-current "project" (&optional maybe-prompt))
 
-(defun my/git-pre-commit-hook ()
+(defun git-pre-commit-hook ()
   "Run tests before git commit."
   (let* ((proj (ignore-errors (project-current)))
 	 (root (when proj (ignore-errors (project-root proj))))
@@ -819,7 +857,6 @@ found above `default-directory'."
 ;; Docker container management via docker.el.
 
 (use-package docker
-  :ensure t
   :bind ("C-c d" . docker))
 
 (use-package dockerfile-mode
