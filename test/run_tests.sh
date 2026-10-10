@@ -53,8 +53,12 @@ bash "$SCRIPT_DIR/test_gdb_workflow.sh"
 
 echo ""
 # Byte-compile check (STRICT MODE)
+# Load init.el first so all packages are installed and their definition
+# prefixes registered; otherwise the compiler reports false free-variable
+# and "might not be defined at runtime" warnings during install.
 echo "--- Byte-Compile Check ---"
 run_isolated_emacs \
+    -l "$SCRIPT_DIR/../src/init.el" \
     --eval "(package-initialize)" \
     --eval "(require 'use-package)" \
     --eval "(setq byte-compile-error-on-warn t)" \
