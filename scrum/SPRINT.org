@@ -17,6 +17,6 @@
 |     12 | 2026-09-06 |       7 |         7 | GDB Debug Workflow for C++                       |
 |     13 | 2026-10-10 |       — |        16 | Commit-driven process + doc audit                |
 |     14 | 2026-10-10 |       7 |        10 | C++ pipeline modernization + impl strategy       |
-|     15 | 2026-10-10 |       3 |         3 | Rule: no Elisp wrappers + default dotfiles       |
+|     15 | 2026-10-10 |       3 |         3 | Rule: no Elisp wrappers + adopt C++ workflow scripts |
 
 *Average*: 7.0 SP/Sprint
