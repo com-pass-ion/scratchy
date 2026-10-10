@@ -359,6 +359,53 @@ All planned features, sorted by category.
    criteria, GDB lessons, ~/.gdbinit recipe, C/C++ pipeline decisions, per-layer
    tests); RULES.md Coding Style references it (user approved the edit).
 
+** DONE Rule: no Elisp wrappers around decoupled designs
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :process:
+   :Sprint:   15
+   :END:
+   Codify that Elisp must not encapsulate data or wrap a design a tool
+   already owns. Ship tool-native default config files instead.
+   - Add Coding Style rule to scrum/RULES.md
+   - Reconcile doc/IMPLEMENTATION-STRATEGY.md (reclassify my/gdb-init-args as an
+     anti-pattern; tool-native config is the owner)
+   - Ship dotfiles/.gdbinit default init file; installer symlinks to ~/.gdbinit
+     only when absent (never overwrites user defaults)
+   Note: a project-aware GDB launcher (would wrap gdb's own command line) is
+   discouraged by this rule; stock M-x gdb stays.
+
+** TODO C/C++ run: make C-c l r build and run
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :cpp-dev:
+   :Sprint:   15
+   :END:
+   =C-c l r= (my/run) is a no-op in C/C++ buffers ("No supported run mode!"),
+   but a human expects the run key to work.
+   - Add a C/C++ branch to my/run that runs `make run' at the project root
+   - Keep C-c l b as project-compile; cover it with tests (13.x) and docs
+
+** TODO Format-on-save hint when clang-format is missing
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :cpp-dev:
+   :Sprint:   15
+   :END:
+   my/clang-format-buffer silently no-ops when clang-format is not installed,
+   so "format on save" looks broken with no feedback.
+   - Emit a one-time message when a C/C++ save is skipped for a missing binary
+
+** TODO Reconsider make -k as the C/C++ build default
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :cpp-dev:
+   :Sprint:   15
+   :END:
+   =C-c l b= proposes `make -k' (the compile default). -k continues past errors
+   and is noisy for a single-target project build.
+   - Decide plain `make' vs `make -k' for C/C++ and document it
+
 ** TODO Clarify specs for all backlog items
    :PROPERTIES:
    :Effort:   2
