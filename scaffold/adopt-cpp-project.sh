@@ -10,8 +10,6 @@
 #
 # Usage: adopt-cpp-project.sh [DIR] [--no-format] [--no-git] [--build] [--dry-run]
 #        adopt-cpp-project.sh -h
-#
-# Exit code: 0 = success, non-zero on usage/argument errors.
 
 set -euo pipefail
 
@@ -25,7 +23,7 @@ DO_BUILD=0
 DRY_RUN=0
 
 usage() {
-  sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# // '
 }
 
 for arg in "$@"; do
@@ -91,7 +89,7 @@ copy_if_missing() { # <src> <dest> <label>
   fi
 }
 
-# --- detect ---------------------------------------------------------------
+# --- detection ---------------------------------------------------------------
 
 build_markers=(CMakeLists.txt Makefile makefile GNUmakefile meson.build \
   build.ninja BUILD BUILD.bazel WORKSPACE xmake.lua SConstruct SConscript \
@@ -104,14 +102,14 @@ done
 sources="$(find_cc_sources)"
 has_sources=0; [ -n "$sources" ] && has_sources=1
 
-# --- provide missing pieces -----------------------------------------------
+# --- provide missing pieces ---------------------------------------------------
 
 if [ -n "$build_marker" ]; then
   note_skipped "build system ($build_marker)"
 elif [ "$has_sources" = 1 ]; then
   copy_if_missing "$TEMPLATE_DIR/Makefile" "Makefile" "Makefile (basic build system)"
 else
-  echo "adopt-cpp-project: warning: no C/C++ sources found; not providing a build system" >&2
+  echo "adopt-cpp-project: warning: no C/C++ sources found; not providing a build system" >&2S
 fi
 
 copy_if_missing "$TEMPLATE_DIR/.clangd" ".clangd" ".clangd"
@@ -143,14 +141,24 @@ else
 fi
 
 # --- optional build (seeds build/compile_commands.json) -------------------
-
-if [ "$DO_BUILD" = 1 ] && [ -e Makefile ]; then
-  if [ "$DRY_RUN" = 1 ]; then
-    note_added "make (would run)"
-  elif make >/dev/null 2>&1; then
-    note_added "make (binary + compile_commands.json)"
-  else
-    echo "adopt-cpp-project: warning: make failed; build/compile_commands.json not generated" >&2
+ 
+if [ "$DO_BUILD" = 1 ]; then
+  if [ -e CMakeLists.txt ]; then
+    if [ "$DRY_RUN" = 1 ]; then
+      note_added "cmake (would run)"
+    elif cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON >/dev/null 2>&1 && cmake --build build >/dev/null 2>&1; then
+      note_added "cmake (binary + compile_commands.json)"
+    else
+      echo "adopt-cpp-project: warning: cmake failed; build/compile_commands.json not generated" >&2
+    fi
+  elif [ -e Makefile ]; then
+    if [ "$DRY_RUN" = 1 ]; then
+      note_added "make (would run)"
+    elif make >/dev/null 2>&1; then
+      note_added "make (binary + compile_commands.json)"
+    else
+      echo "adopt-cpp-project: warning: make failed; build/compile_commands.json not generated" >&2
+    fi
   fi
 fi
 
@@ -159,8 +167,8 @@ fi
 echo ""
 echo "adopt-cpp-project: $PROJECT_NAME"
 echo "  directory: $DIR"
-for a in ${ADDED[@]+"${ADDED[@]}"}; do echo "  added:   $a"; done
-for s in ${SKIPPED[@]+"${SKIPPED[@]}"}; do echo "  skipped: $s"; done
+for a in "${ADDED[@]}"; do echo "  added:   $a"; done
+for s in "${SKIPPED[@]}"; do echo "  skipped: $s"; done
 [ "$DRY_RUN" = 1 ] && echo "  (dry run: no changes written)"
 echo ""
 echo "Build with: make        (C-c l b in Emacs)"

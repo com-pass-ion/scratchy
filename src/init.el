@@ -551,10 +551,19 @@ is found above `default-directory'."
 		  (insert output)
 		  (goto-char (min pos (point-max))))))
 	  (kill-buffer temp))))))
+    (unless exe
+      (message "clang-format not found: please install it to enable format-on-save"))))
+
+(defun my/clang-format-check-binary ()
+  "Warn if `clang-format` is missing when entering C/C++ modes."
+  (unless (executable-find "clang-format")
+    (message "Warning: clang-format not found. Format-on-save disabled.")))
 
 (defun my/clang-format-setup ()
   "Enable `my/clang-format-buffer' before saving C/C++ buffers."
+  (my/clang-format-check-binary)
   (add-hook 'before-save-hook #'my/clang-format-buffer nil t))
+
 
 (add-hook 'c-mode-common-hook #'my/clang-format-setup)
 
@@ -589,11 +598,15 @@ C/C++ is built and run via `project-compile' and `make run'."
    ((derived-mode-p 'python-mode) (my/python-run))
    ((derived-mode-p 'sh-mode)    (my/bash-run))
    ((derived-mode-p 'emacs-lisp-mode) (eval-buffer))
+   ((derived-mode-p 'c++-mode 'c-mode)
+    (let ((default-directory (project-root (project-current t))))
+      (compile "make run")))
    (t (message "No supported run mode!"))))
 
 (define-key global-map (kbd "C-c l r") 'my/run)
 (declare-function project-compile "project" ())
 (define-key global-map (kbd "C-c l b") 'project-compile)
+(setq compile-command "make")
 
 ;; Auto-scroll compile output buffer.
 (setq compilation-scroll-output t)
