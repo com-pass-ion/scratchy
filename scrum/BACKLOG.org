@@ -623,3 +623,6 @@ All planned features, sorted by category.
    :Category: :editor:
    :Sprint:   1+2
    :END:
+** TODO Unified Key Binding Strategy
+Audit all global keybindings in init.el to identify overlaps with built-in or package defaults.
+Establish a consistent naming/convention to avoid conflicts (e.g., C-c l r / C-c l b).

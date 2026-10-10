@@ -35,6 +35,7 @@ Quick reference of all rules to follow when working on this project.
 ## Coding Style
 
 - **Pure Functional Style**: Prefer pure functions with no side effects. Use `let` for local bindings, avoid `setq` for global state. Functions should return values, not modify globals. Use `defconst` for constants, `defvar` for mutable state only when necessary.
+- **No Hardcoded Absolute Paths**: Use relative paths or environment variables. Never hardcode `/home/ncu/...` or similar absolute paths in code, scripts, or configs.
 - **Implementation Layer**: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file — following `doc/IMPLEMENTATION-STRATEGY.md` (one owner per behavior). Tool-native settings are never mirrored in Elisp; ship a default native config file (see `dotfiles/`) when defaults are needed.
 - **No Elisp Wrappers Around Decoupled Designs**: Do not add Elisp functions that encapsulate data or wrap a design a tool already owns (init files, config files, native formats). Configure the tool through its own mechanism. Example: provide a default `.gdbinit` init file for GDB — do not write an Elisp function that overwrites the default.
 

@@ -140,10 +140,6 @@
 ;; `C-x C-r' opens a list of recently opened files.
 
 (recentf-mode)
-(defvar recentf-max-saved-items)
-(with-eval-after-load 'recentf
-  (setq recentf-max-saved-items 100))
-(global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
 ;; --- Which function -------------------------------------------------------
 ;; Display current function/block name in the mode-line.
@@ -179,8 +175,8 @@
 ;; `M-o' shows numbers over each window. Type the number to jump there.
 
 (use-package ace-window
-  :bind ("M-o" . ace-window)
   :config
+
   (defvar aw-keys)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -499,20 +495,14 @@
     (unless (file-executable-p script)
       (error "adopt script not found or not executable: %s" script))
     (when (y-or-n-p (format "Adopt %s into the C/C++ workflow? " dir))
-      (compile (concat script " "" dir """)))))
+      (compile (concat script " " dir)))))
 
 
 ;;; ==========================================================================
 ;;; 13. BUILD & RUN — Language-specific compile commands
 ;;; ==========================================================================
 
-;; --- C/C++ (make over a CMake backbone) -----------------------------------
-;; Project `Makefile' wraps CMake and exports build/compile_commands.json for
-;; clangd. `C-c l b' runs `project-compile' (defaulting to make), so the C/C++
-;; build stays project.el-native with no custom wrapper. Run the built binary
-;; with `make run'. See doc/IMPLEMENTATION-STRATEGY.md.
-
-;; --- clang-format on save (C/C++) -----------------------------------------
+;; --- C/C++ Formatting ---------------------------------------------------------
 ;; Formats with the nearest project `.clang-format' (`-style=file'), so legacy
 ;; code keeps its own style. No-op when clang-format is not installed or no
 ;; `.clang-format' is found above the file.
@@ -532,8 +522,8 @@ DIR is expanded first. Returns nil when none is found."
 
 (defun my/clang-format-buffer ()
   "Format the current C/C++ buffer with `clang-format' using `-style=file'.
-Does nothing unless clang-format is installed and a `.clang-format' file
-is found above `default-directory'."
+Does nothing unless clang-format is installed and a `.clang-format' file is
+found above `default-directory'."
   (interactive)
   (let ((exe (executable-find "clang-format"))
 	(file (buffer-file-name)))
@@ -541,83 +531,54 @@ is found above `default-directory'."
       (let ((temp (generate-new-buffer " *clang-format*")))
 	(unwind-protect
 	    (let ((exit (call-process-region (point-min) (point-max)
-					     exe nil temp
-					     "-style=file" "-assume-filename"
-					     file)))
+					   exe nil temp
+					   "-style=file" "-assume-filename"
+					   file)))
 	      (when (and (integerp exit) (zerop exit))
 		(let ((pos (point))
 		      (output (with-current-buffer temp (buffer-string))))
 		  (delete-region (point-min) (point-max))
 		  (insert output)
 		  (goto-char (min pos (point-max))))))
-	  (kill-buffer temp))))))
-    (unless exe
-      (message "clang-format not found: please install it to enable format-on-save"))))
+	  (when (not exe)
+	    (message "clang-format not found: please install it to enable format-on-save"))
+	(kill-buffer temp))))))
 
-(defun my/clang-format-check-binary ()
-  "Warn if `clang-format` is missing when entering C/C++ modes."
-  (unless (executable-find "clang-format")
-    (message "Warning: clang-format not found. Format-on-save disabled.")))
-
-(defun my/clang-format-setup ()
-  "Enable `my/clang-format-buffer' before saving C/C++ buffers."
-  (my/clang-format-check-binary)
-  (add-hook 'before-save-hook #'my/clang-format-buffer nil t))
-
-
-(add-hook 'c-mode-common-hook #'my/clang-format-setup)
 
 ;; --- Python ---------------------------------------------------------------
 
-(defun my/python-run ()
-  "Run the current Python script."
-  (interactive)
-  (let ((file (buffer-file-name)))
-    (if file
-	(compile (concat "python3 " (shell-quote-argument file)))
-      (message "No file to run!"))))
-
 ;; --- Bash -----------------------------------------------------------------
-
-(defun my/bash-run ()
-  "Run the current bash script."
-  (interactive)
-  (let ((file (buffer-file-name)))
-    (if file
-	(compile (concat "bash " (shell-quote-argument file)))
-      (message "No file to run!"))))
 
 ;; --- Unified run command --------------------------------------------------
 ;; `C-c l r' runs the file based on the current major mode.
 
-(defun my/run ()
-  "Run file based on current mode.
-C/C++ is built and run via `project-compile' and `make run'."
-  (interactive)
-  (cond
-   ((derived-mode-p 'python-mode) (my/python-run))
-   ((derived-mode-p 'sh-mode)    (my/bash-run))
-   ((derived-mode-p 'emacs-lisp-mode) (eval-buffer))
-   ((derived-mode-p 'c++-mode 'c-mode)
-    (let ((default-directory (project-root (project-current t))))
-      (compile "make run")))
-   (t (message "No supported run mode!"))))
-
-(define-key global-map (kbd "C-c l r") 'my/run)
 (declare-function project-compile "project" ())
-(define-key global-map (kbd "C-c l b") 'project-compile)
-(setq compile-command "make")
 
 ;; Auto-scroll compile output buffer.
 (setq compilation-scroll-output t)
 
-;; --- Compilation keybindings -----------------------------------------------
-;; Quick access to compilation from any buffer.
+;; --- CLI-style command aliases -----------------------------------------------
+;; These provide a "shell-like" interface via M-x, mirroring the project Makefile.
 
-(global-set-key (kbd "C-c l c") 'compile)
-(global-set-key (kbd "C-c l k") 'kill-compilation)
-(global-set-key (kbd "C-c l n") 'next-error)
-(global-set-key (kbd "C-c l p") 'previous-error)
+(defun make-build ()
+  "Build the project using project-compile (default: make)."
+  (interactive)
+  (project-compile))
+
+(defun make-run ()
+  "Run the project using `make run'."
+  (interactive)
+  (compile "make run"))
+
+(defun make-clean ()
+  "Clean the project using `make clean'."
+  (interactive)
+  (compile "make clean"))
+
+(defun make-format ()
+  "Format the current C/C++ buffer with `clang-format'."
+  (interactive)
+  (my/clang-format-buffer))
 
 
 ;;; ==========================================================================

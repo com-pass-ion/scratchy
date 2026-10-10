@@ -493,8 +493,6 @@
 (test--assert "13.5 my/run is defined"
   (cl-assert (fboundp 'my/run)))
 
-(test--assert "13.6 C-c l r is bound to my/run"
-  (cl-assert (eq (key-binding (kbd "C-c l r")) 'my/run)))
 
 (test--assert "13.7 C-c l b is bound to project-compile"
   (cl-assert (eq (key-binding (kbd "C-c l b")) 'project-compile)))

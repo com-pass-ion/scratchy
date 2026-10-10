@@ -7,9 +7,8 @@ CXXFLAGS  ?= -std=c++17 -O2 -Wall -Wextra -g
 BUILD_DIR ?= build
 EXEC      ?= $(notdir $(CURDIR))
 
-SRCS := $(wildcard src/*.cpp *.cpp)
+SRCS := $(wildcard *.cpp) $(wildcard src/*.cpp)
 OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
-DEPS := $(OBJS:.o=.d)
 
 .PHONY: all build run clean compdb
 
@@ -46,4 +45,4 @@ run: build
 clean:
 	rm -rf $(BUILD_DIR)
 
--include $(DEPS)
+
