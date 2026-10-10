@@ -179,17 +179,19 @@ else
 fi
 
 # --- F. init.el Sec.21 expectations (hard failures) ---
+# Sec.21 now standardizes on stock M-x gdb: no custom launcher/functions and
+# no hardcoded -ex flags (those live in the user's ~/.gdbinit).
 INIT_EL="$PROJECT_DIR/src/init.el"
 if [ -f "$INIT_EL" ]; then
-  if grep -q "(defun my/cpp-debug " "$INIT_EL" && grep -q 'my/gdb-init-args' "$INIT_EL"; then
-    ok "F.1 init.el defines my/cpp-debug with integrated gdb flags"
+  if ! grep -q '(defun my/cpp-debug ' "$INIT_EL" && ! grep -q 'defun my/cpp-cmake' "$INIT_EL"; then
+    ok "F.1 init.el has no custom GDB launcher (standard M-x gdb)"
   else
-    fail "F.1 init.el defines my/cpp-debug with integrated gdb flags" "Sec.21 must define my/cpp-debug + my/gdb-init-args"
+    fail "F.1 init.el has no custom GDB launcher (standard M-x gdb)" "Sec.21 must not define my/cpp-debug/my/cpp-cmake*"
   fi
-  if grep -q "(defun my/gdb-no-completions " "$INIT_EL"; then
-    ok "F.2 init.el disables completions in GDB buffers"
+  if ! grep -q 'my/gdb-init-args' "$INIT_EL" && ! grep -q -- '-ex ' "$INIT_EL"; then
+    ok "F.2 init.el has no hardcoded GDB -ex flags (moved to ~/.gdbinit)"
   else
-    fail "F.2 init.el disables completions in GDB buffers" "Sec.21 must define my/gdb-no-completions"
+    fail "F.2 init.el has no hardcoded GDB -ex flags (moved to ~/.gdbinit)" "GDB set commands belong in ~/.gdbinit, not init.el"
   fi
   if ! grep -q 'gud-mode-map (kbd' "$INIT_EL" && ! grep -q 'gud-minor-mode-map (kbd' "$INIT_EL"; then
     ok "F.3 init.el has no custom GDB keybindings (built-in aliases only)"
@@ -202,7 +204,7 @@ if [ -f "$INIT_EL" ]; then
     fail "F.4 init.el sets gdb-many-windows layout + tooltips" "Sec.21 must set gdb-many-windows/gdb-show-main and gud-tooltip-mode"
   fi
   if grep -q 'setq compile-command "cmake -B build' "$INIT_EL"; then
-    fail "F.5 init.el avoids global compile-command clobber" "Build command lives in my/cpp-debug, not global"
+    fail "F.5 init.el avoids global compile-command clobber" "Build is driven by project make, not a global compile-command"
   else
     ok "F.5 init.el avoids global compile-command clobber"
   fi

@@ -715,37 +715,27 @@
 ;;; 21. DEBUG (GDB) TESTS — mirrors init.el Sec.21
 ;;; ==========================================================================
 
-(test--assert "21.1 my/cpp-debug is defined"
-  (cl-assert (fboundp 'my/cpp-debug)))
+(test--assert "21.1 no custom GDB launcher/wrapper functions remain"
+  (cl-assert (not (fboundp 'my/cpp-debug)))
+  (cl-assert (not (fboundp 'my/gdb-no-completions)))
+  (cl-assert (not (string-match-p "defun my/cpp-\\(debug\\|cmake\\)" (test--get-init-el)))))
 
-(test--assert "21.2 my/gdb-no-completions is defined"
-  (cl-assert (fboundp 'my/gdb-no-completions)))
+(test--assert "21.2 standard M-x gdb is used (gud/gdb-mi available)"
+  (cl-assert (fboundp 'gdb)))
 
 (test--assert "21.3 no custom GDB keybindings (built-in aliases only)"
   (cl-assert (not (string-match-p "gud-mode-map (kbd" (test--get-init-el))))
   (cl-assert (not (string-match-p "gud-minor-mode-map (kbd" (test--get-init-el)))))
 
 (test--assert "21.4 gdb-many-windows layout is configured"
-  (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el)))
-  (cl-assert (string-match-p "auto-load safe-path" (test--get-init-el))))
+  (cl-assert (string-match-p "gdb-many-windows" (test--get-init-el))))
 
-(test--assert "21.5 my/cpp-cmake-root finds outermost CMake project"
-  (let* ((tmp (make-temp-file "dbgroot" t))
-	 (sub (expand-file-name "sub" tmp)))
-    (make-directory sub t)
-    (with-temp-file (expand-file-name "CMakeLists.txt" tmp)
-      (insert "cmake_minimum_required(VERSION 3.15)\nproject(Demo)\n"))
-    (with-temp-file (expand-file-name "CMakeLists.txt" sub)
-      (insert "add_library(foo foo.cpp)\n"))
-    (unwind-protect
-	(cl-assert (equal (my/cpp-cmake-root sub) (file-name-as-directory tmp)))
-      (delete-directory tmp t))))
+(test--assert "21.5 no hardcoded GDB -ex flags in init.el (moved to ~/.gdbinit)"
+  (cl-assert (not (string-match-p "gdb-init-args" (test--get-init-el))))
+  (cl-assert (not (string-match-p "-ex " (test--get-init-el)))))
 
-(test--assert "21.6 my/cpp-debug-gdb-command puts binary before -ex flags"
-  (let ((cmd (my/cpp-debug-gdb-command "/tmp/demo")))
-    (cl-assert (string-match-p "\\`gdb -i=mi \"/tmp/demo\" -ex" cmd))
-    (cl-assert (not (string-match-p "--args" cmd)))
-    (cl-assert (string-match-p "-ex \"set auto-load safe-path /\"" cmd))))
+(test--assert "21.6 gud-tooltip-mode is configured for GDB buffers"
+  (cl-assert (string-match-p "gud-tooltip-mode" (test--get-init-el))))
 
 
 ;;; ==========================================================================

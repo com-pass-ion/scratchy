@@ -916,27 +916,11 @@ C/C++ is built and run via `project-compile' and `make run'."
 ;;; 21. DEBUG — GDB (gud/gdb-mi, built-in only)
 ;;; ==========================================================================
 
-;; Zero MELPA packages, zero custom keybindings: drive GDB by typing its
-;; built-in abbreviations in the console (n/s/c/b/p/bt, rn/rs/rc).
-;; One entry point: `M-x my/cpp-debug' builds (Debug) and launches GDB.
-;; GDB pretty-printing lives here as `-ex' flags, not in a .gdbinit file.
-
-;; --- GDB defaults, passed as `-ex' flags (no .gdbinit needed) ---------------
-
-(defconst my/gdb-init-args
-  '(;; Allow libstdc++ pretty-printers: a project .gdbinit in cwd would
-    ;; otherwise narrow safe-path and break `print *unique_ptr'.
-    "set auto-load safe-path /"
-    "set print pretty on"
-    "set print array on"
-    "set print array-indexes on"
-    "set print elements 0"
-    "set print object on"
-    "set print address off"
-    "set pagination off"
-    "set breakpoint pending on"
-    "set confirm off")
-  "GDB `set' commands applied by `my/cpp-debug' via `-ex' flags.")
+;; Standard `M-x gdb' (gud/gdb-mi). Build with `C-c l b' (make) and launch
+;; `M-x gdb' on the binary under build/. Type GDB's built-in abbreviations in
+;; the console (n/s/c/b/p/bt, rn/rs/rc). No custom launcher or keybindings.
+;; Pretty-printing/safe-path defaults belong in the user's ~/.gdbinit; see
+;; doc/IMPLEMENTATION-STRATEGY.md.
 
 ;; --- Layout (applied before M-x gdb) ---------------------------------------
 
@@ -950,103 +934,6 @@ C/C++ is built and run via `project-compile' and `make run'."
 
 (with-eval-after-load 'gud
   (add-hook 'gdb-mode-hook #'gud-tooltip-mode))
-
-;; --- No completions in GDB buffers ------------------------------------------
-;; The *gud* console is for typing GDB commands, not code.
-
-(defun my/gdb-no-completions ()
-  "Disable all completion UIs in GDB buffers."
-  (setq-local completion-at-point-functions
-	      (remq 'tempel-expand completion-at-point-functions))
-  (setq-local corfu-auto nil)
-  (when (bound-and-true-p corfu-mode)
-    (corfu-mode -1)))
-
-(with-eval-after-load 'gud
-  (add-hook 'gdb-mode-hook #'my/gdb-no-completions))
-
-;; --- One entry point: build (Debug) + launch GDB -----------------------------
-
-(defun my/cpp-cmake-has-project (cmake-file)
-  "Non-nil if CMAKE-FILE contains a top-level project() call."
-  (when (file-readable-p cmake-file)
-    (with-temp-buffer
-      (insert-file-contents cmake-file)
-      (goto-char (point-min))
-      (re-search-forward "^[ \t]*project[ \t]*(" nil t))))
-
-(defun my/cpp-cmake-root (dir)
-  "Outermost ancestor of DIR (including DIR) with a project() CMakeLists.txt.
-Returns nil when no CMake project is found above DIR."
-  (let ((dir (file-name-as-directory (expand-file-name dir)))
-	best)
-    (while (and dir (file-exists-p (expand-file-name "CMakeLists.txt" dir)))
-      (when (my/cpp-cmake-has-project (expand-file-name "CMakeLists.txt" dir))
-	(setq best dir))
-      (let ((parent (file-name-directory (directory-file-name dir))))
-	(setq dir (unless (equal parent dir) (file-name-as-directory parent)))))
-    best))
-
-(defun my/cpp-debug-root ()
-  "Best build root: outermost CMake project, else project.el, else
-`default-directory'."
-  (require 'project nil t)
-
-  (let* ((proj (and (fboundp 'project-current)
-		    (condition-case nil (project-current) (error nil))))
-	 (start (if (and proj (fboundp 'project-root))
-		    (project-root proj)
-		  default-directory)))
-    (or (my/cpp-cmake-root start) start)))
-
-(defun my/cpp-debug-default-binary (root)
-  "Newest executable under ROOT/build, or nil if none found."
-  (let ((dir (expand-file-name "build" root))
-	best best-time)
-    (when (file-directory-p dir)
-      (dolist (f (directory-files-recursively
-		  dir ".*$" nil
-		  (lambda (d) (not (string-match-p "CMakeFiles\\|_deps" d)))))
-	(when (and (file-regular-p f) (file-executable-p f)
-		   (not (string-match-p "\\.\\(o\\|a\\|so\\|cmake\\|txt\\|mk\\)$" f)))
-	  (let ((mtime (file-attribute-modification-time (file-attributes f))))
-	    (when (or (null best-time) (time-less-p best-time mtime))
-	      (setq best f best-time mtime))))))
-    best))
-
-(defun my/cpp-debug-gdb-command (binary)
-  "Full `gdb' command line for BINARY with `my/gdb-init-args' as -ex flags.
-Gud splits the command line itself with `split-string-and-unquote', which
-keeps quoted groups intact but does not process backslash escapes.
-BINARY comes first so gud names the session buffer *gud-<binary>*."
-  (let ((flags (mapconcat (lambda (s) (concat "-ex \"" s "\""))
-			  my/gdb-init-args " ")))
-    (concat "gdb -i=mi \"" (expand-file-name binary) "\" " flags)))
-
-(defun my/cpp-debug (binary)
-  "Build current project (Debug) and start GDB on BINARY.
-Prompts for BINARY with the newest executable under build/ as default.
-GDB pretty-printing comes from `my/gdb-init-args'; type built-in
-abbreviations (n/s/c/b/p, rn/rs/rc) in the console."
-  (interactive
-   (let ((root (my/cpp-debug-root)))
-     (list (read-file-name "Debug binary: "
-			   (expand-file-name "build" root)
-			   (my/cpp-debug-default-binary root) t))))
-  (let* ((root (my/cpp-debug-root))
-	 (binary (expand-file-name binary))
-	 (build (expand-file-name "build" root))
-	 (build-cmd (format "cmake -S %s -B %s -DCMAKE_BUILD_TYPE=Debug && cmake --build %s"
-			    (shell-quote-argument root)
-			    (shell-quote-argument build)
-			    (shell-quote-argument build)))
-	 (default-directory root))
-    (message "Building Debug: %s" build-cmd)
-    (unless (zerop (call-process-shell-command
-		    build-cmd nil "*my-cpp-debug-build*" t))
-      (pop-to-buffer "*my-cpp-debug-build*")
-      (error "Debug build failed; fix errors before debugging"))
-    (gdb (my/cpp-debug-gdb-command binary))))
 
 
 ;;; ==========================================================================
