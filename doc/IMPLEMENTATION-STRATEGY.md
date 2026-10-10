@@ -27,17 +27,23 @@ other layers only call into it.
    *what* (ordered flags, dispatch); the shell/tool owns the *how*.
 5. **One owner per behavior.** Never implement the same behavior in two
    layers; the other layer should only invoke the owner.
+6. **Never wrap a decoupled design in Elisp.** If a tool already owns a config
+   format, ship the tool's native config file (see `dotfiles/`) instead of
+   adding Elisp functions or data that duplicate it. A default native init
+   file coexists with the user's; it must not overwrite their defaults.
 
 ## Lessons from the GDB workflow (Sprint 12 → 14)
 
-**Positive (keep):** GDB pretty-printing settings were held as an Elisp data
-list (`my/gdb-init-args`) and passed through a single entry point. This kept
-the *data* in one place and testable as a value.
+**Negative (avoid):** GDB pretty-printing settings were once held as an Elisp
+data list (`my/gdb-init-args`) and passed as command-line flags. This wrapped a
+design gdb already owns: the Emacs side duplicated `.gdbinit`, and a project
+`.gdbinit` narrowing `auto-load safe-path` fought the flags. Elisp must not
+wrap decoupled designs (see `scrum/RULES.md`).
 
-**Negative (avoid):** Passing those settings as `-ex` flags meant the Emacs
-side duplicated what gdb/`.gdbinit` already own, and a project `.gdbinit`
-narrowing `auto-load safe-path` fought the flags. The fix is to let gdb own
-its own settings again.
+**Fix (owner):** gdb owns its own settings through a default `.gdbinit` init
+file shipped in this repo (`dotfiles/.gdbinit`). The installer symlinks it to
+`~/.gdbinit` only when the user has none, so the user's own init is never
+overwritten. No Elisp function wraps it.
 
 **Negative (avoid):** Writing Emacs-specific marker files (e.g. `.projectile`)
 that the chosen tool ignores. Use the tool's native mechanism (project.el
@@ -46,13 +52,13 @@ is read natively by Tempel with no adapter code.
 
 **Sprint 14 decision:** Standardize on stock `M-x gdb` with no custom
 launcher. Emacs owns only layout and tooltips; gdb owns pretty-printing and
-safe-path (via `~/.gdbinit`, below).
+safe-path (via the default `.gdbinit`, below).
 
-## User `~/.gdbinit` recipe
+## Default GDB init file
 
-The GDB settings formerly passed as `-ex` flags now live in the user's
-`~/.gdbinit` (outside this repo, so it is not versioned and applies to all
-projects):
+`dotfiles/.gdbinit` is the versioned default. The dependency installer
+symlinks it to `~/.gdbinit` only when that path does not already exist, so a
+user's own init file is never overwritten:
 
 ```gdb
 set auto-load safe-path /
@@ -67,6 +73,8 @@ set breakpoint pending on
 set confirm off
 ```
 
+gdb owns these settings; Emacs passes no command-line GDB flags.
+
 ## C/C++ pipeline decisions (Sprint 14)
 
 - **Build:** the project `Makefile` wraps a CMake backbone
@@ -79,7 +87,8 @@ set confirm off
   unavailable.
 - **Formatting:** clang-format runs on save using `-style=file`, so the
   nearest project `.clang-format` governs the style (legacy-aware).
-- **Debugging:** stock `M-x gdb`; pretty-printing via `~/.gdbinit` (above).
+- **Debugging:** stock `M-x gdb`; pretty-printing via the default `.gdbinit`
+  (`dotfiles/.gdbinit`, symlinked to `~/.gdbinit` by the installer).
 
 ## Test layers per implementation
 
