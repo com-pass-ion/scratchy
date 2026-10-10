@@ -144,7 +144,10 @@
   (cl-assert (eq (key-binding (kbd "M-+")) 'tempel-complete))
   (cl-assert (eq (key-binding (kbd "M-*")) 'tempel-insert)))
 
-(inttest--assert "4.3 Tempel path is configured"
+(inttest--assert "4.3 Tempel loads and defines its template path"
+  ;; init.el relies on tempel's default path and lazy loading, so tempel-path
+  ;; is only bound once tempel itself is loaded.
+  (require 'tempel nil t)
   (cl-assert (boundp 'tempel-path)))
 
 
