@@ -572,6 +572,52 @@
 ;; build stays project.el-native with no custom wrapper. Run the built binary
 ;; with `make run'. See doc/IMPLEMENTATION-STRATEGY.md.
 
+;; --- clang-format on save (C/C++) -----------------------------------------
+;; Formats with the nearest project `.clang-format' (`-style=file'), so legacy
+;; code keeps its own style. No-op when clang-format is not installed or no
+;; `.clang-format' is found above the file.
+
+(defun my/clang-format-config-root (dir)
+  "Return the nearest ancestor of DIR containing a `.clang-format' file.
+DIR is expanded first. Returns nil when none is found."
+  (let ((dir (file-name-as-directory (expand-file-name dir)))
+	found)
+    (while (and dir (not found))
+      (if (file-exists-p (expand-file-name ".clang-format" dir))
+	  (setq found dir)
+	(let ((parent (file-name-directory (directory-file-name dir))))
+	  (setq dir (unless (equal parent dir)
+		      (file-name-as-directory parent))))))
+    found))
+
+(defun my/clang-format-buffer ()
+  "Format the current C/C++ buffer with `clang-format' using `-style=file'.
+Does nothing unless clang-format is installed and a `.clang-format' file
+is found above `default-directory'."
+  (interactive)
+  (let ((exe (executable-find "clang-format"))
+	(file (buffer-file-name)))
+    (when (and exe file (my/clang-format-config-root default-directory))
+      (let ((temp (generate-new-buffer " *clang-format*")))
+	(unwind-protect
+	    (let ((exit (call-process-region (point-min) (point-max)
+					     exe nil temp
+					     "-style=file" "-assume-filename"
+					     file)))
+	      (when (and (integerp exit) (zerop exit))
+		(let ((pos (point))
+		      (output (with-current-buffer temp (buffer-string))))
+		  (delete-region (point-min) (point-max))
+		  (insert output)
+		  (goto-char (min pos (point-max))))))
+	  (kill-buffer temp))))))
+
+(defun my/clang-format-setup ()
+  "Enable `my/clang-format-buffer' before saving C/C++ buffers."
+  (add-hook 'before-save-hook #'my/clang-format-buffer nil t))
+
+(add-hook 'c-mode-common-hook #'my/clang-format-setup)
+
 ;; --- Python ---------------------------------------------------------------
 
 (defun my/python-run ()

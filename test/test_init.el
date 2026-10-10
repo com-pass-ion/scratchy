@@ -515,6 +515,24 @@
   (cl-assert (not (fboundp 'my/cpp-run)))
   (cl-assert (not (string-match-p "defun my/cpp-\\(build\\|run\\)" (test--get-init-el)))))
 
+(test--assert "13.14 clang-format functions are defined"
+  (cl-assert (fboundp 'my/clang-format-buffer))
+  (cl-assert (fboundp 'my/clang-format-config-root)))
+
+(test--assert "13.15 clang-format-config-root finds the nearest .clang-format"
+  (let* ((tmp (make-temp-file "fmtroot" t))
+	 (sub (expand-file-name "a/b" tmp)))
+    (make-directory sub t)
+    (with-temp-file (expand-file-name ".clang-format" tmp)
+      (insert "BasedOnStyle: LLVM\n"))
+    (unwind-protect
+	(cl-assert (equal (my/clang-format-config-root sub)
+			  (file-name-as-directory tmp)))
+      (delete-directory tmp t))))
+
+(test--assert "13.16 C/C++ clang-format hook is installed"
+  (cl-assert (memq 'my/clang-format-setup c-mode-common-hook)))
+
 
 ;;; ==========================================================================
 ;;; 14. ORG-MODE TESTS
