@@ -1,0 +1,69 @@
+#+TITLE: Agent Prompt Templates
+#+AUTHOR: njh
+#+DATE: 2026-10-10
+#+TAGS: ai prompt templates
+
+# Prompt Templates for 32B Models
+
+This file contains optimized prompt templates designed for 32B models, following
+the project's scrum rules and commit convention. Templates are atomic, self-contained,
+and designed to minimize token usage while maintaining clarity.
+
+## Template Conventions
+
+- **Atomic units**: Each prompt addresses one logical task
+- **Commit convention**: `<type>(<scope>): <description> [S<N>] [Xsp] [#item]`
+- **English only**: All documentation and prompts in English
+- **Minimal context**: Read only necessary files, use targeted grep/search
+- **Stop conditions**: Commit and log state when approaching token limits
+
+---
+
+## Template 1: Backlog Review and Triage
+
+**Purpose**: Review BACKLOG.org, triage items, suggest next sprint selection
+
+```
+You are working on an Emacs configuration project called "Scratchy".
+
+## Project Structure
+- src/init.el - Main config
+- test/ - Tests (run with ./test/run_tests.sh)
+- doc/ - Documentation (SCRUM.org)
+- scrum/ - Scrum process, backlog, sprint tracking
+
+## Current Sprint
+Sprint N: [goal/velocity]
+
+## Task
+Review the product backlog and suggest items for the next sprint.
+
+## Backlog Categories
+:editor:, :devops:, :testing:, :docs:, :lang:, :ai:, :cpp-dev:, :debug:
+
+## Instructions
+1. Read scrum/BACKLOG.org
+2. Identify DONE vs TODO items
+3. Group TODO items by category and estimated effort
+4. Recommend 3-5 items for next sprint considering:
+   - Total effort ≤ 16 story points (typical capacity)
+   - Dependencies between items
+   - Risk / unknowns
+5. Output in this format:
+
+### Suggested Sprint Items
+- [Sprint N] <type>(<scope>): <description> [S<N>] [Xsp] [#item]
+
+### Item Details
+- **<item>**: Brief description with acceptance criteria
+- **Effort**: Story points (1-5 scale)
+- **Risks**: Known blockers or uncertainties
+
+---
+
+## Quality Checks
+- Do not mix unrelated changes in a single prompt
+- One logical change per prompt (atomic)
+- Follow commit convention: type(scope): description
+- Keep prompts simple for 32B models - break complex work into units
+- Document context minimization guidelines when relevant

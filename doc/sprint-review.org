@@ -1,0 +1,38 @@
+#+TITLE: Sprint Review Template
+#+PROPERTY: CLOCKSUMMARY
+#+PROPERTY: CLOCKSUM
+
+Sprint N: [Goal/Velocity — e.g., "S17: Testing Strategy + tempel-collection"]
+Review Date: YYYY-MM-DD
+
+## Sprint Goal
+[Original sprint goal from planning]
+
+## Delivered Items
+*[Use commit convention: <type>(<scope>): <description> [S<N>] [Xsp] [#item]]*
+
+- [ ] <type>(<scope>): <description> [S<N>] [Xsp] [#item] — <completion status>
+- [ ] <type>(<scope>): <description> [S<N>] [Xsp] [#item] — <completion status>
+- [ ] <type>(<scope>): <description> [S<N>] [Xsp] [#item] — <completion status>
+
+## Completed SP: __ / __ (N%)
+
+## What Worked Well
+- [List what went well during the sprint]
+
+## What Didn't Work Well
+- [List challenges, blockers, or items that didn't meet expectations]
+
+## Carried-Forward Items
+| Item | Reason for Carryover | New Sprint Assignment |
+|------|---------------------|----------------------|
+|      |                     |                      |
+
+## Action Items for Next Sprint
+- [ ] <type>(<scope>): <description> [S<N>] [Xsp] [#item] — <owner>
+- [ ] <type>(<scope>): <description> [S<N>] [Xsp] [#item] — <owner>
+
+## Review Log Notes
+- Velocity: __ SP (average: 7.0 SP/sprint per SPRINT.org)
+- Capacity used: __ hours (typical session: 2-4 hours)
+- Token/context limits encountered: __

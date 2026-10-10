@@ -56,6 +56,10 @@ echo ""
 # Run adopt script tests
 echo "--- Adopt Script Tests ---"
 bash "$SCRIPT_DIR/test_adopt_cpp.sh"
+
+# Scrum Document Safety Guard
+echo "--- Scrum Document Safety Guard ---"
+bash "$SCRIPT_DIR/validate_process_files.sh"
 # Byte-compile check (STRICT MODE)
 # Load init.el first so all packages are installed and their definition
 # prefixes registered; otherwise the compiler reports false free-variable
