@@ -341,10 +341,11 @@ All planned features, sorted by category.
    - Add audit logging for all bypass executions
    - Add tests for bypass functionality
 
-** TODO Elisp vs Shell vs Config implementation strategy
+** DONE Elisp vs Shell vs Config implementation strategy
    :PROPERTIES:
    :Effort:   2
    :Category: :process:
+   :Sprint:   14
    :END:
    Decide where each capability lives: Elisp in init.el, external config file, or shell script.
    GDB workflow showed the choice unlocks capabilities (data-driven -ex flags, shell builds, zero .gdbinit).
@@ -354,6 +355,9 @@ All planned features, sorted by category.
    - Define tests per layer: Elisp via test_init.el, shell via TAP scripts, config via existence/content checks
    - Write doc/IMPLEMENTATION-STRATEGY.md with decision table and examples
    - Propose rule reference in scrum/RULES.md (needs explicit approval per project rules)
+   Done in Sprint 14: doc/IMPLEMENTATION-STRATEGY.md created (decision table,
+   criteria, GDB lessons, ~/.gdbinit recipe, C/C++ pipeline decisions, per-layer
+   tests); RULES.md Coding Style references it (user approved the edit).
 
 ** TODO Clarify specs for all backlog items
    :PROPERTIES:
@@ -449,10 +453,11 @@ All planned features, sorted by category.
    - Restore positive test 10.6 coverage on 31.1+
    - Update doc/SCRUM.org packages and test tables
 
-** TODO Modernize C++ Development Pipeline
+** DONE Modernize C++ Development Pipeline
    :PROPERTIES:
    :Effort:   5
    :Category: :cpp-dev:
+   :Sprint:   14
    :END:
    Remove suboptimal wrappers and standardize the C++ toolchain.
    - Remove all my/... functions and GDB wrappers in init.el
@@ -462,6 +467,13 @@ All planned features, sorted by category.
    - Setup .clang-format detection for legacy-aware formatting
    - Standardize GDB workflow to use standard M-x gdb
    - Update tests to reflect removal of custom wrappers
+   Done in Sprint 14: removed my/cpp-build, my/cpp-run, my/cpp-debug and all
+   my/cpp-cmake*/my/gdb-* helpers; clangd uses build/compile_commands.json via
+   project .clangd (no fallback flags); Makefile wraps CMake and exports the
+   compile DB; clang-format on save with .clang-format detection; stock M-x gdb
+   with layout + tooltips (pretty-printing moved to ~/.gdbinit); bear +
+   clang-format added to installer; tests 9.8, 13.1-13.16, 21.1-21.6 and GDB
+   workflow F.1-F.5 updated.
 
 
 ** DONE GDB Debug Workflow for C++
