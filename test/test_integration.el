@@ -118,9 +118,8 @@
 (inttest--assert "3.1 Project.el is configured"
   (cl-assert (eq project-switch-commands 'project-find-dir)))
 
-(inttest--assert "3.2 Build functions are defined"
-  (cl-assert (fboundp 'my/cpp-build))
-  (cl-assert (fboundp 'my/cpp-run))
+(inttest--assert "3.2 Build + run functions are defined"
+  (cl-assert (fboundp 'project-compile))
   (cl-assert (fboundp 'my/python-run))
   (cl-assert (fboundp 'my/bash-run))
   (cl-assert (fboundp 'my/run)))

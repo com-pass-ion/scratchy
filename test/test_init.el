@@ -466,11 +466,19 @@
 ;;; 13. BUILD & RUN TESTS
 ;;; ==========================================================================
 
-(test--assert "13.1 my/cpp-build is defined"
-  (cl-assert (fboundp 'my/cpp-build)))
+(test--assert "13.1 project-compile is available (default C/C++ build)"
+  (cl-assert (fboundp 'project-compile)))
 
-(test--assert "13.2 my/cpp-run is defined"
-  (cl-assert (fboundp 'my/cpp-run)))
+(test--assert "13.2 C/C++ Makefile drives a CMake backbone"
+  (let ((mk (expand-file-name
+	     "test/fixtures/debug_cpp/Makefile"
+	     (file-name-directory
+	      (directory-file-name (file-name-directory load-file-name))))))
+    (cl-assert (file-exists-p mk))
+    (with-temp-buffer
+      (insert-file-contents mk)
+      (cl-assert (string-match-p "cmake" (buffer-string)))
+      (cl-assert (string-match-p "CMAKE_EXPORT_COMPILE_COMMANDS" (buffer-string))))))
 
 (test--assert "13.3 my/python-run is defined"
   (cl-assert (fboundp 'my/python-run)))
@@ -484,8 +492,8 @@
 (test--assert "13.6 C-c l r is bound to my/run"
   (cl-assert (eq (key-binding (kbd "C-c l r")) 'my/run)))
 
-(test--assert "13.7 C-c l b is bound to my/cpp-build"
-  (cl-assert (eq (key-binding (kbd "C-c l b")) 'my/cpp-build)))
+(test--assert "13.7 C-c l b is bound to project-compile"
+  (cl-assert (eq (key-binding (kbd "C-c l b")) 'project-compile)))
 
 (test--assert "13.8 compilation-scroll-output is t"
   (cl-assert (eq compilation-scroll-output t)))
@@ -501,6 +509,11 @@
 
 (test--assert "13.12 C-c l p is bound to previous-error"
   (cl-assert (eq (key-binding (kbd "C-c l p")) 'previous-error)))
+
+(test--assert "13.13 no custom C/C++ build/run wrappers remain"
+  (cl-assert (not (fboundp 'my/cpp-build)))
+  (cl-assert (not (fboundp 'my/cpp-run)))
+  (cl-assert (not (string-match-p "defun my/cpp-\\(build\\|run\\)" (test--get-init-el)))))
 
 
 ;;; ==========================================================================

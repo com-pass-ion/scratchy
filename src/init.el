@@ -507,9 +507,19 @@
 	      (insert "#include <iostream>\n\nint main() {\n    std::cout << \"Hello from new Project!\" << std::endl;\n    return 0;\n}\n")
 	      (save-buffer))
 
-	    ;; CMakeLists.txt for C++17 build.
+	    ;; CMakeLists.txt for C++17 build with a compile database.
 	    (with-current-buffer (find-file-noselect (expand-file-name "CMakeLists.txt" proj-root))
-	      (insert (format "cmake_minimum_required(VERSION 3.10)\nproject(%s)\nset(CMAKE_CXX_STANDARD 17)\nadd_executable(${PROJECT_NAME} src/main.cpp)\n" name))
+	      (insert (format "cmake_minimum_required(VERSION 3.10)\nproject(%s)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_EXPORT_COMPILE_COMMANDS ON)\nadd_executable(${PROJECT_NAME} src/main.cpp)\n" name))
+	      (save-buffer))
+
+	    ;; Makefile: make drives the CMake backbone (see Sec.13).
+	    (with-current-buffer (find-file-noselect (expand-file-name "Makefile" proj-root))
+	      (insert (format "BUILD_DIR ?= build\nBUILD_TYPE ?= Debug\nEXEC ?= %s\n\n.PHONY: all build run clean\n\nall: build\n\nbuild:\n\tcmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON\n\tcmake --build $(BUILD_DIR)\n\nrun: build\n\t./$(BUILD_DIR)/$(EXEC)\n\nclean:\n\trm -rf $(BUILD_DIR)\n" name))
+	      (save-buffer))
+
+	    ;; .clangd: point clangd at the CMake compile database.
+	    (with-current-buffer (find-file-noselect (expand-file-name ".clangd" proj-root))
+	      (insert "CompileFlags:\n  CompilationDatabase: build\n")
 	      (save-buffer))
 
 	    ;; .gitignore for build artifacts.
@@ -556,42 +566,11 @@
 ;;; 13. BUILD & RUN — Language-specific compile commands
 ;;; ==========================================================================
 
-;; --- C++ (CMake) ----------------------------------------------------------
-
-(defun my/cpp-build ()
-  "Build the current C++ project using CMake."
-  (interactive)
-  (let* ((root (my/cpp-debug-root))
-	 (build (expand-file-name "build" root)))
-    (if root
-	(let ((build-cmd (format "cmake -S %s -B %s && cmake --build %s"
-				 (shell-quote-argument root)
-				 (shell-quote-argument build)
-				 (shell-quote-argument build))))
-	  (compile build-cmd))
-      (message "No project root found!"))))
-
-(defun my/cpp-run ()
-  "Build and run the current C++ project using CMake.
-Uses `my/cpp-debug-default-binary' (newest executable under build/),
-the same lookup as `my/cpp-debug', so build and debug agree."
-  (interactive)
-  (let* ((root (my/cpp-debug-root)))
-    (if root
-	(let* ((build-dir (expand-file-name "build" root))
-	       (binary (my/cpp-debug-default-binary root))
-	       (run-cmd (if binary
-			    (format "cmake -S %s -B %s && cmake --build %s && %s"
-				    (shell-quote-argument root)
-				    (shell-quote-argument build-dir)
-				    (shell-quote-argument build-dir)
-				    (shell-quote-argument binary))
-			  (format "cmake -S %s -B %s && cmake --build %s"
-				  (shell-quote-argument root)
-				  (shell-quote-argument build-dir)
-				  (shell-quote-argument build-dir)))))
-	  (compile run-cmd))
-      (message "No project root found!"))))
+;; --- C/C++ (make over a CMake backbone) -----------------------------------
+;; Project `Makefile' wraps CMake and exports build/compile_commands.json for
+;; clangd. `C-c l b' runs `project-compile' (defaulting to make), so the C/C++
+;; build stays project.el-native with no custom wrapper. Run the built binary
+;; with `make run'. See doc/IMPLEMENTATION-STRATEGY.md.
 
 ;; --- Python ---------------------------------------------------------------
 
@@ -617,18 +596,18 @@ the same lookup as `my/cpp-debug', so build and debug agree."
 ;; `C-c l r' runs the file based on the current major mode.
 
 (defun my/run ()
-  "Run file based on current mode."
+  "Run file based on current mode.
+C/C++ is built and run via `project-compile' and `make run'."
   (interactive)
   (cond
-   ((derived-mode-p 'c++-mode)   (my/cpp-run))
-   ((derived-mode-p 'c-mode)     (my/cpp-run))
    ((derived-mode-p 'python-mode) (my/python-run))
    ((derived-mode-p 'sh-mode)    (my/bash-run))
    ((derived-mode-p 'emacs-lisp-mode) (eval-buffer))
    (t (message "No supported run mode!"))))
 
 (define-key global-map (kbd "C-c l r") 'my/run)
-(define-key global-map (kbd "C-c l b") 'my/cpp-build)
+(declare-function project-compile "project" ())
+(define-key global-map (kbd "C-c l b") 'project-compile)
 
 ;; Auto-scroll compile output buffer.
 (setq compilation-scroll-output t)
