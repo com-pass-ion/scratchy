@@ -18,5 +18,6 @@
 |     13 | 2026-10-10 |       — |        16 | Commit-driven process + doc audit                |
 |     14 | 2026-10-10 |       7 |        10 | C++ pipeline modernization + impl strategy       |
 |     15 | 2026-10-10 |       3 |         3 | Rule: no Elisp wrappers + adopt C++ workflow scripts |
+|     16 | 2026-10-10 |       3 |         3 | C++ Run, Format Hint, Build Flag, CMake Support    |
 
 *Average*: 7.0 SP/Sprint
