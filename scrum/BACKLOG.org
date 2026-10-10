@@ -242,16 +242,20 @@ All planned features, sorted by category.
    - Keep prompts simple and atomic for 32B models
    - Document context minimization guidelines
 
-** TODO Audit scrum documentation
+** DONE Audit scrum documentation
    :PROPERTIES:
    :Effort:   2
    :Category: :docs:
+   :Sprint:   13
    :END:
    Audit scrum docs for consistency and accuracy.
    - Verify BACKLOG.org status changes are correct
    - Check for duplicate rules across files
    - Fix any violations found
    - Document audit results
+   Done in Sprint 13: fixed doc/SCRUM.org test counts (162→161, §30 3→2),
+   init.el line count (1026→1024), tempel-collection status, removed stale
+   .projectile/known-issues and dead file references.
 
 ** TODO Time-box research tasks
    :PROPERTIES:
@@ -358,12 +362,19 @@ All planned features, sorted by category.
    :END:
    Review and clarify acceptance criteria for TODO items lacking clear specifications.
 
-** TODO Script to install newest emacs version
+** TODO Install script for Emacs 31.1+
    :PROPERTIES:
-   :Effort:   2
+   :Effort:   3
    :Category: :devops:
+   :Sprint:   13
    :END:
-   Automate installation of the latest Emacs version from source or PPA.
+   Automate installation of Emacs 31.1+ as install_emacs_31.sh (repo root).
+   Needed to unlock tempel-collection and current upstream features.
+   - Arch-aware source build (aarch64/x86_64); no PPA on Debian aarch64
+   - Support --prefix and --jobs flags; verify resulting emacs-version
+   - Optional PPA path when running on Ubuntu
+   - Reference from install_emacs_config_dependencies.sh / docs
+   - Verify ./test/run_tests.sh green on 31.1+
 
 ** TODO Clean templates for Scrum process
    :PROPERTIES:
@@ -414,12 +425,44 @@ All planned features, sorted by category.
    :END:
    Research auto-documentation from agent interactions and shell command history.
 
-** TODO Definition of Done
+** TODO Wire Scrum Document Safety Guard into pre-commit
    :PROPERTIES:
    :Effort:   1
    :Category: :process:
+   :Sprint:   13
    :END:
-   Establish clear Definition of Done criteria for all work items.
+   test/validate_process_files.sh exists and is tested but nothing invokes it,
+   so the process-file protection is effectively dead code.
+   - Call validate_process_files.sh from test/git-pre-commit (or run_tests.sh)
+   - Add a test proving it blocks staged RULES.md/PROMPT.md/SCRUM-WORKFLOW.md edits
+   - Document activation in docs
+
+** TODO Re-enable tempel-collection on Emacs 31.1+
+   :PROPERTIES:
+   :Effort:   1
+   :Category: :editor:
+   :Sprint:   13
+   :END:
+   Re-enable the use-package tempel-collection block (commented: needs Emacs 31.1+).
+   Depends on the Emacs 31.1+ install script.
+   - Uncomment tempel-collection in src/init.el Sec.10
+   - Restore positive test 10.6 coverage on 31.1+
+   - Update doc/SCRUM.org packages and test tables
+
+** TODO Modernize C++ Development Pipeline
+   :PROPERTIES:
+   :Effort:   5
+   :Category: :cpp-dev:
+   :END:
+   Remove suboptimal wrappers and standardize the C++ toolchain.
+   - Remove all my/... functions and GDB wrappers in init.el
+   - Configure clangd to prioritize compile_commands.json (removing hardcoded flags)
+   - Implement project.el integration for make as default build command
+   - Add bear to install_emacs_config_dependencies.sh for legacy indexing
+   - Setup .clang-format detection for legacy-aware formatting
+   - Standardize GDB workflow to use standard M-x gdb
+   - Update tests to reflect removal of custom wrappers
+
 
 ** DONE GDB Debug Workflow for C++
    :PROPERTIES:
@@ -505,13 +548,13 @@ All planned features, sorted by category.
    :END:
    Replaced by Custom Agent Environment for low-level control.
 
-** DONE Definition of Done (doc/DOD.md)
+** DONE Definition of Done (scrum/RULES.md)
    :PROPERTIES:
    :Effort:   1
    :Category: :docs:
    :Sprint:   3
    :END:
-   Created Definition of Done document with checklist.
+   DoD checklist lives in scrum/RULES.md > Quality (no separate doc/DOD.md).
 
 * Done
 
