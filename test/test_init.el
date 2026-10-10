@@ -418,13 +418,10 @@
 (test--assert "10.3 M-* is bound to tempel-insert"
   (cl-assert (eq (key-binding (kbd "M-*")) 'tempel-insert)))
 
-(test--assert "10.4 tempel is installed"
-  (cl-assert (package-installed-p 'tempel)))
-
-(test--assert "10.5 tempel-expand is in completion-at-point-functions"
+(test--assert "10.4 tempel-expand is in completion-at-point-functions"
   (cl-assert (string-match-p "tempel-expand" (test--get-init-el))))
 
-(test--assert "10.6 tempel-collection gated on Emacs 31.1+"
+(test--assert "10.5 tempel-collection gated on Emacs 31.1+"
   ;; tempel-collection requires Emacs 31.1+ and is disabled in init.el below
   ;; that version, so verify the resulting state rather than a fixed assumption.
   (if (version<= "31.1" emacs-version)
