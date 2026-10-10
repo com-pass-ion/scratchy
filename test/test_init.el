@@ -458,8 +458,12 @@
 (test--assert "12.2 project-list-files-gap is 0"
   (cl-assert (eq project-list-files-gap 0)))
 
-(test--assert "12.3 my/project-new is defined"
-  (cl-assert (fboundp 'my/project-new)))
+(test--assert "12.3 adopt-cpp-project is defined"
+  (cl-assert (fboundp 'adopt-cpp-project)))
+
+(test--assert "12.4 my/project-new is removed (replaced by adopt script)"
+  (cl-assert (not (fboundp 'my/project-new)))
+  (cl-assert (not (string-match-p "defun my/project-new" (test--get-init-el)))))
 
 
 ;;; ==========================================================================

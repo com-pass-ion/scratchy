@@ -479,87 +479,27 @@
 (defvar project-list-files-gap)
 (setq project-list-files-gap 0)
 
-;; --- New project scaffolding ----------------------------------------------
-;; `M-x my/project-new' creates a C++ or Python project in ~/Projects/
-;; with Git init, .gitignore, and appropriate boilerplate.
-;; project.el detects the project via the `.git/' directory created below,
-;; so no extra marker file is needed.
+;; --- C/C++ project adoption -----------------------------------------------
+;; `M-x adopt-cpp-project' runs the repo's scaffold/adopt-cpp-project.sh
+;; in the current directory to add only what's missing (build system if none
+;; exists, .clangd, .gitignore, .clang-format unless --no-format).
 
-(defun my/project-new ()
-  "Create a new C++ or Python project with Git and Venv integration."
+(defvar my/repo-root
+  (file-name-directory (directory-file-name (file-name-directory (or load-file-name buffer-file-name "."))))
+  "Absolute path to the Scratchy repository root.")
+
+(defun my/adopt-script-path ()
+  (expand-file-name "scaffold/adopt-cpp-project.sh" my/repo-root))
+
+(defun adopt-cpp-project ()
+  "Adopt the current directory into the C/C++ workflow (confirmation first)."
   (interactive)
-  (let* ((lang (completing-read "Language: " '("cpp" "python")))
-	 (name (read-string "Project Name: "))
-	 (proj-root (expand-file-name (concat "~/Projects/" name))))
-    (if (file-exists-p proj-root)
-	(error "Project directory already exists!")
-      (progn
-	(make-directory proj-root t)
-
-	(cond
-	 ;; --- C++ project ------------------------------------------------
-	 ((string= lang "cpp")
-	  (let ((src-dir (expand-file-name "src" proj-root)))
-	    (make-directory src-dir t)
-
-	    ;; main.cpp with hello world.
-	    (with-current-buffer (find-file-noselect (expand-file-name "main.cpp" src-dir))
-	      (insert "#include <iostream>\n\nint main() {\n    std::cout << \"Hello from new Project!\" << std::endl;\n    return 0;\n}\n")
-	      (save-buffer))
-
-	    ;; CMakeLists.txt for C++17 build with a compile database.
-	    (with-current-buffer (find-file-noselect (expand-file-name "CMakeLists.txt" proj-root))
-	      (insert (format "cmake_minimum_required(VERSION 3.10)\nproject(%s)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_EXPORT_COMPILE_COMMANDS ON)\nadd_executable(${PROJECT_NAME} src/main.cpp)\n" name))
-	      (save-buffer))
-
-	    ;; Makefile: make drives the CMake backbone (see Sec.13).
-	    (with-current-buffer (find-file-noselect (expand-file-name "Makefile" proj-root))
-	      (insert (format "BUILD_DIR ?= build\nBUILD_TYPE ?= Debug\nEXEC ?= %s\n\n.PHONY: all build run clean\n\nall: build\n\nbuild:\n\tcmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_EXPORT_COMPILE_COMMANDS=ON\n\tcmake --build $(BUILD_DIR)\n\nrun: build\n\t./$(BUILD_DIR)/$(EXEC)\n\nclean:\n\trm -rf $(BUILD_DIR)\n" name))
-	      (save-buffer))
-
-	    ;; .clangd: point clangd at the CMake compile database.
-	    (with-current-buffer (find-file-noselect (expand-file-name ".clangd" proj-root))
-	      (insert "CompileFlags:\n  CompilationDatabase: build\n")
-	      (save-buffer))
-
-	    ;; .gitignore for build artifacts.
-	    (with-current-buffer (find-file-noselect (expand-file-name ".gitignore" proj-root))
-	      (insert "build/\n")
-	      (save-buffer))
-
-	    (find-file (expand-file-name "main.cpp" src-dir))))
-
-	 ;; --- Python project ---------------------------------------------
-	 ((string= lang "python")
-	  (let ((main-py (expand-file-name "main.py" proj-root)))
-
-	    ;; main.py with boilerplate.
-	    (with-current-buffer (find-file-noselect main-py)
-	      (insert "def main():\n    print('Hello from new Project!')\n\nif __name__ == '__main__':\n    main()\n")
-	      (save-buffer))
-
-	    ;; .gitignore for Python.
-	    (with-current-buffer (find-file-noselect (expand-file-name ".gitignore" proj-root))
-	      (insert ".venv/\n__pycache__/\n*.py[cod]\n")
-	      (save-buffer))
-
-	    ;; Create virtualenv.
-	    (shell-command (format "python3 -m venv %s"
-				   (shell-quote-argument (expand-file-name ".venv" proj-root))))
-
-	    (find-file main-py))))
-
-	;; Git init + initial commit via git CLI (non-interactive).
-	;; `magit-commit' opens a transient popup and cannot take a message
-	;; argument, so use plain git here.  The commit is best-effort:
-	;; it fails gracefully when user.name/user.email are unset.
-	(let ((default-directory proj-root))
-	  (when (zerop (call-process "git" nil nil nil "init"))
-	    (call-process "git" nil nil nil "add" "-A")
-	    (ignore-errors
-	      (call-process "git" nil nil nil "commit" "-m" "Initial commit"))))
-
-	(message "Project %s created successfully!" name)))))
+  (let ((dir default-directory)
+        (script (my/adopt-script-path)))
+    (unless (file-executable-p script)
+      (error "adopt script not found or not executable: %s" script))
+    (when (y-or-n-p (format "Adopt %s into the C/C++ workflow? " dir))
+      (compile (concat script " "" dir """)))))
 
 
 ;;; ==========================================================================

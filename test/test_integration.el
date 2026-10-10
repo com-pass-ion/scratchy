@@ -127,8 +127,11 @@
 (inttest--assert "3.3 Compile settings are configured"
   (cl-assert (eq compilation-scroll-output t)))
 
-(inttest--assert "3.4 Project scaffolding is defined"
-  (cl-assert (fboundp 'my/project-new)))
+(inttest--assert "3.4 Project adopt command is defined"
+  (cl-assert (fboundp 'adopt-cpp-project)))
+
+(inttest--assert "3.5 my/project-new is removed (replaced by adopt script)"
+  (cl-assert (not (fboundp 'my/project-new))))
 
 
 ;;; ==========================================================================

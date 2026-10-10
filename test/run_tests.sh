@@ -52,6 +52,10 @@ echo "--- GDB Workflow Tests ---"
 bash "$SCRIPT_DIR/test_gdb_workflow.sh"
 
 echo ""
+echo ""
+# Run adopt script tests
+echo "--- Adopt Script Tests ---"
+bash "$SCRIPT_DIR/test_adopt_cpp.sh"
 # Byte-compile check (STRICT MODE)
 # Load init.el first so all packages are installed and their definition
 # prefixes registered; otherwise the compiler reports false free-variable

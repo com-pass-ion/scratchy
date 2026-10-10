@@ -1,0 +1,5 @@
+# Scratchy default C++ style (conservative, least-intrusive).
+BasedOnStyle: LLVM
+Standard: c++17
+ColumnLimit: 100
+SortIncludes: Never
