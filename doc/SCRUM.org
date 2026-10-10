@@ -18,7 +18,7 @@
 - *Built-in first*: Use Emacs built-ins where possible (eglot, project.el, tempo, flymake, which-key)
 - *Minimal packages*: Only add packages that provide clear, measurable value
 - *Single-file config*: Everything in =src/init.el=, no modular splitting
-- *Testable*: Every feature has an automated test (162 module + 32 integration + 17 GDB workflow checks, TAP format)
+- *Testable*: Every feature has an automated test (161 module + 32 integration + 17 GDB workflow checks, TAP format)
 - *Workflow*: Every workflow has a predefined usage-test automated and user reviewed.
 - *Documented*: Documentation lives in ./doc as SCRUM.org
 - *Commit-driven*: Sprint tracking via conventional commits with `[S<N>]` markers
@@ -31,18 +31,21 @@
 ** File Structure
 
 #+begin_example
-emacs_from_scratch/
+scratchy/
 ├── src/
-│   └── init.el                          # Main config (1026 lines)
+│   └── init.el                          # Main config (1024 lines)
 ├── test/
-│   ├── test_init.el                     # Module tests (162 tests)
+│   ├── test_init.el                     # Module tests (161 tests)
 │   ├── test_integration.el              # Integration tests (32 tests)
 │   ├── test_gdb_workflow.sh             # GDB workflow tests (17 checks)
+│   ├── validate_process_files.sh        # Scrum document safety guard
+│   ├── git-pre-commit                   # Pre-commit hook (tests)
 │   ├── fixtures/debug_cpp/              # Hermetic GDB demo
 │   ├── run_tests.sh                     # Test runner
 │   └── coverage.sh                      # Coverage report
 ├── doc/
 │   ├── SCRUM.org                        # This file — specs & workflow
+│   ├── scratchy_testing_strategy.org    # Testing strategy
 │   └── agent-research/                  # Research documents
 ├── scrum/
 │   ├── PROMPT.md                        # Agent entry prompt (auto-loaded)
@@ -70,9 +73,9 @@ emacs_from_scratch/
 | 7   | Help         | helpful              | Enhanced describe-function/variable/key/symbol       |
 | 8   | Git          | magit, diff-hl       | Magit status, git gutter in fringe                   |
 | 9   | LSP          | eglot                | pyright, clangd, jdtls, bash-ls, flymake navigation  |
-| 10  | Snippets     | tempel, tempel-collection | C, Python, Bash, Elisp, Java templates, M-+/M-* expand |
+| 10  | Snippets     | tempel (tempel-collection disabled) | C, Python, Bash, Elisp, Java templates, M-+/M-* expand |
 | 11  | Terminal     | eat                  | Shell in Emacs                                       |
-| 12  | Project      | — (project.el built-in) | Scaffolding (C++/Python), .projectile, git init   |
+| 12  | Project      | — (project.el built-in) | Scaffolding (C++/Python), git init               |
 | 13  | Build & Run  | —                    | CMake build, mode-specific run, compile mode         |
 | 14  | Org-Mode     | —                    | Babel shell integration                              |
 | 15  | Language Modes | markdown, yaml, json, toml, nix | Config file support |
@@ -128,7 +131,7 @@ emacs_from_scratch/
 | vundo      | ELPA   | 3       | Visual undo         | Lazy (command)|
 | ace-window | ELPA   | 3       | Window switching    | Eager (bind)  |
 | tempel     | ELPA   | 10      | Template system     | Eager         |
-| tempel-collection | MELPA | 10  | Community templates | Eager (after tempel) |
+| tempel-collection | MELPA | 10  | Community templates (disabled: needs Emacs 31.1+) | — |
 | eat        | ELPA   | 11      | Terminal emulator   | Lazy (command)|
 | markdown-mode | MELPA | 15     | Markdown files      | Eager         |
 | yaml-mode  | MELPA   | 15      | YAML files          | Eager         |
@@ -148,7 +151,7 @@ emacs_from_scratch/
 - *Format*: TAP (Test Anything Protocol)
 - *Runner*: =./test/run_tests.sh= (runs module + integration + GDB workflow)
 - *Exit Code*: 0 = pass, 1 = fail
-- *Module Tests*: 162
+- *Module Tests*: 161
 - *Integration Tests*: 32
 - *GDB Workflow Tests*: 17 checks (hard PASS/FAIL + arch SKIPs, =test/test_gdb_workflow.sh=)
 - *Coverage*: =./test/coverage.sh=
@@ -166,7 +169,7 @@ emacs_from_scratch/
 | 7. Help       |     4 | All helpful remaps                                    |
 | 8. Git        |     5 | Magit functions, diff-hl                              |
 | 9. LSP        |     7 | Eglot hooks (5 languages), autoshutdown, flymake faces|
-| 10. Snippets  |     6 | Tempel, tempel-collection, keybindings, path          |
+| 10. Snippets  |     6 | Tempel, tempel-collection gating, keybindings         |
 | 11. Terminal  |     2 | Eat command, keybinding                               |
 | 12. Project   |     3 | Project.el config, scaffolding function               |
 | 13. Build & Run |   12 | All functions, keybindings, compile settings          |
@@ -178,7 +181,7 @@ emacs_from_scratch/
 | 19. Git Hooks |     3 | Pre-commit script, executable, function definition    |
 | 20. DevOps    |     4 | Docker command, keybinding, dockerfile-mode           |
 | 21. Debug     |     6 | my/cpp-debug, no-completions, no keys, gdb-many-windows, cmake-root, gdb-command |
-| 30. Meta: Coverage | 3 | Coverage script, templates                      |
+| 30. Meta: Coverage | 2 | Coverage script                                 |
 | 31. Meta: Safety Guard | 5 | validate script, RULES/WORKFLOW/PROMPT existence |
 
 *** Integration Test Coverage
@@ -239,10 +242,10 @@ emacs_from_scratch/
 
 ** Known Issues
 
-| Issue                | Detail                                          | Fix                              |
-|----------------------+-------------------------------------------------+----------------------------------|
-| Stale Emacs artifacts | =#init.el#= and =init.el~= in repo           | Added to .gitignore, removed     |
-| Git history minimal  | Only 1 commit, many changes since               | Commit current state             |
+| Issue                      | Detail                                                   | Tracking                         |
+|----------------------------+----------------------------------------------------------+----------------------------------|
+| tempel-collection disabled | Requires Emacs 31.1+; block commented out in init.el     | Sprint 13 backlog (re-enable)    |
+| Safety guard not wired     | validate_process_files.sh is not invoked by the hook     | Sprint 13 backlog (wire it)      |
 
 * Scrum Workflow
 
