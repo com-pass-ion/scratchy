@@ -35,6 +35,7 @@ Quick reference of all rules to follow when working on this project.
 ## Coding Style
 
 - **Pure Functional Style**: Prefer pure functions with no side effects. Use `let` for local bindings, avoid `setq` for global state. Functions should return values, not modify globals. Use `defconst` for constants, `defvar` for mutable state only when necessary.
+- **Implementation Layer**: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file — following `doc/IMPLEMENTATION-STRATEGY.md` (one owner per behavior).
 
 ## Sprint
 
