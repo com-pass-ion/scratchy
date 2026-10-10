@@ -50,4 +50,26 @@ sudo npm install -g @mermaid-js/mermaid-cli
 # Install Noto Sans Mono font (as specified in init.el)
 sudo apt install -y fonts-noto
 
+# Default dot files (tool-native configs versioned in this repo).
+# Symlink into $HOME only when the target does not already exist, so a
+# user's own configuration is never overwritten.
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)/dotfiles"
+if [ -d "$DOTFILES_DIR" ]; then
+    echo "Linking default dot files from $DOTFILES_DIR..."
+    shopt -s nullglob dotglob
+    for src in "$DOTFILES_DIR"/*; do
+        base="$(basename "$src")"
+        dest="$HOME/$base"
+        if [ -e "$dest" ] || [ -L "$dest" ]; then
+            echo "  skip $dest (already exists)"
+        else
+            ln -s "$src" "$dest"
+            echo "  linked $dest -> $src"
+        fi
+    done
+    shopt -u nullglob dotglob
+else
+    echo "No dotfiles directory found; skipping dot-file symlinks."
+fi
+
 echo "All dependencies installed successfully."

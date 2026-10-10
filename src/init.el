@@ -919,7 +919,8 @@ C/C++ is built and run via `project-compile' and `make run'."
 ;; Standard `M-x gdb' (gud/gdb-mi). Build with `C-c l b' (make) and launch
 ;; `M-x gdb' on the binary under build/. Type GDB's built-in abbreviations in
 ;; the console (n/s/c/b/p/bt, rn/rs/rc). No custom launcher or keybindings.
-;; Pretty-printing/safe-path defaults belong in the user's ~/.gdbinit; see
+;; Pretty-printing/safe-path defaults live in the default `.gdbinit' shipped
+;; in dotfiles/ (symlinked to ~/.gdbinit by the installer); see
 ;; doc/IMPLEMENTATION-STRATEGY.md.
 
 ;; --- Layout (applied before M-x gdb) ---------------------------------------

@@ -737,6 +737,26 @@
 (test--assert "21.6 gud-tooltip-mode is configured for GDB buffers"
   (cl-assert (string-match-p "gud-tooltip-mode" (test--get-init-el))))
 
+(test--assert "21.7 default GDB init file is shipped (dotfiles/.gdbinit)"
+  (let* ((root (file-name-directory
+		(directory-file-name (file-name-directory load-file-name))))
+	 (f (expand-file-name "dotfiles/.gdbinit" root)))
+    (cl-assert (file-exists-p f))
+    (with-temp-buffer
+      (insert-file-contents f)
+      (cl-assert (string-match-p "set auto-load safe-path /" (buffer-string)))
+      (cl-assert (string-match-p "set print pretty on" (buffer-string))))))
+
+(test--assert "21.8 installer symlinks default dot files into HOME"
+  (let* ((root (file-name-directory
+		(directory-file-name (file-name-directory load-file-name))))
+	 (sh (expand-file-name "install_emacs_config_dependencies.sh" root)))
+    (cl-assert (file-exists-p sh))
+    (with-temp-buffer
+      (insert-file-contents sh)
+      (cl-assert (string-match-p "dotfiles" (buffer-string)))
+      (cl-assert (string-match-p "ln -s" (buffer-string))))))
+
 
 ;;; ==========================================================================
 ;;; 30. META: COVERAGE REPORT TESTS (test-only, not an init.el section)

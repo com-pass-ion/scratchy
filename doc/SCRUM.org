@@ -98,7 +98,7 @@ scratchy/
 *** C/C++
 - LSP: clangd (flags from build/compile_commands.json via project .clangd)
 - Build: =C-c l b= (project-compile → make → CMake backbone)
-- Debug: =M-x gdb= (stock; layout + tooltips; pretty-printing via ~/.gdbinit)
+- Debug: =M-x gdb= (stock; layout + tooltips; pretty-printing via default =.gdbinit= in =dotfiles/=, symlinked by the installer)
 - Run: =make run= (built binary; =C-c l r= covers Python/Bash/Elisp)
 - Snippet: =if= / =for= + =M-+=
 
@@ -250,7 +250,7 @@ scratchy/
 |----------------------------+----------------------------------------------------------+----------------------------------|
 | tempel-collection disabled | Requires Emacs 31.1+; block commented out in init.el     | Sprint 13 backlog (re-enable)    |
 | Safety guard not wired     | validate_process_files.sh is not invoked by the hook     | Sprint 13 backlog (wire it)      |
-| GDB pretty-print moved out | Stock M-x gdb; -ex flags live in user ~/.gdbinit         | doc/IMPLEMENTATION-STRATEGY.md   |
+| GDB pretty-print moved out | Stock M-x gdb; settings live in dotfiles/.gdbinit        | doc/IMPLEMENTATION-STRATEGY.md   |
 
 * Scrum Workflow
 
