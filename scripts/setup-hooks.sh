@@ -15,4 +15,8 @@ echo "Installing pre-commit hook..."
 ln -sf "$(pwd)/$HOOK_SOURCE" "$HOOK_DEST"
 chmod +x "$HOOK_DEST"
 
-echo "Pre-commit hook activated successfully."
+echo "Installing commit-msg hook..."
+ln -sf "$(pwd)/test/git-commit-msg" ".git/hooks/commit-msg"
+chmod +x ".git/hooks/commit-msg"
+
+echo "Hooks activated successfully."

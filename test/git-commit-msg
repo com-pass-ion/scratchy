@@ -1,0 +1,16 @@
+#!/bin/bash
+# git-commit-msg hook
+# Dispatches to the Cycle commit validator.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+VALIDATOR="$SCRIPT_DIR/../cycle/bin/validate-commit.sh"
+
+if [ ! -f "$VALIDATOR" ]; then
+    echo "ERROR: commit validator not found at $VALIDATOR" >&2
+    exit 1
+fi
+
+# Git passes the commit message file as the first argument
+bash "$VALIDATOR" "$1"

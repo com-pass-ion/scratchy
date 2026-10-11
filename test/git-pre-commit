@@ -22,8 +22,17 @@ elif git diff --cached --name-only | grep -qE '\.(el|sh)$|dotfiles/'; then
     TIER="functional"
 fi
 
-# 2. Execute the corresponding pipeline
+# 2. Process Validation
+# Check governance and state before running expensive tests.
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+if ! bash "$SCRIPT_DIR/../cycle/bin/local-ci.sh"; then
+    echo "Commit blocked by Local CI process validation."
+    exit 1
+fi
+
+# 3. Execute the corresponding pipeline
 if bash "$SCRIPT_DIR/run_tests.sh" "$TIER"; then
+
     echo "Pre-commit validation ($TIER) passed!"
     exit 0
 else
