@@ -53,14 +53,21 @@ assert_commit_exit "wrong id" "feat(lsp): add eglot [$WRONG_CYCLE]" 1
 assert_commit_exit "merge" "Merge branch x" 0
 
 # 2. Test Governance Checksums
+# Back up working-tree state so the test never discards uncommitted edits
+# (do NOT use `git restore`: it reverts to the index and destroys local work).
 echo "Testing checksums..."
+CHECKSUM_BAK=$(mktemp)
+PROMPT_BAK=$(mktemp)
+trap 'cp "$CHECKSUM_BAK" "$PROJECT_DIR/cycle/governance.sha256"; cp "$PROMPT_BAK" "$PROJECT_DIR/cycle/PROMPT.org"; rm -f "$CHECKSUM_BAK" "$PROMPT_BAK"' EXIT
+cp "$PROJECT_DIR/cycle/governance.sha256" "$CHECKSUM_BAK"
+cp "$PROJECT_DIR/cycle/PROMPT.org" "$PROMPT_BAK"
 # Initial generation
 bash "$CHECKSUM_TOOL" >/dev/null
 bash "$CHECKSUM_TOOL" --check >/dev/null || { echo "FAIL: clean tree should pass"; exit 1; }
 # Tamper
-    printf '\n' >> "$PROJECT_DIR/cycle/PROMPT.org"
-    bash "$CHECKSUM_TOOL" --check >/dev/null && { echo "FAIL: tamper should fail"; exit 1; }
-    git restore "$PROJECT_DIR/cycle/PROMPT.org"
+printf '\n' >> "$PROJECT_DIR/cycle/PROMPT.org"
+bash "$CHECKSUM_TOOL" --check >/dev/null && { echo "FAIL: tamper should fail"; exit 1; }
+cp "$PROMPT_BAK" "$PROJECT_DIR/cycle/PROMPT.org"
 
 # 3. Test State Gate
 echo "Testing state gate..."

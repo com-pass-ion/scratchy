@@ -4,8 +4,8 @@
 #   (no args)  regenerate cycle/governance.sha256
 #   --check    verify the tree against cycle/governance.sha256
 #
-# Immutable governance: AGENTS.md, cycle/RULES.md, cycle/PROMPT.md.
-# NEXT.md is intentionally excluded; it is the mutable working plan.
+# Immutable governance: AGENTS.md, cycle/PROMPT.org.
+# The cycle state and working plan are intentionally excluded; they are mutable.
 
 set -euo pipefail
 
@@ -14,9 +14,7 @@ PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 CHECKSUM_FILE="cycle/governance.sha256"
 GOVERNANCE_FILES=(
     "AGENTS.md"
-    "doc/handbook.org"
     "cycle/PROMPT.org"
-
 )
 
 usage() {

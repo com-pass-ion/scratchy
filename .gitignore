@@ -13,3 +13,7 @@ test/fixtures/debug_cpp/build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Emacs desktop save (runtime session state)
+.desktop
+.desktop.lock

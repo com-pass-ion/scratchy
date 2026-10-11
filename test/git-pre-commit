@@ -12,12 +12,12 @@ SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 # Default to fast
 TIER="fast"
 
-# Changes to build scripts or master branch (approximate) trigger Absolute-Pass
-if git diff --cached --name-only | grep -qE 'build_emacs_source.sh|install_emacs_config_dependencies.sh'; then
+# Changes to build scripts trigger Absolute-Pass
+if git diff --cached --name-only | grep -qE 'build_emacs_source.sh'; then
     echo "Toolchain changes detected. Triggering Absolute-Pass..."
     TIER="absolute"
-# Changes to elisp, shell scripts, or dotfiles trigger Functional-Pass
-elif git diff --cached --name-only | grep -qE '\.(el|sh)$|dotfiles/'; then
+# Changes to elisp, shell scripts, or scaffold configs trigger Functional-Pass
+elif git diff --cached --name-only | grep -qE '\.(el|sh)$|scaffold/'; then
     echo "Code changes detected. Triggering Functional-Pass..."
     TIER="functional"
 fi

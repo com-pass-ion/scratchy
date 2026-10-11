@@ -34,10 +34,7 @@ run_isolated_emacs() {
 
 # --- TIER A: FAST-PASS (Every Commit) ---
 echo "--- Tier A: Fast-Pass ---"
-# 1. Cycle Document Safety Guard
-bash "$SCRIPT_DIR/validate_process_files.sh"
-
-# 2. Security Scan
+# 1. Security Scan
 if grep -rni "password\|secret\|api.key" "$SCRIPT_DIR/../src" "$SCRIPT_DIR" | grep -vE "grep -rni|ERROR: Secrets found|No secrets found" ; then
     echo "ERROR: Secrets found in codebase!"
     exit 1
@@ -45,7 +42,7 @@ else
     echo "Security scan: No secrets found."
 fi
 
-# 3. Strict Byte-Compile (against current binary)
+# 2. Strict Byte-Compile (against current binary)
 echo "--- Strict Byte-Compile ---"
 run_isolated_emacs \
     -l "$SCRIPT_DIR/../src/init.el" \

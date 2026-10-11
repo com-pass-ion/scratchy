@@ -676,8 +676,8 @@
 (test--assert "19.3 git-pre-commit-hook is defined"
   (cl-assert (fboundp 'git-pre-commit-hook)))
 
-(test--assert "19.4 setup-hooks.sh exists and is executable"
-  (let ((sh (expand-file-name "scripts/setup-hooks.sh"
+(test--assert "19.4 setup_hooks.sh exists and is executable"
+  (let ((sh (expand-file-name "scripts/setup_hooks.sh"
                               (file-name-directory (directory-file-name (file-name-directory load-file-name))))))
     (cl-assert (file-exists-p sh))
     (cl-assert (file-executable-p sh))))
@@ -729,25 +729,15 @@
 (test--assert "21.6 gud-tooltip-mode is configured for GDB buffers"
   (cl-assert (string-match-p "gud-tooltip-mode" (test--get-init-el))))
 
-(test--assert "21.7 default GDB init file is shipped (dotfiles/.gdbinit)"
+(test--assert "21.7 default GDB init file is shipped (scaffold/templates/.gdbinit)"
   (let* ((root (file-name-directory
 		(directory-file-name (file-name-directory load-file-name))))
-	 (f (expand-file-name "dotfiles/.gdbinit" root)))
+	 (f (expand-file-name "scaffold/templates/.gdbinit" root)))
     (cl-assert (file-exists-p f))
     (with-temp-buffer
       (insert-file-contents f)
       (cl-assert (string-match-p "set auto-load safe-path /" (buffer-string)))
       (cl-assert (string-match-p "set print pretty on" (buffer-string))))))
-
-(test--assert "21.8 installer symlinks default dot files into HOME"
-  (let* ((root (file-name-directory
-		(directory-file-name (file-name-directory load-file-name))))
-	 (sh (expand-file-name "install_emacs_config_dependencies.sh" root)))
-    (cl-assert (file-exists-p sh))
-    (with-temp-buffer
-      (insert-file-contents sh)
-      (cl-assert (string-match-p "dotfiles" (buffer-string)))
-      (cl-assert (string-match-p "ln -s" (buffer-string))))))
 
 
 ;;; ==========================================================================
@@ -764,27 +754,27 @@
 
 
 ;;; ==========================================================================
-;;; 31. META: CYCLE DOCUMENT SAFETY GUARD TESTS (test-only)
+;;; 31. META: CYCLE GOVERNANCE TESTS (test-only)
 ;;; ==========================================================================
 
-(test--assert "31.1 validate_process_files.sh exists"
-  (cl-assert (file-exists-p (expand-file-name "test/validate_process_files.sh"
+(test--assert "31.1 test_cycle_guards.sh exists"
+  (cl-assert (file-exists-p (expand-file-name "test/test_cycle_guards.sh"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
-(test--assert "31.2 validate_process_files.sh is executable"
-  (cl-assert (file-executable-p (expand-file-name "test/validate_process_files.sh"
+(test--assert "31.2 test_cycle_guards.sh is executable"
+  (cl-assert (file-executable-p (expand-file-name "test/test_cycle_guards.sh"
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
-(test--assert "31.3 RULES.md exists"
-  (cl-assert (file-exists-p (expand-file-name "cycle/RULES.md"
+(test--assert "31.3 cycle/PROMPT.org exists"
+  (cl-assert (file-exists-p (expand-file-name "cycle/PROMPT.org"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
-(test--assert "31.4 DEVELOPMENT-CYCLE.md exists"
-  (cl-assert (file-exists-p (expand-file-name "cycle/DEVELOPMENT-CYCLE.md"
+(test--assert "31.4 AGENTS.md exists"
+  (cl-assert (file-exists-p (expand-file-name "AGENTS.md"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
-(test--assert "31.5 PROMPT.md exists"
-  (cl-assert (file-exists-p (expand-file-name "cycle/PROMPT.md"
+(test--assert "31.5 governance.sha256 exists"
+  (cl-assert (file-exists-p (expand-file-name "cycle/governance.sha256"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 

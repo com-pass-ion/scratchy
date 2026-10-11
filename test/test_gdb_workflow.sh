@@ -105,7 +105,7 @@ fi
 
 # Stages C/D mirror real usage: gud runs gdb with cwd=project root and no
 # -nx, so a project .gdbinit narrows safe-path unless the flags below reopen
-# it. Default settings live in dotfiles/.gdbinit (symlinked to ~/.gdbinit).
+# it. Default settings live in scaffold/templates/.gdbinit (symlinked to ~/.gdbinit).
 if [ -d "$DEMO_DIR" ]; then
   cd "$DEMO_DIR" || { fail "chdir to demo" "$DEMO_DIR"; }
 fi
@@ -180,7 +180,7 @@ fi
 
 # --- F. init.el Sec.21 expectations (hard failures) ---
 # Sec.21 now standardizes on stock M-x gdb: no custom launcher/functions and
-# no hardcoded -ex flags (settings live in dotfiles/.gdbinit).
+# no hardcoded -ex flags (settings live in scaffold/templates/.gdbinit).
 INIT_EL="$PROJECT_DIR/src/init.el"
 if [ -f "$INIT_EL" ]; then
   if ! grep -q '(defun my/cpp-debug ' "$INIT_EL" && ! grep -q 'defun my/cpp-cmake' "$INIT_EL"; then
@@ -189,15 +189,15 @@ if [ -f "$INIT_EL" ]; then
     fail "F.1 init.el has no custom GDB launcher (standard M-x gdb)" "Sec.21 must not define my/cpp-debug/my/cpp-cmake*"
   fi
   if ! grep -q 'my/gdb-init-args' "$INIT_EL" && ! grep -q -- '-ex ' "$INIT_EL"; then
-    ok "F.2 init.el has no hardcoded GDB flags (settings live in dotfiles/.gdbinit)"
+    ok "F.2 init.el has no hardcoded GDB flags (settings live in scaffold/templates/.gdbinit)"
   else
-    fail "F.2 init.el has no hardcoded GDB flags (settings live in dotfiles/.gdbinit)" "GDB settings belong in dotfiles/.gdbinit, not init.el"
+    fail "F.2 init.el has no hardcoded GDB flags (settings live in scaffold/templates/.gdbinit)" "GDB settings belong in scaffold/templates/.gdbinit, not init.el"
   fi
-  if [ -f "$PROJECT_DIR/dotfiles/.gdbinit" ] \
-     && grep -q 'set auto-load safe-path /' "$PROJECT_DIR/dotfiles/.gdbinit"; then
-    ok "F.6 default dotfiles/.gdbinit is shipped with pretty-print settings"
+  if [ -f "$PROJECT_DIR/scaffold/templates/.gdbinit" ] \
+     && grep -q 'set auto-load safe-path /' "$PROJECT_DIR/scaffold/templates/.gdbinit"; then
+    ok "F.6 default scaffold/templates/.gdbinit is shipped with pretty-print settings"
   else
-    fail "F.6 default dotfiles/.gdbinit is shipped with pretty-print settings" "Expected dotfiles/.gdbinit with 'set auto-load safe-path /'"
+    fail "F.6 default scaffold/templates/.gdbinit is shipped with pretty-print settings" "Expected scaffold/templates/.gdbinit with 'set auto-load safe-path /'"
   fi
   if ! grep -q 'gud-mode-map (kbd' "$INIT_EL" && ! grep -q 'gud-minor-mode-map (kbd' "$INIT_EL"; then
     ok "F.3 init.el has no custom GDB keybindings (built-in aliases only)"

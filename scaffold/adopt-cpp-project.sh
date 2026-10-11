@@ -109,7 +109,7 @@ if [ -n "$build_marker" ]; then
 elif [ "$has_sources" = 1 ]; then
   copy_if_missing "$TEMPLATE_DIR/Makefile" "Makefile" "Makefile (basic build system)"
 else
-  echo "adopt-cpp-project: warning: no C/C++ sources found; not providing a build system" >&2S
+  echo "adopt-cpp-project: warning: no C/C++ sources found; not providing a build system" >&2
 fi
 
 copy_if_missing "$TEMPLATE_DIR/.clangd" ".clangd" ".clangd"

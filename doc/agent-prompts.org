@@ -29,7 +29,7 @@ You are working on an Emacs configuration project called "Scratchy".
 ## Project Structure
 - src/init.el - Main config
 - test/ - Tests (run with ./test/run_tests.sh)
-- doc/ - Documentation (SCRUM.org)
+- doc/ - Documentation (cycle/PROMPT.org is the spec of record)
 - cycle/ - Cycle process, backlog, cycle tracking
 
 ## Current Cycle
