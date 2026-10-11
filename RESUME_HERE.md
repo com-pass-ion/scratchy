@@ -32,3 +32,4 @@ Following the "one owner per behavior" rule:
 - **`#cpp-format-hint`**: Added warning on mode entry when `clang-format` is missing.
 - **`#cpp-build-flag`**: Confirmed `C-c l b` uses plain `make`.
 - **CMake Backbone**: Adoption script now supports native CMake builds via `--build` to generate compile commands.
+- **Emacs Build Script**: Added `build_emacs_source.sh` to compile the latest stable Emacs from source with native compilation, installing to `~/.local`.

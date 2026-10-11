@@ -286,6 +286,8 @@
 ;;; 5. COMPLETION — Vertico + Orderless + Marginalia + Corfu + Cape
 ;;; ==========================================================================
 
+(use-package compat)
+
 ;; --- Minibuffer completion (Vertico) -------------------------------------
 ;; Vertical minibuffer for M-x, C-x C-f, C-x b, etc.
 
@@ -609,12 +611,14 @@ found above `default-directory'."
 (defun make-run ()
   "Run the project using `make run'."
   (interactive)
-  (compile "make run"))
+  (let ((default-directory (project-root (project-current))))
+    (compile "make run")))
 
 (defun make-clean ()
   "Clean the project using `make clean'."
   (interactive)
-  (compile "make clean"))
+  (let ((default-directory (project-root (project-current))))
+    (compile "make clean")))
 
 (defun make-format ()
   "Format the current C/C++ buffer with `clang-format'."
