@@ -1,6 +1,6 @@
 #!/bin/bash
-# validate_process_files.sh — Scrum Document Safety Guard
-# Validates that RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md
+# validate_process_files.sh — Cycle Document Safety Guard
+# Validates that AGENTS.md, cycle/RULES.md, and cycle/PROMPT.md
 # are not modified without explicit approval.
 
 set -euo pipefail
@@ -9,9 +9,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 PROCESS_FILES=(
-    "scrum/RULES.md"
-    "scrum/SCRUM-WORKFLOW.md"
-    "scrum/PROMPT.md"
+    "AGENTS.md"
+    "cycle/RULES.md"
+    "cycle/PROMPT.md"
 )
 
 ERRORS=0
@@ -20,7 +20,7 @@ for file in "${PROCESS_FILES[@]}"; do
     filepath="$PROJECT_DIR/$file"
     if [ -f "$filepath" ]; then
         # Check if file is staged for commit
-        if git -C "$PROJECT_DIR" diff --cached --name-only | grep -q "$(basename "$file")"; then
+        if git -C "$PROJECT_DIR" diff --cached --name-only | grep -q "^$file$"; then
             # Check if there are actual changes
             if ! git -C "$PROJECT_DIR" diff --cached --quiet -- "$file" 2>/dev/null; then
                 echo "ERROR: Unauthorized change detected in $file"
@@ -34,7 +34,7 @@ done
 if [ "$ERRORS" -gt 0 ]; then
     echo ""
     echo "Commit blocked: $ERRORS process file(s) modified without approval."
-    echo "See scrum/RULES.md > Agent Safety > Scrum Document Safety"
+    echo "See cycle/RULES.md > Agent Safety > Cycle Document Safety"
     exit 1
 fi
 

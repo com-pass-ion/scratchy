@@ -1,0 +1,18 @@
+#!/bin/bash
+# setup-hooks.sh — Activate git pre-commit hooks
+
+set -e
+
+HOOK_SOURCE="test/git-pre-commit"
+HOOK_DEST=".git/hooks/pre-commit"
+
+if [ ! -f "$HOOK_SOURCE" ]; then
+    echo "ERROR: Source hook $HOOK_SOURCE not found!"
+    exit 1
+fi
+
+echo "Installing pre-commit hook..."
+ln -sf "$(pwd)/$HOOK_SOURCE" "$HOOK_DEST"
+chmod +x "$HOOK_DEST"
+
+echo "Pre-commit hook activated successfully."
