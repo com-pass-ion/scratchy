@@ -38,7 +38,7 @@ other layers only call into it.
 data list (`my/gdb-init-args`) and passed as command-line flags. This wrapped a
 design gdb already owns: the Emacs side duplicated `.gdbinit`, and a project
 `.gdbinit` narrowing `auto-load safe-path` fought the flags. Elisp must not
-wrap decoupled designs (see `scrum/RULES.md`).
+wrap decoupled designs (see `cycle/RULES.md`).
 
 **Fix (owner):** gdb owns its own settings through a default `.gdbinit` init
 file shipped in this repo (`dotfiles/.gdbinit`). The installer symlinks it to
@@ -100,6 +100,6 @@ gdb owns these settings; Emacs passes no command-line GDB flags.
 
 ## References
 
-- `scrum/RULES.md` — project rules (see Coding Style)
+- `cycle/RULES.md` — project rules (see Coding Style)
 - `doc/SCRUM.org` — architecture and test coverage
 - `doc/agent-research/WORLD-MODEL-STRUCTURE.org` — tools/skills roadmap

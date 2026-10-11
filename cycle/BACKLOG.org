@@ -211,9 +211,9 @@ All planned features, sorted by category.
    :Category: :process:
    :Sprint:   9
    :END:
-   Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, SCRUM-WORKFLOW.md, and PROMPT.md without explicit approval.
+   Implement pre-commit hook or validation to prevent unauthorized changes to RULES.md, DEVELOPMENT-CYCLE.md, and PROMPT.md without explicit approval.
    - Create scripts/validate_process_files.sh
-   - Add git diff check for RULES.md, SCRUM-WORKFLOW.md, PROMPT.md
+   - Add git diff check for RULES.md, DEVELOPMENT-CYCLE.md, PROMPT.md
    - Return error if unauthorized changes detected
    - Create test case in test/test_document_guard.sh
    - Document usage in doc/ or README
@@ -228,7 +228,7 @@ All planned features, sorted by category.
     - Define allowed types (feat, fix, chore, docs, refactor, test)
     - Document scope conventions
     - Add examples for each type
-    - Reference in scrum/RULES.md
+    - Reference in cycle/RULES.md
 
 ** TODO Minimize context window per sprint
    :PROPERTIES:
@@ -354,7 +354,7 @@ All planned features, sorted by category.
    - Document negative cases: .gdbinit vs -ex flags (safe-path fight), .projectile ignored by project.el; positive case: src/templates read natively by tempel
    - Define tests per layer: Elisp via test_init.el, shell via TAP scripts, config via existence/content checks
    - Write doc/IMPLEMENTATION-STRATEGY.md with decision table and examples
-   - Propose rule reference in scrum/RULES.md (needs explicit approval per project rules)
+   - Propose rule reference in cycle/RULES.md (needs explicit approval per project rules)
    Done in Sprint 14: doc/IMPLEMENTATION-STRATEGY.md created (decision table,
    criteria, GDB lessons, ~/.gdbinit recipe, C/C++ pipeline decisions, per-layer
    tests); RULES.md Coding Style references it (user approved the edit).
@@ -367,7 +367,7 @@ All planned features, sorted by category.
    :END:
    Codify that Elisp must not encapsulate data or wrap a design a tool
    already owns. Ship tool-native default config files instead.
-   - Add Coding Style rule to scrum/RULES.md
+   - Add Coding Style rule to cycle/RULES.md
    - Reconcile doc/IMPLEMENTATION-STRATEGY.md (reclassify my/gdb-init-args as an
      anti-pattern; tool-native config is the owner)
    - Ship dotfiles/.gdbinit default init file; installer symlinks to ~/.gdbinit
@@ -485,7 +485,7 @@ All planned features, sorted by category.
     test/validate_process_files.sh exists and is tested but nothing invokes it,
     so the process-file protection is effectively dead code.
     - Call validate_process_files.sh from test/git-pre-commit (or run_tests.sh)
-    - Add a test proving it blocks staged RULES.md/PROMPT.md/SCRUM-WORKFLOW.md edits
+    - Add a test proving it blocks staged RULES.md/PROMPT.md/DEVELOPMENT-CYCLE.md edits
     - Document activation in docs
 
 
@@ -608,13 +608,13 @@ All planned features, sorted by category.
    :END:
    Replaced by Custom Agent Environment for low-level control.
 
-** DONE Definition of Done (scrum/RULES.md)
+** DONE Definition of Done (cycle/RULES.md)
    :PROPERTIES:
    :Effort:   1
    :Category: :docs:
    :Sprint:   3
    :END:
-   DoD checklist lives in scrum/RULES.md > Quality (no separate doc/DOD.md).
+   DoD checklist lives in cycle/RULES.md > Quality (no separate doc/DOD.md).
 
 * Done
 

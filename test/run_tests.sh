@@ -34,7 +34,7 @@ run_isolated_emacs() {
 
 # --- TIER A: FAST-PASS (Every Commit) ---
 echo "--- Tier A: Fast-Pass ---"
-# 1. Scrum Document Safety Guard
+# 1. Cycle Document Safety Guard
 bash "$SCRIPT_DIR/validate_process_files.sh"
 
 # 2. Security Scan

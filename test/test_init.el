@@ -774,7 +774,7 @@
 
 
 ;;; ==========================================================================
-;;; 31. META: SCRUM DOCUMENT SAFETY GUARD TESTS (test-only)
+;;; 31. META: CYCLE DOCUMENT SAFETY GUARD TESTS (test-only)
 ;;; ==========================================================================
 
 (test--assert "31.1 validate_process_files.sh exists"
@@ -786,15 +786,15 @@
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "31.3 RULES.md exists"
-  (cl-assert (file-exists-p (expand-file-name "scrum/RULES.md"
+  (cl-assert (file-exists-p (expand-file-name "cycle/RULES.md"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
-(test--assert "31.4 SCRUM-WORKFLOW.md exists"
-  (cl-assert (file-exists-p (expand-file-name "scrum/SCRUM-WORKFLOW.md"
+(test--assert "31.4 DEVELOPMENT-CYCLE.md exists"
+  (cl-assert (file-exists-p (expand-file-name "cycle/DEVELOPMENT-CYCLE.md"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "31.5 PROMPT.md exists"
-  (cl-assert (file-exists-p (expand-file-name "scrum/PROMPT.md"
+  (cl-assert (file-exists-p (expand-file-name "cycle/PROMPT.md"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 
