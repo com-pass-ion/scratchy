@@ -33,8 +33,9 @@ case "${1:-}" in
             exit 1
         fi
         ( cd "$PROJECT_DIR" && sha256sum --check --status "$CHECKSUM_FILE" ) || {
-            echo "ERROR: governance checksum mismatch (governance file modified)." >&2
-            echo "       Regenerate with: bash cycle/bin/governance-checksum.sh" >&2
+            echo "GOVERNANCE_VIOLATION: One or more immutable governance files have been modified." >&2
+            echo "The following files are protected: ${GOVERNANCE_FILES[*]}" >&2
+            echo "To authorize these changes, regenerate the checksum: bash cycle/bin/governance-checksum.sh" >&2
             exit 1
         }
         echo "Governance checksums OK."

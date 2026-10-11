@@ -228,26 +228,26 @@ scratchy/
 - *Definition of Done*: All code must pass tests, be documented, and follow style guide. For configuration changes, passing the Absolute-Pass (Source Build + Compile) is required.
 - *Test Before Commit*: Run =./test/run_tests.sh= before committing
 - *Commit After Every Step*: Commit after completing each task with descriptive message
-- *Atomic Commits*: Each commit must be self-contained and reversible. One logical change per commit.
+- *Atomic Commits*: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes (e.g. a code fix and a docs update) in a single commit.
 - *Dependencies Required*: When adding packages with system dependencies, always update the installation script.
-- *Dependency Gate*: Verify package availability during planning. Do not commit to a cycle item if its core dependencies are unverified.
-- *Test Strategy*: Tests must verify functionality, not just code presence.
-- *Research Documents Exempt from Tests*: Files in =doc/agent-research/= do not require test coverage.
-- *Blueprint Requirement*: Research tasks must conclude with a "Prototype/Implementation Sketch" section.
+- *Dependency Gate*: Verify package availability and system dependencies during planning. Do not commit to a cycle item if its core dependencies are unverified.
+- *Test Strategy*: Tests must verify functionality, not just code presence. Use feature tests (=fboundp=), state tests (=bound-and-true-p=), and integration tests (file open). Source-level tests only for critical configs (fonts, keybindings).
+- *Research Documents Exempt from Tests*: Documentation-only files in =doc/agent-research/= and similar research directories do not require test coverage. Research is documentation, not code.
+- *Blueprint Requirement*: Research tasks must conclude with a "Prototype/Implementation Sketch" section. This transforms abstract findings into a concrete blueprint for future implementation.
 
 ** Agent Safety
-- *Context Limits*: If session runs out of tokens or context becomes too large, STOP. Commit what exists, log state, and start fresh.
-- *Session Restart Protocol*: On session restart, read =cycle/BACKLOG.org= first.
-- *Minimal Reads*: Read only: =cycle/BACKLOG.org=, relevant task file, and max 2-3 supporting files.
-- *Prompt Complexity*: Keep prompts simple and direct. Break work into atomic units.
-- *Fail-Safe Commits*: If any operation fails, stop immediately. Commit partial progress and report.
-- *Cycle Document Safety*: Never modify =cycle/PROMPT.org= without explicit user approval.
+- *Context Limits*: If session runs out of tokens or context becomes too large, STOP. Do not continue with partial work. Commit what exists, log state, and start fresh in a new session.
+- *Session Restart Protocol*: On session restart, read =cycle/BACKLOG.org= first. Do not re-read all project files; read only what the current task needs.
+- *Minimal Reads*: Read only: =cycle/BACKLOG.org=, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
+- *Prompt Complexity*: Keep prompts simple and direct. Complex multi-step prompts fail on smaller models (32B); break work into atomic units with clear stop conditions.
+- *Fail-Safe Commits*: If any operation fails (edit, test, commit), stop immediately. Do not attempt workarounds that bypass the fail-safe; commit partial progress and report.
+- *Cycle Document Safety*: Never modify =cycle/PROMPT.org= without explicit user approval. This is a process-defining file affecting all future sessions; propose changes first and wait for confirmation.
 
 ** Coding Style
-- *Pure Functional Style*: Prefer pure functions. Use =let= for local bindings, avoid =setq= for global state.
-- *No Hardcoded Absolute Paths*: Use relative paths or environment variables.
-- *Implementation Layer*: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file (see =doc/IMPLEMENTATION-STRATEGY.org=).
-- *No Elisp Wrappers Around Decoupled Designs*: Configure the tool through its own mechanism (e.g., =.gdbinit=).
+- *Pure Functional Style*: Prefer pure functions. Use =let= for local bindings, avoid =setq= for global state. Functions should return values rather than mutate globals; use =defconst= for constants and =defvar= only when mutable state is necessary.
+- *No Hardcoded Absolute Paths*: Use relative paths or environment variables. Never hardcode =/home/ncu/...= or similar absolute paths in code, scripts, or configs.
+- *Implementation Layer*: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file — following =doc/IMPLEMENTATION-STRATEGY.org= (one owner per behavior). Tool-native settings are never mirrored in Elisp; ship a default native config (see =scaffold/templates/=) when defaults are needed.
+- *No Elisp Wrappers Around Decoupled Designs*: Do not add Elisp that encapsulates data or wraps a design a tool already owns (init files, config files, native formats). Configure the tool through its own mechanism — e.g. ship a default =.gdbinit= rather than writing Elisp that overwrites it.
 
 ** Cycle Process
 - *Cycle Goal*: Each cycle must have a clear, measurable goal
@@ -274,7 +274,10 @@ If a commit is required while the cycle is not =ACTIVE=:
 2. *Persistent*: Set =git config cycle.bypass true=.
 
 *Local CI*:
-=cycle/bin/local-ci.sh= is the single owner of process validation.
+=cycle/bin/local-ci.sh= is the single owner of process validation, orchestrating:
+- State-file schema validation.
+- Governance checksum verification.
+- Current-cycle state gating.
 
 * Commit Convention
 
@@ -287,6 +290,8 @@ Extend conventional commits with cycle metadata:
 - =[C<N>]= — Cycle number (required)
 - =[Xsp]= — Story point estimate (optional)
 - =[#item]= — Backlog item reference (optional)
+
+The legacy =[S<N>]= marker is forbidden; use =[C<N>]=.
 
 Example: =feat(lsp): add eglot for nix-mode [C13] [3sp] [#nix-lsp]=
 
