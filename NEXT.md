@@ -1,6 +1,6 @@
 # NEXT: C1 — Scrum → Cycle Migration
 
-Status: READY · Est: 6sp · Do tasks in order. One commit per task.
+Status: DONE (2026-10-11). All boxes checked. Do tasks in order. One commit per task.
 STOP and report on the first failing command. Do not improvise around failures.
 
 ## Facts (verify, do not assume)
@@ -12,11 +12,20 @@ STOP and report on the first failing command. Do not improvise around failures.
 
 ## Definition of Done
 
-- [ ] T1  Renames recorded with `git mv` (history preserved).
-- [ ] T2  `cycle/` governance docs use Cycle terminology; `[C<N>]` required, `[S<N>]` banned.
-- [ ] T3  No `scrum/` references remain (see check in T3).
-- [ ] T4  Guard targets `AGENTS.md cycle/RULES.md cycle/PROMPT.md`; hook installed and blocks a staged governance edit.
-- [ ] T5  `./test/run_tests.sh functional` passes.
+- [x] T1  Renames recorded with `git mv` (history preserved).
+- [x] T2  `cycle/` governance docs use Cycle terminology; `[C<N>]` required, `[S<N>]` banned.
+- [x] T3  No `scrum/` references remain (see check in T3).
+- [x] T4  Guard targets `AGENTS.md cycle/RULES.md cycle/PROMPT.md`; hook installed and blocks a staged governance edit.
+- [x] T5  `./test/run_tests.sh functional` passes.
+
+## Notes from execution
+
+- T4: the installed hook is a symlink; `test/git-pre-commit` now resolves it with
+  `readlink -f` so it finds `run_tests.sh`.
+- T5: enabling the hook surfaced 16 pre-existing stale assertions from the S14–S16
+  refactors (removed `my/*` wrappers, missing `C-x C-r`/`recentf-max-saved-items`
+  settings). Restored `recentf` behavior in `src/init.el` and aligned the module and
+  integration tests with the command-centric build design.
 
 ## T1 — Record renames (2sp)
 
