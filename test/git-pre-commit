@@ -5,7 +5,8 @@
 set -euo pipefail
 
 echo "Running pre-commit validation..."
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Resolve symlinks so the hook locates its siblings when invoked from .git/hooks/.
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 # 1. Determine required tier based on changes
 # Default to fast
