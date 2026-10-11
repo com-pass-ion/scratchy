@@ -15,6 +15,10 @@ echo "=== Testing Cycle Guards ==="
 # Setup: ensure ACTIVE state
 python3 -c "import json; d=json.load(open('$STATE_FILE')); d['state']='ACTIVE'; json.dump(d, open('$STATE_FILE','w'))"
 
+# Derive the expected cycle id from the state file (never hardcode it).
+CYCLE="$(python3 -c 'import json; print(json.load(open("'"$STATE_FILE"'"))["cycle_id"])')"
+WRONG_CYCLE="C99"
+
 # Helper to test validate-commit exit codes
 # Usage: assert_commit_exit "description" "message" expected_exit
 assert_commit_exit() {
@@ -39,13 +43,13 @@ assert_commit_exit() {
 }
 
 # 1. Test Format and Legacy tags
-assert_commit_exit "valid full" "feat(lsp): add eglot [C2] [3sp] [#nix]" 0
-assert_commit_exit "valid min" "fix(cycle): empty [C2]" 0
+assert_commit_exit "valid full" "feat(lsp): add eglot [$CYCLE] [3sp] [#nix]" 0
+assert_commit_exit "valid min" "fix(cycle): empty [$CYCLE]" 0
 assert_commit_exit "legacy S" "feat(lsp): add eglot [S2]" 1
-assert_commit_exit "no type" "add eglot [C2]" 1
-assert_commit_exit "no scope" "feat: add eglot [C2]" 1
+assert_commit_exit "no type" "add eglot [$CYCLE]" 1
+assert_commit_exit "no scope" "feat: add eglot [$CYCLE]" 1
 assert_commit_exit "no cycle" "feat(lsp): add eglot" 1
-assert_commit_exit "wrong id" "feat(lsp): add eglot [C1]" 1
+assert_commit_exit "wrong id" "feat(lsp): add eglot [$WRONG_CYCLE]" 1
 assert_commit_exit "merge" "Merge branch x" 0
 
 # 2. Test Governance Checksums
@@ -62,14 +66,14 @@ bash "$CHECKSUM_TOOL" --check >/dev/null || { echo "FAIL: clean tree should pass
 echo "Testing state gate..."
 # Setup: ensure ACTIVE
 python3 -c "import json; d=json.load(open('$STATE_FILE')); d['state']='ACTIVE'; json.dump(d, open('$STATE_FILE','w'))"
-assert_commit_exit "active gate" "chore(ci): check [C2]" 0
+assert_commit_exit "active gate" "chore(ci): check [$CYCLE]" 0
 
 # Setup: CLOSING
 python3 -c "import json; d=json.load(open('$STATE_FILE')); d['state']='CLOSING'; json.dump(d, open('$STATE_FILE','w'))"
-assert_commit_exit "closing gate fail" "chore(ci): check [C2]" 1
+assert_commit_exit "closing gate fail" "chore(ci): check [$CYCLE]" 1
 # Recovery test (manual call to pass flag)
 f_rec=$(mktemp)
-printf "chore(ci): recovery [C2]\n" > "$f_rec"
+printf "chore(ci): recovery [$CYCLE]\n" > "$f_rec"
 if bash "$VALIDATOR" --recovery "$f_rec" >/dev/null 2>&1; then
     echo "PASS: closing gate recovery"
 else
