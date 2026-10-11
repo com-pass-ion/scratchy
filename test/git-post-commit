@@ -1,0 +1,18 @@
+#!/bin/bash
+# post-commit hook
+# Trigger cycle closure if a closure marker is detected.
+
+set -euo pipefail
+
+# Resolve symlinks
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+CLOSE_SCRIPT="$SCRIPT_DIR/../cycle/bin/cycle-close.sh"
+
+# Check the last commit message for the closure marker [C<N>-CLOSE]
+# Or if the user has explicitly flagged the commit as the final one.
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+if [[ "$COMMIT_MSG" =~ \[C[0-9]+-CLOSE\] ]]; then
+    echo "Closure marker detected. Triggering cycle-close..."
+    bash "$CLOSE_SCRIPT"
+fi

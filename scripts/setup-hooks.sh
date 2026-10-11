@@ -19,4 +19,8 @@ echo "Installing commit-msg hook..."
 ln -sf "$(pwd)/test/git-commit-msg" ".git/hooks/commit-msg"
 chmod +x ".git/hooks/commit-msg"
 
+echo "Installing post-commit hook..."
+ln -sf "$(pwd)/test/git-post-commit" ".git/hooks/post-commit"
+chmod +x ".git/hooks/post-commit"
+
 echo "Hooks activated successfully."

@@ -58,7 +58,7 @@ if [[ "$subject" =~ \[S[0-9]+\] ]]; then
 fi
 
 # --- Format check. ---
-PATTERN='^(feat|fix|docs|test|chore|refactor|style|perf|build|ci)\([^)]+\): .+ \[C[0-9]+\]( \[[0-9]+sp\])?( \[#[A-Za-z0-9._-]+\])?$'
+PATTERN='^(feat|fix|docs|test|chore|refactor|style|perf|build|ci)\([^)]+\): .+ \[C[0-9]+(-CLOSE)?\]( \[[0-9]+sp\])?( \[#[A-Za-z0-9._-]+\])?$'
 if [[ ! "$subject" =~ $PATTERN ]]; then
     echo "ERROR: commit subject does not match the convention." >&2
     echo "       <type>(<scope>): <description> [C<N>] [Xsp] [#item]" >&2
@@ -67,7 +67,7 @@ if [[ ! "$subject" =~ $PATTERN ]]; then
 fi
 
 # --- Cycle id check against state, falling back to git log. ---
-if [[ "$subject" =~ \[C([0-9]+)\] ]]; then
+if [[ "$subject" =~ \[C([0-9]+)(-CLOSE)?\] ]]; then
     commit_cycle="C${BASH_REMATCH[1]}"
 else
     echo "ERROR: could not extract [C<N>] from subject." >&2
