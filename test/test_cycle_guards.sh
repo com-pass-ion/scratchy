@@ -54,9 +54,9 @@ echo "Testing checksums..."
 bash "$CHECKSUM_TOOL" >/dev/null
 bash "$CHECKSUM_TOOL" --check >/dev/null || { echo "FAIL: clean tree should pass"; exit 1; }
 # Tamper
-printf '\n' >> "$PROJECT_DIR/cycle/PROMPT.md"
-bash "$CHECKSUM_TOOL" --check >/dev/null && { echo "FAIL: tamper should fail"; exit 1; }
-git restore "$PROJECT_DIR/cycle/PROMPT.md"
+    printf '\n' >> "$PROJECT_DIR/cycle/PROMPT.org"
+    bash "$CHECKSUM_TOOL" --check >/dev/null && { echo "FAIL: tamper should fail"; exit 1; }
+    git restore "$PROJECT_DIR/cycle/PROMPT.org"
 
 # 3. Test State Gate
 echo "Testing state gate..."

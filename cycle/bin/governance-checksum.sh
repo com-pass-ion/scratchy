@@ -14,8 +14,9 @@ PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 CHECKSUM_FILE="cycle/governance.sha256"
 GOVERNANCE_FILES=(
     "AGENTS.md"
-    "cycle/RULES.md"
-    "cycle/PROMPT.md"
+    "doc/handbook.org"
+    "cycle/PROMPT.org"
+
 )
 
 usage() {
