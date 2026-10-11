@@ -478,10 +478,9 @@
   (add-hook 'text-mode-hook 'tempel-setup-capf))
 
 ;; Community snippet collection (more IDE templates beyond our custom set).
-;; Disabled: requires Emacs 31.1+
-;; (use-package tempel-collection
-;;   :ensure t
-;;   :after tempel)
+(use-package tempel-collection
+  :ensure t
+  :after tempel)
 
 
 ;;; ==========================================================================

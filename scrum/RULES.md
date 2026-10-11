@@ -13,7 +13,7 @@ Quick reference of all rules to follow when working on this project.
 
 ## Quality
 
-- **Definition of Done**: All code must pass tests, be documented, and follow style guide
+- **Definition of Done**: All code must pass tests, be documented, and follow style guide. For configuration changes, passing the Absolute-Pass (Source Build + Compile) is required.
 - **Test Before Commit**: Run `./test/run_tests.sh` before committing
 - **Commit After Every Step**: Commit after completing each task with descriptive message
 - **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes (e.g., code fix + docs update) in a single commit.
@@ -70,7 +70,6 @@ docs(scrum): remove kanban process [S13] [1sp]
 | File | Purpose |
 |------|---------|
 | `scrum/BACKLOG.org` | Product backlog with all planned items |
-| `scrum/SPRINT.org` | Velocity tracking (historical) |
 | `doc/SCRUM.org` | Technical specification and workflow |
 | `scrum/SCRUM-WORKFLOW.md` | Generic Scrum process documentation |
 | `scrum/RULES.md` | This file — all project rules |

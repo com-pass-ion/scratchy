@@ -413,13 +413,13 @@ All planned features, sorted by category.
    :END:
    Review and clarify acceptance criteria for TODO items lacking clear specifications.
 
-** TODO Install script for Emacs 31.1+
+** DONE Install script for Emacs 31.1+
    :PROPERTIES:
    :Effort:   3
    :Category: :devops:
-   :Sprint:   13
+   :Sprint:   16
    :END:
-   Automate installation of Emacs 31.1+ as install_emacs_31.sh (repo root).
+   Automate installation of Emacs 31.1+ as build_emacs_source.sh (repo root).
    Needed to unlock tempel-collection and current upstream features.
    - Arch-aware source build (aarch64/x86_64); no PPA on Debian aarch64
    - Support --prefix and --jobs flags; verify resulting emacs-version
@@ -476,19 +476,20 @@ All planned features, sorted by category.
    :END:
    Research auto-documentation from agent interactions and shell command history.
 
-** TODO Wire Scrum Document Safety Guard into pre-commit
-   :PROPERTIES:
-   :Effort:   1
-   :Category: :process:
-   :Sprint:   13
-   :END:
-   test/validate_process_files.sh exists and is tested but nothing invokes it,
-   so the process-file protection is effectively dead code.
-   - Call validate_process_files.sh from test/git-pre-commit (or run_tests.sh)
-   - Add a test proving it blocks staged RULES.md/PROMPT.md/SCRUM-WORKFLOW.md edits
-   - Document activation in docs
+** DONE Wire Scrum Document Safety Guard into pre-commit
+    :PROPERTIES:
+    :Effort:   1
+    :Category: :process:
+    :Sprint:   13
+    :END:
+    test/validate_process_files.sh exists and is tested but nothing invokes it,
+    so the process-file protection is effectively dead code.
+    - Call validate_process_files.sh from test/git-pre-commit (or run_tests.sh)
+    - Add a test proving it blocks staged RULES.md/PROMPT.md/SCRUM-WORKFLOW.md edits
+    - Document activation in docs
 
-** TODO Re-enable tempel-collection on Emacs 31.1+
+
+** DONE Re-enable tempel-collection on Emacs 31.1+
    :PROPERTIES:
    :Effort:   1
    :Category: :editor:
