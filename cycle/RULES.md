@@ -1,4 +1,4 @@
-# Scrum Rules for Agents
+# Cycle Rules for Agents
 
 Quick reference of all rules to follow when working on this project.
 
@@ -18,7 +18,7 @@ Quick reference of all rules to follow when working on this project.
 - **Commit After Every Step**: Commit after completing each task with descriptive message
 - **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes (e.g., code fix + docs update) in a single commit.
 - **Dependencies Required**: When adding packages with system dependencies, always update `install_emacs_config_dependencies.sh`
-- **Dependency Gate**: Verify package availability and system dependencies during planning poker. Do not commit to a sprint item if its core dependencies are unverified.
+- **Dependency Gate**: Verify package availability and system dependencies during planning poker. Do not commit to a cycle item if its core dependencies are unverified.
 - **Test Strategy**: Tests must verify functionality, not just code presence. Use feature tests (fboundp), state tests (bound-and-true-p), and integration tests (file open). Source code tests only for critical configs (font, keybindings).
 - **Research Documents Exempt from Tests**: Documentation-only files in `doc/agent-research/` and similar research directories do not require test coverage. Research is documentation, not code.
 - **Blueprint Requirement**: Research tasks must conclude with a "Prototype/Implementation Sketch" section. This transforms abstract findings into a concrete blueprint for future implementation.
@@ -26,11 +26,11 @@ Quick reference of all rules to follow when working on this project.
 ## Agent Safety
 
 - **Context Limits**: If session runs out of tokens or context becomes too large, STOP. Do not continue with partial work. Commit what exists, log state, and start fresh in a new session.
-- **Session Restart Protocol**: On session restart, read `scrum/BACKLOG.org` first. Do not re-read all project files. Only read files needed for the current task.
-- **Minimal Reads**: When resuming work, read only: `scrum/BACKLOG.org`, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
+- **Session Restart Protocol**: On session restart, read `cycle/BACKLOG.org` first. Do not re-read all project files. Only read files needed for the current task.
+- **Minimal Reads**: When resuming work, read only: `cycle/BACKLOG.org`, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
 - **Prompt Complexity**: Keep prompts simple and direct. Complex multi-step prompts fail on smaller models (32B). Break work into atomic units with clear stop conditions.
 - **Fail-Safe Commits**: If any operation fails (edit, test, commit), stop immediately. Do not attempt workarounds that bypass the fail-safe. Commit partial progress and report.
-- **Scrum Document Safety**: Never modify `scrum/RULES.md`, `scrum/SCRUM-WORKFLOW.md`, or `scrum/PROMPT.md` without explicit user approval. These are process-defining files that affect all future sessions. Propose changes first, wait for confirmation.
+- **Cycle Document Safety**: Never modify `cycle/RULES.md`, `cycle/DEVELOPMENT-CYCLE.md`, or `cycle/PROMPT.md` without explicit user approval. These are process-defining files that affect all future sessions. Propose changes first, wait for confirmation.
 
 ## Coding Style
 
@@ -39,38 +39,40 @@ Quick reference of all rules to follow when working on this project.
 - **Implementation Layer**: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file — following `doc/IMPLEMENTATION-STRATEGY.md` (one owner per behavior). Tool-native settings are never mirrored in Elisp; ship a default native config file (see `dotfiles/`) when defaults are needed.
 - **No Elisp Wrappers Around Decoupled Designs**: Do not add Elisp functions that encapsulate data or wrap a design a tool already owns (init files, config files, native formats). Configure the tool through its own mechanism. Example: provide a default `.gdbinit` init file for GDB — do not write an Elisp function that overwrites the default.
 
-## Sprint
+## Cycle
 
-- **Sprint Goal**: Each sprint must have a clear, measurable goal
-- **User Selects Items**: The user must explicitly select which backlog items to include in each sprint. The agent may suggest items, but must wait for user approval before finalizing sprint planning.
+- **Cycle Goal**: Each cycle must have a clear, measurable goal
+- **User Selects Items**: The user must explicitly select which backlog items to include in each cycle. The agent may suggest items, but must wait for user approval before finalizing cycle planning.
 - **Capacity**: 2-4 hours per session
-- **Review Findings**: After sprint review, discuss findings with user and add action items to `scrum/BACKLOG.org`
+- **Review Findings**: After cycle review, discuss findings with user and add action items to `cycle/BACKLOG.org`
 
 ## Commit Convention
 
-Extend conventional commits with sprint metadata:
+Extend conventional commits with cycle metadata:
 ```
-<type>(<scope>): <description> [S<N>] [Xsp] [#item]
+<type>(<scope>): <description> [C<N>] [Xsp] [#item]
 ```
 
-- `[S<N>]` — Sprint number (required for sprint tracking)
+- `[C<N>]` — Cycle number (required for cycle tracking)
 - `[Xsp]` — Story point estimate (optional)
 - `[#item]` — Backlog item reference (optional)
 
+The legacy `[S<N>]` marker is forbidden; use `[C<N>]`.
+
 Examples:
 ```
-feat(lsp): add eglot for nix-mode [S13] [3sp] [#nix-lsp]
-fix(debug): correct gdb binary path [S13] [1sp]
-chore(deps): add ripgrep to installer [S13] [1sp]
-docs(scrum): remove kanban process [S13] [1sp]
+feat(lsp): add eglot for nix-mode [C13] [3sp] [#nix-lsp]
+fix(debug): correct gdb binary path [C13] [1sp]
+chore(deps): add ripgrep to installer [C13] [1sp]
+docs(cycle): remove kanban process [C13] [1sp]
 ```
 
 ## File Locations
 
 | File | Purpose |
 |------|---------|
-| `scrum/BACKLOG.org` | Product backlog with all planned items |
+| `cycle/BACKLOG.org` | Product backlog with all planned items |
 | `doc/SCRUM.org` | Technical specification and workflow |
-| `scrum/SCRUM-WORKFLOW.md` | Generic Scrum process documentation |
-| `scrum/RULES.md` | This file — all project rules |
-| `scrum/PROMPT.md` | Agent entry prompt (auto-loaded) |
+| `cycle/DEVELOPMENT-CYCLE.md` | Generic Cycle process documentation |
+| `cycle/RULES.md` | This file — all project rules |
+| `cycle/PROMPT.md` | Agent entry prompt (auto-loaded) |

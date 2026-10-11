@@ -1,7 +1,7 @@
-#+TITLE: Sprint Velocity
+#+TITLE: Cycle Velocity
 #+STARTUP: overview
 
-| Sprint |       Date | Planned | Delivered | Notes                                            |
+| Cycle |       Date | Planned | Delivered | Notes                                            |
 |--------+------------+---------+-----------+--------------------------------------------------|
 |      1 | 2026-04-28 |       — |         8 | Setup + Refactor                                 |
 |      2 | 2026-08-30 |       — |         8 | Quick Wins                                       |
@@ -20,4 +20,4 @@
 |     15 | 2026-10-10 |       3 |         3 | Rule: no Elisp wrappers + adopt C++ workflow scripts |
 |     16 | 2026-10-10 |       3 |         3 | C++ Run, Format Hint, Build Flag, CMake Support    |
 
-*Average*: 7.0 SP/Sprint
+*Average*: 7.0 SP/Cycle

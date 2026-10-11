@@ -1,4 +1,4 @@
-# Scrum Workflow
+# Development Cycle
 
 ## Rules
 
@@ -7,15 +7,18 @@ See [RULES.md](RULES.md) for the complete ruleset.
 ## Commit Convention
 
 ```
-<type>(<scope>): <description> [S<N>] [Xsp] [#item]
+<type>(<scope>): <description> [C<N>] [Xsp] [#item]
 ```
 
-- `[S<N>]` — Sprint number (required)
+- `[C<N>]` — Cycle number (required)
 - `[Xsp]` — Story point estimate (optional)
 - `[#item]` — Backlog item reference (optional)
 
+The legacy `[S<N>]` marker is forbidden.
+
 ## Workflow
 
-1. Pick items from `scrum/BACKLOG.org`
-2. Work in atomic commits with sprint markers
-3. After sprint: discuss findings, add action items to `scrum/BACKLOG.org`
+1. Pick items from `cycle/BACKLOG.org`
+2. Work in atomic commits with cycle markers
+3. After a cycle: discuss findings, add action items to `cycle/BACKLOG.org`
+4. Record delivered story points in `cycle/CYCLE-HISTORY.org`

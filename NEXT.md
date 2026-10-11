@@ -44,7 +44,12 @@ Edit these files:
 - `cycle/CYCLE-HISTORY.org` — title → "Cycle Velocity"; header `Sprint` → `Cycle`.
 - `AGENTS.md` — protect cycle artifacts `RULES.md, PROMPT.md, DEVELOPMENT-CYCLE.md`.
 
-Check: `grep -rniE 'scrum-|\[S<N>\]|\[S[0-9]+\]' cycle/ AGENTS.md` → empty.
+Check (must print nothing):
+```
+grep -rniE 'scrum-|\[S[0-9]+\]' \
+  cycle/RULES.md cycle/PROMPT.md cycle/DEVELOPMENT-CYCLE.md \
+  cycle/CYCLE-HISTORY.org AGENTS.md
+```
 Commit: `docs(cycle): rewrite process docs in cycle terminology [C1] [1sp]`
 
 ## T3 — Sweep references (1sp)
