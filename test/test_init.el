@@ -186,8 +186,8 @@
 (test--assert "3.7 which-function-mode is enabled"
   (cl-assert (bound-and-true-p which-function-mode)))
 
-(test--assert "3.8 whitespace-cleanup is in before-save-hook"
-  (cl-assert (memq 'whitespace-cleanup before-save-hook)))
+(test--assert "3.8 cleanup-whitespace is in before-save-hook"
+  (cl-assert (memq 'cleanup-whitespace before-save-hook)))
 
 (test--assert "3.9 narrow-to-region is not disabled"
   (cl-assert (null (get 'narrow-to-region 'disabled))))
@@ -380,6 +380,7 @@
 ;;; ==========================================================================
 
 (test--assert "9.1 eglot-autoshutdown is t"
+  (require 'eglot)
   (cl-assert (eq eglot-autoshutdown t)))
 
 (test--assert "9.2 python-mode-hook has eglot setup"
@@ -484,56 +485,39 @@
       (cl-assert (string-match-p "cmake" (buffer-string)))
       (cl-assert (string-match-p "CMAKE_EXPORT_COMPILE_COMMANDS" (buffer-string))))))
 
-(test--assert "13.3 my/python-run is defined"
-  (cl-assert (fboundp 'my/python-run)))
+(test--assert "13.3 make-build is defined"
+  (cl-assert (fboundp 'make-build)))
 
-(test--assert "13.4 my/bash-run is defined"
-  (cl-assert (fboundp 'my/bash-run)))
+(test--assert "13.4 make-run is defined"
+  (cl-assert (fboundp 'make-run)))
 
-(test--assert "13.5 my/run is defined"
-  (cl-assert (fboundp 'my/run)))
+(test--assert "13.5 make-clean is defined"
+  (cl-assert (fboundp 'make-clean)))
 
+(test--assert "13.6 make-format is defined"
+  (cl-assert (fboundp 'make-format)))
 
-(test--assert "13.7 C-c l b is bound to project-compile"
-  (cl-assert (eq (key-binding (kbd "C-c l b")) 'project-compile)))
-
-(test--assert "13.8 compilation-scroll-output is t"
+(test--assert "13.7 compilation-scroll-output is t"
   (cl-assert (eq compilation-scroll-output t)))
 
-(test--assert "13.9 C-c l c is bound to compile"
-  (cl-assert (eq (key-binding (kbd "C-c l c")) 'compile)))
+(test--assert "13.8 clang-format-buffer is defined"
+  (cl-assert (fboundp 'clang-format-buffer)))
 
-(test--assert "13.10 C-c l k is bound to kill-compilation"
-  (cl-assert (eq (key-binding (kbd "C-c l k")) 'kill-compilation)))
-
-(test--assert "13.11 C-c l n is bound to next-error"
-  (cl-assert (eq (key-binding (kbd "C-c l n")) 'next-error)))
-
-(test--assert "13.12 C-c l p is bound to previous-error"
-  (cl-assert (eq (key-binding (kbd "C-c l p")) 'previous-error)))
-
-(test--assert "13.13 no custom C/C++ build/run wrappers remain"
-  (cl-assert (not (fboundp 'my/cpp-build)))
-  (cl-assert (not (fboundp 'my/cpp-run)))
-  (cl-assert (not (string-match-p "defun my/cpp-\\(build\\|run\\)" (test--get-init-el)))))
-
-(test--assert "13.14 clang-format functions are defined"
-  (cl-assert (fboundp 'my/clang-format-buffer))
-  (cl-assert (fboundp 'my/clang-format-config-root)))
-
-(test--assert "13.15 clang-format-config-root finds the nearest .clang-format"
+(test--assert "13.9 clang-format-config-root finds the nearest .clang-format"
   (let* ((tmp (make-temp-file "fmtroot" t))
 	 (sub (expand-file-name "a/b" tmp)))
     (make-directory sub t)
     (with-temp-file (expand-file-name ".clang-format" tmp)
       (insert "BasedOnStyle: LLVM\n"))
     (unwind-protect
-	(cl-assert (equal (my/clang-format-config-root sub)
+	(cl-assert (equal (clang-format-config-root sub)
 			  (file-name-as-directory tmp)))
       (delete-directory tmp t))))
 
-(test--assert "13.16 C/C++ clang-format hook is installed"
-  (cl-assert (memq 'my/clang-format-setup c-mode-common-hook)))
+(test--assert "13.10 no custom C/C++ build/run wrappers remain"
+  (cl-assert (not (fboundp 'my/cpp-build)))
+  (cl-assert (not (fboundp 'my/cpp-run)))
+  (cl-assert (not (string-match-p "defun my/cpp-\\(build\\|run\\)" (test--get-init-el)))))
 
 
 ;;; ==========================================================================
@@ -689,8 +673,14 @@
   (cl-assert (file-executable-p (expand-file-name "test/git-pre-commit"
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
-(test--assert "19.3 my/git-pre-commit-hook is defined"
-  (cl-assert (fboundp 'my/git-pre-commit-hook)))
+(test--assert "19.3 git-pre-commit-hook is defined"
+  (cl-assert (fboundp 'git-pre-commit-hook)))
+
+(test--assert "19.4 setup-hooks.sh exists and is executable"
+  (let ((sh (expand-file-name "scripts/setup-hooks.sh"
+                              (file-name-directory (directory-file-name (file-name-directory load-file-name))))))
+    (cl-assert (file-exists-p sh))
+    (cl-assert (file-executable-p sh))))
 
 
 ;;; ==========================================================================

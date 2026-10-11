@@ -160,7 +160,10 @@
 ;; `C-x C-r' opens a list of recently opened files.
 
 (use-package recentf
-  :init (recentf-mode))
+  :bind ("C-x C-r" . recentf-open-files)
+  :init (recentf-mode)
+  :config
+  (setq recentf-max-saved-items 100))
 
 ;; --- Which function -------------------------------------------------------
 ;; Display current function/block name in the mode-line.
@@ -601,7 +604,7 @@ found above `default-directory'."
 (defun make-build ()
   "Build the project using project-compile (default: make)."
   (interactive)
-  (project-compile))
+  (call-interactively #'project-compile))
 
 (defun make-run ()
   "Run the project using `make run'."

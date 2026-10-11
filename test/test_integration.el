@@ -74,6 +74,7 @@
 ;; Eglot + Corfu + Cape work together for code intelligence.
 
 (inttest--assert "1.1 Eglot and Corfu are both active"
+  (require 'eglot)
   (cl-assert (eq eglot-autoshutdown t))
   (cl-assert (bound-and-true-p global-corfu-mode)))
 
@@ -120,9 +121,9 @@
 
 (inttest--assert "3.2 Build + run functions are defined"
   (cl-assert (fboundp 'project-compile))
-  (cl-assert (fboundp 'my/python-run))
-  (cl-assert (fboundp 'my/bash-run))
-  (cl-assert (fboundp 'my/run)))
+  (cl-assert (fboundp 'make-build))
+  (cl-assert (fboundp 'make-run))
+  (cl-assert (fboundp 'make-clean)))
 
 (inttest--assert "3.3 Compile settings are configured"
   (cl-assert (eq compilation-scroll-output t)))
