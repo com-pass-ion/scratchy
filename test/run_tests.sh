@@ -63,6 +63,8 @@ fi
 # --- TIER B: FUNCTIONAL-PASS (Code/Test Changes) ---
 echo ""
 echo "--- Tier B: Functional-Pass ---"
+# Process Governance Guards
+bash "$SCRIPT_DIR/test_cycle_guards.sh"
 # Environment Sync
 run_isolated_emacs -l "$SCRIPT_DIR/../src/init.el" --eval "(package-initialize)"
 
