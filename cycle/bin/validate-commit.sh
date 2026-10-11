@@ -88,4 +88,20 @@ if [ -n "$expected_cycle" ] && [ "$commit_cycle" != "$expected_cycle" ]; then
     exit 1
 fi
 
+# --- Active-cycle gate. Bypassable via --recovery or cycle.bypass; the format
+#     and cycle-id checks above are never bypassable. ---
+if [ -f "$STATE_FILE" ] && command -v python3 >/dev/null 2>&1; then
+    state="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["state"])' "$STATE_FILE" 2>/dev/null || true)"
+    bypass_cfg="$(git -C "$PROJECT_DIR" config --bool cycle.bypass 2>/dev/null || true)"
+    if [ -n "$state" ] && [ "$state" != "ACTIVE" ]; then
+        if [ "$RECOVERY" -eq 1 ] || [ "$bypass_cfg" = "true" ]; then
+            echo "WARNING: cycle $commit_cycle state=$state; closing gate bypassed (recovery)." >&2
+        else
+            echo "ERROR: no ACTIVE cycle (state=$state)." >&2
+            echo "       Recover with: --recovery, or 'git config cycle.bypass true'." >&2
+            exit 1
+        fi
+    fi
+fi
+
 echo "Commit message OK ($commit_cycle)."
