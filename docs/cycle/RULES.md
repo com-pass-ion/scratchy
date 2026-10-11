@@ -14,13 +14,13 @@ Quick reference of all rules to follow when working on this project.
 ## Quality
 
 - **Definition of Done**: All code must pass tests, be documented, and follow style guide. For configuration changes, passing the Absolute-Pass (Source Build + Compile) is required.
-- **Test Before Commit**: Run `./test/run_tests.sh` before committing
+- **Test Before Commit**: Run `./tests/run_tests.sh` before committing
 - **Commit After Every Step**: Commit after completing each task with descriptive message
 - **Atomic Commits**: Each commit must be self-contained and reversible. One logical change per commit. Never mix unrelated changes (e.g., code fix + docs update) in a single commit.
 - **Dependencies Required**: When adding packages with system dependencies, always update the installation script.
 - **Dependency Gate**: Verify package availability and system dependencies during planning poker. Do not commit to a cycle item if its core dependencies are unverified.
 - **Test Strategy**: Tests must verify functionality, not just code presence. Use feature tests (fboundp), state tests (bound-and-true-p), and integration tests (file open). Source code tests only for critical configs (font, keybindings).
-- **Research Documents Exempt from Tests**: Documentation-only files in `doc/agent-research/` and similar research directories do not require test coverage. Research is documentation, not code.
+- **Research Documents Exempt from Tests**: Documentation-only files in `docs/agent-research/` and similar research directories do not require test coverage. Research is documentation, not code.
 - **Blueprint Requirement**: Research tasks must conclude with a "Prototype/Implementation Sketch" section. This transforms abstract findings into a concrete blueprint for future implementation.
 
 ## Agent Safety
@@ -30,13 +30,13 @@ Quick reference of all rules to follow when working on this project.
 - **Minimal Reads**: When resuming work, read only: `cycle/BACKLOG.org`, relevant task file, and max 2-3 supporting files. Do not batch-read the entire project.
 - **Prompt Complexity**: Keep prompts simple and direct. Complex multi-step prompts fail on smaller models (32B). Break work into atomic units with clear stop conditions.
 - **Fail-Safe Commits**: If any operation fails (edit, test, commit), stop immediately. Do not attempt workarounds that bypass the fail-safe. Commit partial progress and report.
-- **Cycle Document Safety**: Never modify `cycle/RULES.md` or `cycle/PROMPT.md` without explicit user approval. These are process-defining files that affect all future sessions. Propose changes first, wait for confirmation.
+- **Cycle Document Safety**: Never modify `docs/cycle/RULES.md` or `docs/cycle/PROMPT.md` without explicit user approval. These are process-defining files that affect all future sessions. Propose changes first, wait for confirmation.
 
 ## Coding Style
 
 - **Pure Functional Style**: Prefer pure functions with no side effects. Use `let` for local bindings, avoid `setq` for global state. Functions should return values, not modify globals. Use `defconst` for constants, `defvar` for mutable state only when necessary.
 - **No Hardcoded Absolute Paths**: Use relative paths or environment variables. Never hardcode `/home/ncu/...` or similar absolute paths in code, scripts, or configs.
-- **Implementation Layer**: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file — following `doc/IMPLEMENTATION-STRATEGY.md` (one owner per behavior). Tool-native settings are never mirrored in Elisp; ship a default native config file (see `dotfiles/`) when defaults are needed.
+- **Implementation Layer**: Implement each capability in exactly one layer — Elisp, a shell script, or a tool-native config file — following `docs/IMPLEMENTATION-STRATEGY.md` (one owner per behavior). Tool-native settings are never mirrored in Elisp; ship a default native config file (see `src/dotfiles/`) when defaults are needed.
 - **No Elisp Wrappers Around Decoupled Designs**: Do not add Elisp functions that encapsulate data or wrap a design a tool already owns (init files, config files, native formats). Configure the tool through its own mechanism. Example: provide a default `.gdbinit` init file for GDB — do not write an Elisp function that overwrites the default.
 
 ## Cycle
@@ -53,7 +53,7 @@ Quick reference of all rules to follow when working on this project.
 3. **Post-Cycle**: Discuss findings, add action items to `cycle/BACKLOG.org`
 4. **Record** delivered story points in `cycle/CYCLE-HISTORY.org`
 
-The cycle process is machine-enforced via git hooks and `cycle/bin/local-ci.sh`.
+The cycle process is machine-enforced via git hooks and `bin/cycle/local-ci.sh`.
 
 **State Machine**:
 Cycles follow a formal state transition: `PLANNING` $\rightarrow$ `ACTIVE` $\rightarrow$ `CLOSING` $\rightarrow$ `ARCHIVED`
@@ -66,7 +66,7 @@ If a commit is required while the cycle is not `ACTIVE`:
 2. **Persistent**: Set `git config cycle.bypass true`.
 
 **Local CI**:
-`cycle/bin/local-ci.sh` is the single owner of process validation, orchestrating:
+`bin/cycle/local-ci.sh` is the single owner of process validation, orchestrating:
 - State file schema validation.
 - Governance checksum verification.
 - Current cycle state gating.
@@ -98,6 +98,6 @@ docs(cycle): remove kanban process [C13] [1sp]
 | File | Purpose |
 |------|---------|
 | `cycle/BACKLOG.org` | Product backlog with all planned items |
-| `doc/SCRUM.org` | Technical specification and workflow |
-| `cycle/RULES.md` | This file — all project rules |
-| `cycle/PROMPT.md` | Agent entry prompt (auto-loaded) |
+| `docs/SCRUM.org` | Technical specification and workflow |
+| `docs/cycle/RULES.md` | This file — all project rules |
+| `docs/cycle/PROMPT.md` | Agent entry prompt (auto-loaded) |

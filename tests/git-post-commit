@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Resolve symlinks
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-CLOSE_SCRIPT="$SCRIPT_DIR/../cycle/bin/cycle-close.sh"
+CLOSE_SCRIPT="$SCRIPT_DIR/../bin/cycle/cycle-close.sh"
 
 # Check the last commit message for the closure marker [C<N>-CLOSE]
 # Or if the user has explicitly flagged the commit as the final one.

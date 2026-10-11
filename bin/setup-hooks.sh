@@ -3,7 +3,7 @@
 
 set -e
 
-HOOK_SOURCE="test/git-pre-commit"
+HOOK_SOURCE="tests/git-pre-commit"
 HOOK_DEST=".git/hooks/pre-commit"
 
 if [ ! -f "$HOOK_SOURCE" ]; then
@@ -16,11 +16,11 @@ ln -sf "$(pwd)/$HOOK_SOURCE" "$HOOK_DEST"
 chmod +x "$HOOK_DEST"
 
 echo "Installing commit-msg hook..."
-ln -sf "$(pwd)/test/git-commit-msg" ".git/hooks/commit-msg"
+ln -sf "$(pwd)/tests/git-commit-msg" ".git/hooks/commit-msg"
 chmod +x ".git/hooks/commit-msg"
 
 echo "Installing post-commit hook..."
-ln -sf "$(pwd)/test/git-post-commit" ".git/hooks/post-commit"
+ln -sf "$(pwd)/tests/git-post-commit" ".git/hooks/post-commit"
 chmod +x ".git/hooks/post-commit"
 
 echo "Hooks activated successfully."

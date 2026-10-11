@@ -9,9 +9,9 @@ other layers only call into it.
 
 | Capability kind | Home | Why | Test layer |
 |-----------------|------|-----|------------|
-| Emacs state, interaction, entry points (commands, hooks, keybindings, dispatch) | Elisp (`src/init.el`) | Needs live editor state and user interaction | `test/test_init.el`, `test/test_integration.el` |
-| Data tables / constants (flags, mappings) | Elisp (`defconst`/`defvar`) | Single source of truth, testable as values | `test/test_init.el` |
-| Subprocesses, pipelines, builds outside Emacs | Shell script (`test/`, `scripts/`, project `Makefile`) | Runs standalone, reusable at the terminal and in CI | TAP shell scripts |
+| Emacs state, interaction, entry points (commands, hooks, keybindings, dispatch) | Elisp (`src/init.el`) | Needs live editor state and user interaction | `tests/test_init.el`, `tests/test_integration.el` |
+| Data tables / constants (flags, mappings) | Elisp (`defconst`/`defvar`) | Single source of truth, testable as values | `tests/test_init.el` |
+| Subprocesses, pipelines, builds outside Emacs | Shell script (`tests/`, `scripts/`, project `Makefile`) | Runs standalone, reusable at the terminal and in CI | TAP shell scripts |
 | Tool-native settings (language server, formatter, build tool) | Tool config file (`.clangd`, `.clang-format`, `CMakeLists.txt`) | Works with other editors/CI, no Emacs dependency | fixture existence/content checks |
 
 ## Criteria (rules of thumb)
@@ -28,7 +28,7 @@ other layers only call into it.
 5. **One owner per behavior.** Never implement the same behavior in two
    layers; the other layer should only invoke the owner.
 6. **Never wrap a decoupled design in Elisp.** If a tool already owns a config
-   format, ship the tool's native config file (see `dotfiles/`) instead of
+   format, ship the tool's native config file (see `src/dotfiles/`) instead of
    adding Elisp functions or data that duplicate it. A default native init
    file coexists with the user's; it must not overwrite their defaults.
 
@@ -38,10 +38,10 @@ other layers only call into it.
 data list (`my/gdb-init-args`) and passed as command-line flags. This wrapped a
 design gdb already owns: the Emacs side duplicated `.gdbinit`, and a project
 `.gdbinit` narrowing `auto-load safe-path` fought the flags. Elisp must not
-wrap decoupled designs (see `cycle/RULES.md`).
+wrap decoupled designs (see `docs/cycle/RULES.md`).
 
 **Fix (owner):** gdb owns its own settings through a default `.gdbinit` init
-file shipped in this repo (`dotfiles/.gdbinit`). The installer symlinks it to
+file shipped in this repo (`src/dotfiles/.gdbinit`). The installer symlinks it to
 `~/.gdbinit` only when the user has none, so the user's own init is never
 overwritten. No Elisp function wraps it.
 
@@ -56,7 +56,7 @@ safe-path (via the default `.gdbinit`, below).
 
 ## Default GDB init file
 
-`dotfiles/.gdbinit` is the versioned default. The dependency installer
+`src/dotfiles/.gdbinit` is the versioned default. The dependency installer
 symlinks it to `~/.gdbinit` only when that path does not already exist, so a
 user's own init file is never overwritten:
 
@@ -88,18 +88,18 @@ gdb owns these settings; Emacs passes no command-line GDB flags.
 - **Formatting:** clang-format runs on save using `-style=file`, so the
   nearest project `.clang-format` governs the style (legacy-aware).
 - **Debugging:** stock `M-x gdb`; pretty-printing via the default `.gdbinit`
-  (`dotfiles/.gdbinit`, symlinked to `~/.gdbinit` by the installer).
+  (`src/dotfiles/.gdbinit`, symlinked to `~/.gdbinit` by the installer).
 
 ## Test layers per implementation
 
 | Layer | Verified by | Example |
 |-------|-------------|---------|
-| Elisp behavior | `test/test_init.el`, `test/test_integration.el` | commands defined, keybindings, pure helpers |
-| Shell behavior | TAP shell scripts | `test/test_gdb_workflow.sh`, `test/validate_process_files.sh` |
+| Elisp behavior | `tests/test_init.el`, `tests/test_integration.el` | commands defined, keybindings, pure helpers |
+| Shell behavior | TAP shell scripts | `tests/test_gdb_workflow.sh`, `tests/validate_process_files.sh` |
 | Config files | existence/content checks | fixture `Makefile` exports `CMAKE_EXPORT_COMPILE_COMMANDS`, `.clangd`, `.clang-format` |
 
 ## References
 
-- `cycle/RULES.md` — project rules (see Coding Style)
-- `doc/SCRUM.org` — architecture and test coverage
-- `doc/agent-research/WORLD-MODEL-STRUCTURE.org` — tools/skills roadmap
+- `docs/cycle/RULES.md` — project rules (see Coding Style)
+- `docs/SCRUM.org` — architecture and test coverage
+- `docs/agent-research/WORLD-MODEL-STRUCTURE.org` — tools/skills roadmap

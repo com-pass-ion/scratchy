@@ -6,8 +6,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 PROJECT_DIR="$SCRIPT_DIR/.."
-VALIDATOR="$PROJECT_DIR/cycle/bin/validate-commit.sh"
-CHECKSUM_TOOL="$PROJECT_DIR/cycle/bin/governance-checksum.sh"
+VALIDATOR="$PROJECT_DIR/bin/cycle/validate-commit.sh"
+CHECKSUM_TOOL="$PROJECT_DIR/bin/cycle/governance-checksum.sh"
 STATE_FILE="$PROJECT_DIR/.cycle_state.json"
 
 echo "=== Testing Cycle Guards ==="
@@ -54,9 +54,13 @@ echo "Testing checksums..."
 bash "$CHECKSUM_TOOL" >/dev/null
 bash "$CHECKSUM_TOOL" --check >/dev/null || { echo "FAIL: clean tree should pass"; exit 1; }
 # Tamper
-printf '\n' >> "$PROJECT_DIR/cycle/PROMPT.md"
-bash "$CHECKSUM_TOOL" --check >/dev/null && { echo "FAIL: tamper should fail"; exit 1; }
-git restore "$PROJECT_DIR/cycle/PROMPT.md"
+printf '\n' >> "$PROJECT_DIR/docs/cycle/PROMPT.md"
+if bash "$CHECKSUM_TOOL" --check >/dev/null 2>&1; then
+    echo "FAIL: tamper should fail"
+    git restore "$PROJECT_DIR/docs/cycle/PROMPT.md"
+    exit 1
+fi
+git restore "$PROJECT_DIR/docs/cycle/PROMPT.md"
 
 # 3. Test State Gate
 echo "Testing state gate..."

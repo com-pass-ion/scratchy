@@ -409,7 +409,7 @@
   (cl-assert (not (string-match-p "fallbackFlags" (test--get-init-el))))
   (cl-assert (file-exists-p
 	      (expand-file-name
-	       "test/fixtures/debug_cpp/.clangd"
+	       "tests/fixtures/debug_cpp/.clangd"
 	       (file-name-directory
 		(directory-file-name (file-name-directory load-file-name)))))))
 
@@ -476,7 +476,7 @@
 
 (test--assert "13.2 C/C++ Makefile drives a CMake backbone"
   (let ((mk (expand-file-name
-	     "test/fixtures/debug_cpp/Makefile"
+	     "tests/fixtures/debug_cpp/Makefile"
 	     (file-name-directory
 	      (directory-file-name (file-name-directory load-file-name))))))
     (cl-assert (file-exists-p mk))
@@ -666,11 +666,11 @@
 ;;; ==========================================================================
 
 (test--assert "19.1 pre-commit hook script exists"
-  (cl-assert (file-exists-p (expand-file-name "test/git-pre-commit"
+  (cl-assert (file-exists-p (expand-file-name "tests/git-pre-commit"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "19.2 pre-commit hook is executable"
-  (cl-assert (file-executable-p (expand-file-name "test/git-pre-commit"
+  (cl-assert (file-executable-p (expand-file-name "tests/git-pre-commit"
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "19.3 git-pre-commit-hook is defined"
@@ -729,10 +729,10 @@
 (test--assert "21.6 gud-tooltip-mode is configured for GDB buffers"
   (cl-assert (string-match-p "gud-tooltip-mode" (test--get-init-el))))
 
-(test--assert "21.7 default GDB init file is shipped (dotfiles/.gdbinit)"
+(test--assert "21.7 default GDB init file is shipped (src/dotfiles/.gdbinit)"
   (let* ((root (file-name-directory
 		(directory-file-name (file-name-directory load-file-name))))
-	 (f (expand-file-name "dotfiles/.gdbinit" root)))
+	 (f (expand-file-name "src/dotfiles/.gdbinit" root)))
     (cl-assert (file-exists-p f))
     (with-temp-buffer
       (insert-file-contents f)
@@ -755,11 +755,11 @@
 ;;; ==========================================================================
 
 (test--assert "30.1 coverage script exists"
-  (cl-assert (file-exists-p (expand-file-name "test/coverage.sh"
+  (cl-assert (file-exists-p (expand-file-name "tests/coverage.sh"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "30.2 coverage script is executable"
-  (cl-assert (file-executable-p (expand-file-name "test/coverage.sh"
+  (cl-assert (file-executable-p (expand-file-name "tests/coverage.sh"
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 
@@ -768,15 +768,15 @@
 ;;; ==========================================================================
 
 (test--assert "31.1 validate_process_files.sh exists"
-  (cl-assert (file-exists-p (expand-file-name "test/validate_process_files.sh"
+  (cl-assert (file-exists-p (expand-file-name "tests/validate_process_files.sh"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "31.2 validate_process_files.sh is executable"
-  (cl-assert (file-executable-p (expand-file-name "test/validate_process_files.sh"
+  (cl-assert (file-executable-p (expand-file-name "tests/validate_process_files.sh"
                                                    (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "31.3 RULES.md exists"
-  (cl-assert (file-exists-p (expand-file-name "cycle/RULES.md"
+  (cl-assert (file-exists-p (expand-file-name "docs/cycle/RULES.md"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "31.4 DEVELOPMENT-CYCLE.md exists"
@@ -784,7 +784,7 @@
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 (test--assert "31.5 PROMPT.md exists"
-  (cl-assert (file-exists-p (expand-file-name "cycle/PROMPT.md"
+  (cl-assert (file-exists-p (expand-file-name "docs/cycle/PROMPT.md"
                                                (file-name-directory (directory-file-name (file-name-directory load-file-name)))))))
 
 

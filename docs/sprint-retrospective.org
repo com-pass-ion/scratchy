@@ -41,4 +41,4 @@ Retrospective Date: YYYY-MM-DD
 ## Review Log Notes
 - Token/context limits: __ (guideline: stop, commit, log state)
 - Session duration: __ hours (guideline: 2-4 hours/session)
-- Model size considerations: 32B prompt templates (doc/agent-prompts.org)
+- Model size considerations: 32B prompt templates (docs/agent-prompts.org)

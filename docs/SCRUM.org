@@ -26,7 +26,7 @@
 ** Development Workflow
 
 - *Commit after every step*: After completing each task or feature, commit the changes immediately with a descriptive message
-- *Test before commit*: Run =./test/run_tests.sh= to verify all tests pass before committing
+- *Test before commit*: Run =./tests/run_tests.sh= to verify all tests pass before committing
 
 ** File Structure
 
@@ -34,7 +34,7 @@
 scratchy/
 ├── src/
 │   └── init.el                          # Main config (944 lines)
-├── test/
+├── tests/
 │   ├── test_init.el                     # Module tests (165 tests)
 │   ├── test_integration.el              # Integration tests (32 tests)
 │   ├── test_gdb_workflow.sh             # GDB workflow tests (17 checks)
@@ -43,7 +43,7 @@ scratchy/
 │   ├── fixtures/debug_cpp/              # Hermetic GDB demo
 │   ├── run_tests.sh                     # Test runner
 │   └── coverage.sh                      # Coverage report
-├── doc/
+├── docs/
 │   ├── SCRUM.org                        # This file — specs & workflow
 │   ├── IMPLEMENTATION-STRATEGY.md       # Elisp vs shell vs config decisions
 │   ├── scratchy_testing_strategy.org    # Testing strategy
@@ -102,7 +102,7 @@ scratchy/
 *** C/C++
 - LSP: clangd (flags from build/compile_commands.json via project .clangd)
 - Build: =C-c l b= (project-compile → make → CMake backbone)
-- Debug: =M-x gdb= (stock; layout + tooltips; pretty-printing via default =.gdbinit= in =dotfiles/=, symlinked by the installer)
+- Debug: =M-x gdb= (stock; layout + tooltips; pretty-printing via default =.gdbinit= in =src/dotfiles/=, symlinked by the installer)
 - Run: =make run= (built binary; =C-c l r= covers Python/Bash/Elisp)
 - Snippet: =if= / =for= + =M-+=
 
@@ -155,12 +155,12 @@ scratchy/
 ** Testing
 
 - *Format*: TAP (Test Anything Protocol)
-- *Runner*: =./test/run_tests.sh= (runs module + integration + GDB workflow)
+- *Runner*: =./tests/run_tests.sh= (runs module + integration + GDB workflow)
 - *Exit Code*: 0 = pass, 1 = fail
 - *Module Tests*: 165
 - *Integration Tests*: 32
-- *GDB Workflow Tests*: 17 checks (hard PASS/FAIL + arch SKIPs, =test/test_gdb_workflow.sh=)
-- *Coverage*: =./test/coverage.sh=
+- *GDB Workflow Tests*: 17 checks (hard PASS/FAIL + arch SKIPs, =tests/test_gdb_workflow.sh=)
+- *Coverage*: =./tests/coverage.sh=
 
 *** Coverage by Section
 
@@ -254,14 +254,14 @@ scratchy/
 |----------------------------+----------------------------------------------------------+----------------------------------|
 | tempel-collection disabled | Requires Emacs 31.1+; block commented out in init.el     | Sprint 13 backlog (re-enable)    |
 | Safety guard not wired     | validate_process_files.sh is not invoked by the hook     | Sprint 13 backlog (wire it)      |
-| GDB pretty-print moved out | Stock M-x gdb; settings live in dotfiles/.gdbinit        | doc/IMPLEMENTATION-STRATEGY.md   |
+| GDB pretty-print moved out | Stock M-x gdb; settings live in src/dotfiles/.gdbinit        | docs/IMPLEMENTATION-STRATEGY.md   |
 
 * Cycle Workflow
 
 See the following files for the Cycle process:
-- [[file:../cycle/RULES.md][cycle/RULES.md]] — All project rules
+- [[file:../docs/cycle/RULES.md][docs/cycle/RULES.md]] — All project rules
 - [[file:../cycle/DEVELOPMENT-CYCLE.md][cycle/DEVELOPMENT-CYCLE.md]] — Commit-driven workflow
-- [[file:../cycle/PROMPT.md][cycle/PROMPT.md]] — Agent entry prompt
+- [[file:../docs/cycle/PROMPT.md][docs/cycle/PROMPT.md]] — Agent entry prompt
 
 * Review Log
 
@@ -290,7 +290,7 @@ See the following files for the Cycle process:
 *** Actions Taken
 - Added Agent Safety rules to RULES.md, DEVELOPMENT-CYCLE.md, PROMPT.md
 - Consolidated DEVELOPMENT-CYCLE.md: removed 18 duplicated rules, replaced with reference to RULES.md
-- Consolidated doc/SCRUM.org: removed ~194 lines of duplicated content
+- Consolidated docs/SCRUM.org: removed ~194 lines of duplicated content
   - Rules section → reference to RULES.md
   - Keybinding Reference (90 lines) → reference to WORKFLOWS.org
   - Process diagram (60 lines) → reference to DEVELOPMENT-CYCLE.md
@@ -299,11 +299,11 @@ See the following files for the Cycle process:
 - Fixed Language-Specific Workflows to use Tempel snippets
 
 *** Files Changed
-- cycle/RULES.md: +5 safety rules
+- docs/cycle/RULES.md: +5 safety rules
 - cycle/DEVELOPMENT-CYCLE.md: -18 rules, +8 summary
-- cycle/PROMPT.md: +3 safety rules
-- doc/SCRUM.org: -194 lines, +11 references
-- doc/TESTING-STRATEGY.md: fixed test counts
+- docs/cycle/PROMPT.md: +3 safety rules
+- docs/SCRUM.org: -194 lines, +11 references
+- docs/TESTING-STRATEGY.md: fixed test counts
 
 ** Sprint 5 Review — 2026-08-30
 
@@ -314,21 +314,21 @@ See the following files for the Cycle process:
 | 1   | Critical | Missing use-package for treesit-auto | FIXED |
 | 2   | Medium | Duplicate dockerfile-mode declarations | FIXED |
 | 3   | Low | Duplicate tests 17.2/17.3, 20.2/20.5 | FIXED |
-| 4   | Medium | doc/SCRUM.org outdated (16 sections → 20) | FIXED |
+| 4   | Medium | docs/SCRUM.org outdated (16 sections → 20) | FIXED |
 | 5   | Medium | Test count inconsistent (106/125 → 139) | FIXED |
 | 6   | Medium | SESSION.org missing Sprints 4-5 | FIXED |
 | 7   | Medium | Sprint 3/4 Kanban boards empty | FIXED |
 | 8   | Low | Category mislabeling (:lang: → :media:) | FIXED |
 | 9   | Low | DONE items missing :Sprint: property | FIXED |
 | 10  | Low | Missing rules in DEVELOPMENT-CYCLE.md/PROMPT.md | FIXED |
-| 11  | Low | Missing dependencies in doc/SCRUM.org | FIXED |
+| 11  | Low | Missing dependencies in docs/SCRUM.org | FIXED |
 
 *** Actions Taken
 - Added Follow-up Questions and Session Logging rules to RULES.md
 - Added use-package block for treesit-auto in init.el
 - Consolidated dockerfile-mode into Section 20 only
 - Fixed duplicate tests in test_init.el
-- Updated doc/SCRUM.org: architecture, test count, file structure, packages, dependencies
+- Updated docs/SCRUM.org: architecture, test count, file structure, packages, dependencies
 - Fixed BACKLOG.org categories and added missing Sprint properties
 - Updated Sprint 3/4 Kanban boards in SPRINT.org
 - Added session logs for Sprints 4-5

@@ -11,7 +11,7 @@ Each cycle gets its own `NEXT.md` with atomic tasks and acceptance criteria.
 - `.cycle_state.json` is the source of truth for cycle state.
 - Process files: `cycle/BACKLOG.org`, `cycle/CYCLE-HISTORY.org`,
   `cycle/DEVELOPMENT-CYCLE.md`.
-- Immutable governance: `AGENTS.md`, `cycle/RULES.md`, `cycle/PROMPT.md`.
+- Immutable governance: `AGENTS.md`, `docs/cycle/RULES.md`, `docs/cycle/PROMPT.md`.
 
 ## Commit convention
 
@@ -25,13 +25,13 @@ Each cycle gets its own `NEXT.md` with atomic tasks and acceptance criteria.
 
 - `.cycle_state.json` plus JSON schema.
 - Formal state machine: `PLANNING → ACTIVE → CLOSING → ARCHIVED`.
-- `cycle/bin/validate-commit.sh`: regex commit validation; strict quoting with
+- `bin/cycle/validate-commit.sh`: regex commit validation; strict quoting with
   **no `eval`** (neutralize injection from commit messages); explicit rejection
   of `[S<N>]`; validate Cycle ID against `.cycle_state.json` or `git log`.
 - Cycle-closure logic: fail commits when no cycle is active, but permit recovery
   via `--recovery` or `git config cycle.bypass true`.
 - Checksum verification of governance files.
-- `cycle/bin/local-ci.sh`: single pass over regex + state + checksums + schema.
+- `bin/cycle/local-ci.sh`: single pass over regex + state + checksums + schema.
 
 ## C3 — Lifecycle
 
@@ -56,6 +56,6 @@ Each cycle gets its own `NEXT.md` with atomic tasks and acceptance criteria.
 
 - Enforcement must not rely solely on client-side hooks — decide the
   server-side/CI fallback.
-- `local-ci.sh` overlaps `test/git-pre-commit` and `test/run_tests.sh`; fold them
+- `local-ci.sh` overlaps `tests/git-pre-commit` and `tests/run_tests.sh`; fold them
   into one owner instead of duplicating (see "one owner per behavior").
 - Confirm whether `NEXT.md` is itself immutable, since every cycle edits it.

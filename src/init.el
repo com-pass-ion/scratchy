@@ -439,7 +439,7 @@
 ;; --- C/C++ (clangd) -------------------------------------------------------
 ;; Compile flags come from the CMake-generated build/compile_commands.json,
 ;; not hardcoded fallback flags. A project `.clangd' points clangd at the
-;; compile database (see doc/IMPLEMENTATION-STRATEGY.md).
+;; compile database (see docs/IMPLEMENTATION-STRATEGY.md).
 
 ;; --- Java (jdtls) ---------------------------------------------------------
 ;; Vanilla eglot — jdtls is auto-detected.
@@ -846,14 +846,14 @@ found above `default-directory'."
   (let* ((proj (ignore-errors (project-current)))
 	 (root (when proj (ignore-errors (project-root proj))))
 	 (default-directory (or root default-directory)))
-    (when (file-exists-p "test/run_tests.sh")
+    (when (file-exists-p "tests/run_tests.sh")
       (message "Running pre-commit tests...")
-      (if (zerop (call-process "bash" nil nil nil "test/run_tests.sh"))
+      (if (zerop (call-process "bash" nil nil nil "tests/run_tests.sh"))
 	  (message "Pre-commit tests passed!")
 	(error "Pre-commit tests failed! Commit aborted.")))))
 
 ;; Note: To activate, symlink or copy to .git/hooks/pre-commit:
-;;   ln -sf ../../test/git-pre-commit .git/hooks/pre-commit
+;;   ln -sf ../../tests/git-pre-commit .git/hooks/pre-commit
 
 
 ;;; ==========================================================================
@@ -877,8 +877,8 @@ found above `default-directory'."
 ;; `M-x gdb' on the binary under build/. Type GDB's built-in abbreviations in
 ;; the console (n/s/c/b/p/bt, rn/rs/rc). No custom launcher or keybindings.
 ;; Pretty-printing/safe-path defaults live in the default `.gdbinit' shipped
-;; in dotfiles/ (symlinked to ~/.gdbinit by the installer); see
-;; doc/IMPLEMENTATION-STRATEGY.md.
+;; in src/dotfiles/ (symlinked to ~/.gdbinit by the installer); see
+;; docs/IMPLEMENTATION-STRATEGY.md.
 
 ;; --- Layout (applied before M-x gdb) ---------------------------------------
 

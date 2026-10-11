@@ -8,7 +8,7 @@
 *.o
 *.so
 *.dylib
-test/fixtures/debug_cpp/build/
+tests/fixtures/debug_cpp/build/
 
 # OS files
 .DS_Store

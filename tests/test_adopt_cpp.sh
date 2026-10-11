@@ -1,6 +1,6 @@
 #!/bin/bash
 # test_adopt_cpp.sh — TAP tests for scaffold/adopt-cpp-project.sh
-# Run via ./test/run_tests.sh (wired in) or directly.
+# Run via ./tests/run_tests.sh (wired in) or directly.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"

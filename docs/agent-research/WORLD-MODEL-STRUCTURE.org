@@ -138,8 +138,8 @@ These help analyze problems.
 ```org
 * Project Structure
   - src/init.el          :: Main configuration
-  - test/                 :: Test suite
-  - doc/                  :: Documentation
+  - tests/                 :: Test suite
+  - docs/                  :: Documentation
   - log/                  :: Sprint logs
 
 * Current State
@@ -159,7 +159,7 @@ These help analyze problems.
 ```org
 * Active Files
   - src/init.el         :: [currently editing]
-  - test/test_lsp.el    :: [related test]
+  - tests/test_lsp.el    :: [related test]
 
 * Recent Changes
   - [commit]: description
@@ -351,8 +351,8 @@ Agent would:
 1. Load skill: emacs-module-standard
 2. Create: src/latex.el
 3. Add to init.el: (require 'latex)
-4. Create test: test/test_latex.el
-5. Run: ./test/run_tests.sh
+4. Create test: tests/test_latex.el
+5. Run: ./tests/run_tests.sh
 ```
 
 ** Implementation
@@ -427,4 +427,4 @@ Agent would:
 - [2026-02] Agent Skills for Large Language Models (arXiv:2602.12430)
 - [2026-03] SkillNet: Skill Organization Infrastructure
 - [2026-04] GraSP: Graph-Structured Skill Compositions
-- Open Code Architecture Research (doc/agent-research/OPENCODE-ARCHITECTURE-RESEARCH.org)
+- Open Code Architecture Research (docs/agent-research/OPENCODE-ARCHITECTURE-RESEARCH.org)

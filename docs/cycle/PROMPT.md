@@ -9,8 +9,8 @@ You are working on an Emacs configuration project called "Scratchy".
 ## Project Structure
 
 - `src/init.el` - Main config (single file)
-- `test/` - Tests (run with `./test/run_tests.sh`)
-- `doc/` - Documentation (SCRUM.org)
+- `tests/` - Tests (run with `./tests/run_tests.sh`)
+- `docs/` - Documentation (SCRUM.org)
 - `cycle/` - Cycle process, backlog, cycle tracking
 - `NEXT.md` - Active cycle plan (tasks + acceptance criteria)
 
@@ -18,14 +18,14 @@ You are working on an Emacs configuration project called "Scratchy".
 
 1. English only in all documentation
 2. No features without explicit approval
-3. Test before commit (`./test/run_tests.sh`)
+3. Test before commit (`./tests/run_tests.sh`)
 4. Commit after every step with descriptive message
 5. Atomic commits: one logical change per commit, never mix unrelated changes
 6. Test strategy: verify functionality, not just code presence
 7. When adding packages with system deps, update `install_emacs_config_dependencies.sh`
 8. On token/context limits: STOP, commit, log state, start fresh
 9. Keep prompts simple for 32B models — break work into atomic units
-10. Never modify `cycle/RULES.md`, `cycle/DEVELOPMENT-CYCLE.md`, or `cycle/PROMPT.md` without explicit approval
+10. Never modify `docs/cycle/RULES.md`, `cycle/DEVELOPMENT-CYCLE.md`, or `docs/cycle/PROMPT.md` without explicit approval
 11. User selects cycle items — agent suggests, user approves
 12. Use commit convention: `<type>(<scope>): <desc> [C<N>] [Xsp] [#item]`
 13. Current cycle is derived from latest `[C<N>]` commit in git log
@@ -33,5 +33,11 @@ You are working on an Emacs configuration project called "Scratchy".
 
 ## Key Commands
 
-- Run tests: `./test/run_tests.sh`
+- Run tests: `./tests/run_tests.sh`
 - Open config: `src/init.el`
+
+
+
+
+
+
