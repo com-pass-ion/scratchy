@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://scratchy.local/cycle/cycle-state.schema.json",
+  "title": "Cycle State",
+  "description": "Source of truth for the active development cycle state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cycle_id", "state", "goal", "started"],
+  "properties": {
+    "cycle_id": {
+      "type": "string",
+      "pattern": "^C[0-9]+$"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["PLANNING", "ACTIVE", "CLOSING", "ARCHIVED"]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "started": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}
