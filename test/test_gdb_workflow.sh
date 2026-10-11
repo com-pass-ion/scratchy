@@ -1,7 +1,7 @@
 #!/bin/bash
 # test_gdb_workflow.sh — automated basic functionality test for the C++ GDB workflow.
 #
-# Demo project: tests/fixtures/debug_cpp (hermetic, no network).
+# Demo project: test/fixtures/debug_cpp (hermetic, no network).
 # ~/debug_cpp is used when present; override with GDB_DEMO_DIR.
 #
 # Semantics:
@@ -11,20 +11,20 @@
 #             Never fails the suite.
 #
 # Run with:
-#   bash tests/test_gdb_workflow.sh
+#   bash test/test_gdb_workflow.sh
 #
 # Exit code: 0 = no hard failures, 1 = hard failure.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 # Hermetic default: in-repo fixture; ~/debug_cpp used when present (dev machine).
-# Override with: GDB_DEMO_DIR=/path/to/demo ./tests/run_tests.sh
+# Override with: GDB_DEMO_DIR=/path/to/demo ./test/run_tests.sh
 if [ -n "${GDB_DEMO_DIR:-}" ]; then
   DEMO_DIR="$GDB_DEMO_DIR"
 elif [ -d "$HOME/debug_cpp" ]; then
   DEMO_DIR="$HOME/debug_cpp"
 else
-  DEMO_DIR="$PROJECT_DIR/tests/fixtures/debug_cpp"
+  DEMO_DIR="$PROJECT_DIR/test/fixtures/debug_cpp"
 fi
 # Absolute paths: the script cd's into DEMO_DIR later, so relative
 # GDB_DEMO_DIR values must not break -f "$BINARY" checks.
@@ -105,7 +105,7 @@ fi
 
 # Stages C/D mirror real usage: gud runs gdb with cwd=project root and no
 # -nx, so a project .gdbinit narrows safe-path unless the flags below reopen
-# it. Default settings live in src/dotfiles/.gdbinit (symlinked to ~/.gdbinit).
+# it. Default settings live in scaffold/templates/.gdbinit (symlinked to ~/.gdbinit).
 if [ -d "$DEMO_DIR" ]; then
   cd "$DEMO_DIR" || { fail "chdir to demo" "$DEMO_DIR"; }
 fi
@@ -180,7 +180,7 @@ fi
 
 # --- F. init.el Sec.21 expectations (hard failures) ---
 # Sec.21 now standardizes on stock M-x gdb: no custom launcher/functions and
-# no hardcoded -ex flags (settings live in src/dotfiles/.gdbinit).
+# no hardcoded -ex flags (settings live in scaffold/templates/.gdbinit).
 INIT_EL="$PROJECT_DIR/src/init.el"
 if [ -f "$INIT_EL" ]; then
   if ! grep -q '(defun my/cpp-debug ' "$INIT_EL" && ! grep -q 'defun my/cpp-cmake' "$INIT_EL"; then
@@ -189,15 +189,15 @@ if [ -f "$INIT_EL" ]; then
     fail "F.1 init.el has no custom GDB launcher (standard M-x gdb)" "Sec.21 must not define my/cpp-debug/my/cpp-cmake*"
   fi
   if ! grep -q 'my/gdb-init-args' "$INIT_EL" && ! grep -q -- '-ex ' "$INIT_EL"; then
-    ok "F.2 init.el has no hardcoded GDB flags (settings live in src/dotfiles/.gdbinit)"
+    ok "F.2 init.el has no hardcoded GDB flags (settings live in scaffold/templates/.gdbinit)"
   else
-    fail "F.2 init.el has no hardcoded GDB flags (settings live in src/dotfiles/.gdbinit)" "GDB settings belong in src/dotfiles/.gdbinit, not init.el"
+    fail "F.2 init.el has no hardcoded GDB flags (settings live in scaffold/templates/.gdbinit)" "GDB settings belong in scaffold/templates/.gdbinit, not init.el"
   fi
-  if [ -f "$PROJECT_DIR/src/dotfiles/.gdbinit" ] \
-     && grep -q 'set auto-load safe-path /' "$PROJECT_DIR/src/dotfiles/.gdbinit"; then
-    ok "F.6 default src/dotfiles/.gdbinit is shipped with pretty-print settings"
+  if [ -f "$PROJECT_DIR/scaffold/templates/.gdbinit" ] \
+     && grep -q 'set auto-load safe-path /' "$PROJECT_DIR/scaffold/templates/.gdbinit"; then
+    ok "F.6 default scaffold/templates/.gdbinit is shipped with pretty-print settings"
   else
-    fail "F.6 default src/dotfiles/.gdbinit is shipped with pretty-print settings" "Expected src/dotfiles/.gdbinit with 'set auto-load safe-path /'"
+    fail "F.6 default scaffold/templates/.gdbinit is shipped with pretty-print settings" "Expected scaffold/templates/.gdbinit with 'set auto-load safe-path /'"
   fi
   if ! grep -q 'gud-mode-map (kbd' "$INIT_EL" && ! grep -q 'gud-minor-mode-map (kbd' "$INIT_EL"; then
     ok "F.3 init.el has no custom GDB keybindings (built-in aliases only)"

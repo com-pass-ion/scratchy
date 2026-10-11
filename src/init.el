@@ -410,8 +410,9 @@
   (setq diff-hl-margin-mode nil))
 
 
-;; --- LSP — Eglot (built-in Language Server Protocol)
-;; ==========================================================================
+;;; ==========================================================================
+;;; 9. LSP — Eglot (built-in Language Server Protocol)
+;;; ==========================================================================
 
 ;; Eglot connects to language servers for code intelligence.
 ;; Servers: pyright (Python), clangd (C/C++), jdtls (Java), bash-ls.
@@ -439,7 +440,7 @@
 ;; --- C/C++ (clangd) -------------------------------------------------------
 ;; Compile flags come from the CMake-generated build/compile_commands.json,
 ;; not hardcoded fallback flags. A project `.clangd' points clangd at the
-;; compile database (see docs/IMPLEMENTATION-STRATEGY.md).
+;; compile database (see doc/IMPLEMENTATION-STRATEGY.org).
 
 ;; --- Java (jdtls) ---------------------------------------------------------
 ;; Vanilla eglot — jdtls is auto-detected.
@@ -592,38 +593,64 @@ found above `default-directory'."
 
 ;; --- Bash -----------------------------------------------------------------
 
-;; --- Unified run command --------------------------------------------------
-;; `C-c l r' runs the file based on the current major mode.
+;; --- Unified build/run commands -------------------------------------------
+;; `C-c l b' builds the project (project-compile → make).
+;; `C-c l r' runs the current file according to its major mode.
 
 (defvar compilation-scroll-output)
 (setq compilation-scroll-output t)
 
 (declare-function project-compile "project" ())
+(declare-function python-shell-send-buffer "python" ())
 
 ;; --- CLI-style command aliases -----------------------------------------------
 ;; These provide a "shell-like" interface via M-x, mirroring the project Makefile.
 
+(defun scratchy-project-root ()
+  "Return the project root, or `default-directory' outside a project."
+  (or (ignore-errors (project-root (project-current)))
+      default-directory))
+
 (defun make-build ()
   "Build the project using project-compile (default: make)."
   (interactive)
-  (call-interactively #'project-compile))
+  (let ((default-directory (scratchy-project-root)))
+    (call-interactively #'project-compile)))
 
 (defun make-run ()
   "Run the project using `make run'."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (scratchy-project-root)))
     (compile "make run")))
 
 (defun make-clean ()
   "Clean the project using `make clean'."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (scratchy-project-root)))
     (compile "make clean")))
 
 (defun make-format ()
   "Format the current C/C++ buffer with `clang-format'."
   (interactive)
   (clang-format-buffer))
+
+(defun run-current-file ()
+  "Run the current file according to its major mode."
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (pcase major-mode
+      ((or 'python-mode 'python-ts-mode)
+       (python-shell-send-buffer))
+      ((or 'emacs-lisp-mode 'lisp-interaction-mode)
+       (eval-buffer))
+      ((or 'sh-mode 'bash-ts-mode)
+       (compile (format "bash %s" (shell-quote-argument file))))
+      ((or 'c-mode 'c++-mode 'c-ts-mode 'c++-ts-mode)
+       (make-run))
+      (_ (compile (or file "make run"))))))
+
+(define-key global-map (kbd "C-c l b") #'make-build)
+(define-key global-map (kbd "C-c l r") #'run-current-file)
 
 
 ;;; ==========================================================================
@@ -846,14 +873,14 @@ found above `default-directory'."
   (let* ((proj (ignore-errors (project-current)))
 	 (root (when proj (ignore-errors (project-root proj))))
 	 (default-directory (or root default-directory)))
-    (when (file-exists-p "tests/run_tests.sh")
+    (when (file-exists-p "test/run_tests.sh")
       (message "Running pre-commit tests...")
-      (if (zerop (call-process "bash" nil nil nil "tests/run_tests.sh"))
+      (if (zerop (call-process "bash" nil nil nil "test/run_tests.sh"))
 	  (message "Pre-commit tests passed!")
 	(error "Pre-commit tests failed! Commit aborted.")))))
 
 ;; Note: To activate, symlink or copy to .git/hooks/pre-commit:
-;;   ln -sf ../../tests/git-pre-commit .git/hooks/pre-commit
+;;   ln -sf ../../test/git-pre-commit .git/hooks/pre-commit
 
 
 ;;; ==========================================================================
@@ -877,8 +904,8 @@ found above `default-directory'."
 ;; `M-x gdb' on the binary under build/. Type GDB's built-in abbreviations in
 ;; the console (n/s/c/b/p/bt, rn/rs/rc). No custom launcher or keybindings.
 ;; Pretty-printing/safe-path defaults live in the default `.gdbinit' shipped
-;; in src/dotfiles/ (symlinked to ~/.gdbinit by the installer); see
-;; docs/IMPLEMENTATION-STRATEGY.md.
+;; in scaffold/templates/ (symlinked to ~/.gdbinit by the installer); see
+;; doc/IMPLEMENTATION-STRATEGY.org.
 
 ;; --- Layout (applied before M-x gdb) ---------------------------------------
 

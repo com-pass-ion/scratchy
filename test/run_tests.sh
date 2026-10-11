@@ -34,10 +34,7 @@ run_isolated_emacs() {
 
 # --- TIER A: FAST-PASS (Every Commit) ---
 echo "--- Tier A: Fast-Pass ---"
-# 1. Cycle Document Safety Guard
-# bash "$SCRIPT_DIR/validate_process_files.sh"
-
-# 2. Security Scan
+# 1. Security Scan
 if grep -rni "password\|secret\|api.key" "$SCRIPT_DIR/../src" "$SCRIPT_DIR" | grep -vE "grep -rni|ERROR: Secrets found|No secrets found" ; then
     echo "ERROR: Secrets found in codebase!"
     exit 1
@@ -45,7 +42,7 @@ else
     echo "Security scan: No secrets found."
 fi
 
-# 3. Strict Byte-Compile (against current binary)
+# 2. Strict Byte-Compile (against current binary)
 echo "--- Strict Byte-Compile ---"
 run_isolated_emacs \
     -l "$SCRIPT_DIR/../src/init.el" \
@@ -89,9 +86,9 @@ fi
 echo ""
 echo "--- Tier C: Absolute-Pass ---"
 # Verify Emacs source build
-if [ -f "$SCRIPT_DIR/../bin/build_emacs_source.sh" ]; then
+if [ -f "$SCRIPT_DIR/../build_emacs_source.sh" ]; then
     echo "Triggering Emacs source build verification..."
-    bash "$SCRIPT_DIR/../bin/build_emacs_source.sh"
+    bash "$SCRIPT_DIR/../build_emacs_source.sh"
 else
     echo "WARNING: build_emacs_source.sh not found, skipping source build."
 fi

@@ -8,8 +8,8 @@ echo "========================================"
 echo ""
 
 EMACS_CONFIG="src/init.el"
-TEST_FILE="tests/test_init.el"
-INTEGRATION_FILE="tests/test_integration.el"
+TEST_FILE="test/test_init.el"
+INTEGRATION_FILE="test/test_integration.el"
 
 # Count sections in init.el
 echo "=== Sections in init.el ==="
@@ -31,8 +31,8 @@ INT_TESTS=$(grep -c '(inttest--assert "' "$INTEGRATION_FILE")
 echo "=== Total Integration Tests: $INT_TESTS ==="
 echo ""
 
-# GDB workflow checks live in tests/test_gdb_workflow.sh (shell TAP).
-echo "=== GDB Workflow Checks: see tests/test_gdb_workflow.sh ==="
+# GDB workflow checks live in test/test_gdb_workflow.sh (shell TAP).
+echo "=== GDB Workflow Checks: see test/test_gdb_workflow.sh ==="
 echo ""
 
 # Sections with/without tests (1-21 mirror init.el; 30-31 are test-only meta tiers)

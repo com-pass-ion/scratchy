@@ -203,7 +203,7 @@ All planned features, sorted by category.
    :Category: :docs:
    :Sprint:   6
    :END:
-   Created docs/workflows/ folder with sample files for each workflow.
+   Created doc/workflows/ folder with sample files for each workflow.
 
 ** DONE Scrum Document Safety Guard
    :PROPERTIES:
@@ -215,8 +215,8 @@ All planned features, sorted by category.
    - Create scripts/validate_process_files.sh
    - Add git diff check for RULES.md, DEVELOPMENT-CYCLE.md, PROMPT.md
    - Return error if unauthorized changes detected
-   - Create test case in tests/test_document_guard.sh
-   - Document usage in docs/ or README
+   - Create test case in test/test_document_guard.sh
+   - Document usage in doc/ or README
 
 ** DONE Commit convention documentation
    :PROPERTIES:
@@ -228,7 +228,7 @@ All planned features, sorted by category.
     - Define allowed types (feat, fix, chore, docs, refactor, test)
     - Document scope conventions
     - Add examples for each type
-    - Reference in docs/cycle/RULES.md
+    - Reference in cycle/RULES.md
 
 ** TODO Minimize context window per sprint
    :PROPERTIES:
@@ -253,7 +253,7 @@ All planned features, sorted by category.
    - Check for duplicate rules across files
    - Fix any violations found
    - Document audit results
-   Done in Sprint 13: fixed docs/SCRUM.org test counts (162→161, §30 3→2),
+   Done in Sprint 13: fixed doc/SCRUM.org test counts (162→161, §30 3→2),
    init.el line count (1026→1024), tempel-collection status, removed stale
    .projectile/known-issues and dead file references.
 
@@ -353,9 +353,9 @@ All planned features, sorted by category.
    - Codify GDB lessons: Elisp owns data (my/gdb-init-args) + entry points (my/cpp-debug); shell owns builds (cmake via compile); one owner per behavior
    - Document negative cases: .gdbinit vs -ex flags (safe-path fight), .projectile ignored by project.el; positive case: src/templates read natively by tempel
    - Define tests per layer: Elisp via test_init.el, shell via TAP scripts, config via existence/content checks
-   - Write docs/IMPLEMENTATION-STRATEGY.md with decision table and examples
-   - Propose rule reference in docs/cycle/RULES.md (needs explicit approval per project rules)
-   Done in Sprint 14: docs/IMPLEMENTATION-STRATEGY.md created (decision table,
+   - Write doc/IMPLEMENTATION-STRATEGY.md with decision table and examples
+   - Propose rule reference in cycle/RULES.md (needs explicit approval per project rules)
+   Done in Sprint 14: doc/IMPLEMENTATION-STRATEGY.md created (decision table,
    criteria, GDB lessons, ~/.gdbinit recipe, C/C++ pipeline decisions, per-layer
    tests); RULES.md Coding Style references it (user approved the edit).
 
@@ -367,10 +367,10 @@ All planned features, sorted by category.
    :END:
    Codify that Elisp must not encapsulate data or wrap a design a tool
    already owns. Ship tool-native default config files instead.
-   - Add Coding Style rule to docs/cycle/RULES.md
-   - Reconcile docs/IMPLEMENTATION-STRATEGY.md (reclassify my/gdb-init-args as an
+   - Add Coding Style rule to cycle/RULES.md
+   - Reconcile doc/IMPLEMENTATION-STRATEGY.md (reclassify my/gdb-init-args as an
      anti-pattern; tool-native config is the owner)
-   - Ship src/dotfiles/.gdbinit default init file; installer symlinks to ~/.gdbinit
+   - Ship dotfiles/.gdbinit default init file; installer symlinks to ~/.gdbinit
      only when absent (never overwrites user defaults)
    Note: a project-aware GDB launcher (would wrap gdb's own command line) is
    discouraged by this rule; stock M-x gdb stays.
@@ -425,7 +425,7 @@ All planned features, sorted by category.
    - Support --prefix and --jobs flags; verify resulting emacs-version
    - Optional PPA path when running on Ubuntu
    - Reference from install_emacs_config_dependencies.sh / docs
-   - Verify ./tests/run_tests.sh green on 31.1+
+   - Verify ./test/run_tests.sh green on 31.1+
 
 ** TODO Clean templates for Scrum process
    :PROPERTIES:
@@ -482,9 +482,9 @@ All planned features, sorted by category.
     :Category: :process:
     :Sprint:   13
     :END:
-    tests/validate_process_files.sh exists and is tested but nothing invokes it,
+    test/validate_process_files.sh exists and is tested but nothing invokes it,
     so the process-file protection is effectively dead code.
-    - Call validate_process_files.sh from tests/git-pre-commit (or run_tests.sh)
+    - Call validate_process_files.sh from test/git-pre-commit (or run_tests.sh)
     - Add a test proving it blocks staged RULES.md/PROMPT.md/DEVELOPMENT-CYCLE.md edits
     - Document activation in docs
 
@@ -499,7 +499,7 @@ All planned features, sorted by category.
    Depends on the Emacs 31.1+ install script.
    - Uncomment tempel-collection in src/init.el Sec.10
    - Restore positive test 10.6 coverage on 31.1+
-   - Update docs/SCRUM.org packages and test tables
+   - Update doc/SCRUM.org packages and test tables
 
 ** DONE Modernize C++ Development Pipeline
    :PROPERTIES:
@@ -534,7 +534,7 @@ All planned features, sorted by category.
     Split 3+2+2 (core GDB + time-travel + docs/tests); exceeds 1-5 scale by user decision.
     - Review gdb_setup.org, fix console-safe C-c bindings
     - Add init.el Sec.21 DEBUG (gdb-mi layout, gud keybindings, time-travel)
-    - Add tests/test_gdb_workflow.sh + cheat sheet, update dependencies (gdb, rr)
+    - Add test/test_gdb_workflow.sh + cheat sheet, update dependencies (gdb, rr)
 
 ** DONE More Modes (markdown, yaml, json)
    :PROPERTIES:
@@ -608,13 +608,13 @@ All planned features, sorted by category.
    :END:
    Replaced by Custom Agent Environment for low-level control.
 
-** DONE Definition of Done (docs/cycle/RULES.md)
+** DONE Definition of Done (cycle/RULES.md)
    :PROPERTIES:
    :Effort:   1
    :Category: :docs:
    :Sprint:   3
    :END:
-   DoD checklist lives in docs/cycle/RULES.md > Quality (no separate docs/DOD.md).
+   DoD checklist lives in cycle/RULES.md > Quality (no separate doc/DOD.md).
 
 * Done
 

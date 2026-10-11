@@ -46,8 +46,9 @@ bash "$SCRIPT_DIR/governance-checksum.sh" --check
 # Note: validate-commit.sh handles its own logic; we use it here to check the current state.
 # Since we aren't in a commit-msg hook, we simulate a valid commit message to check the state.
 echo "Checking current cycle state gate..."
+CYCLE_ID="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cycle_id"])' "$PROJECT_DIR/.cycle_state.json")"
 TMP_MSG=$(mktemp)
-printf 'chore(ci): check state [C2]\n' > "$TMP_MSG"
+printf 'chore(ci): check state [%s]\n' "$CYCLE_ID" > "$TMP_MSG"
 bash "$SCRIPT_DIR/validate-commit.sh" "$TMP_MSG" || {
     echo "ERROR: cycle state gate is CLOSED (not ACTIVE). Recovery is required for commits." >&2
     rm -f "$TMP_MSG"

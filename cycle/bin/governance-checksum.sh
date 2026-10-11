@@ -4,8 +4,8 @@
 #   (no args)  regenerate cycle/governance.sha256
 #   --check    verify the tree against cycle/governance.sha256
 #
-# Immutable governance: AGENTS.md, docs/cycle/RULES.md, docs/cycle/PROMPT.md.
-# NEXT.md is intentionally excluded; it is the mutable working plan.
+# Immutable governance: AGENTS.md, cycle/PROMPT.org.
+# The cycle state and working plan are intentionally excluded; they are mutable.
 
 set -euo pipefail
 
@@ -14,8 +14,7 @@ PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 CHECKSUM_FILE="cycle/governance.sha256"
 GOVERNANCE_FILES=(
     "AGENTS.md"
-    "docs/cycle/RULES.md"
-    "docs/cycle/PROMPT.md"
+    "cycle/PROMPT.org"
 )
 
 usage() {
@@ -36,7 +35,7 @@ case "${1:-}" in
         ( cd "$PROJECT_DIR" && sha256sum --check --status "$CHECKSUM_FILE" ) || {
             echo "GOVERNANCE_VIOLATION: One or more immutable governance files have been modified." >&2
             echo "The following files are protected: ${GOVERNANCE_FILES[*]}" >&2
-            echo "To authorize these changes, regenerate the checksum: bash bin/cycle/governance-checksum.sh" >&2
+            echo "To authorize these changes, regenerate the checksum: bash cycle/bin/governance-checksum.sh" >&2
             exit 1
         }
         echo "Governance checksums OK."

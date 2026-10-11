@@ -28,8 +28,8 @@ You are working on an Emacs configuration project called "Scratchy".
 
 ## Project Structure
 - src/init.el - Main config
-- tests/ - Tests (run with ./tests/run_tests.sh)
-- docs/ - Documentation (SCRUM.org)
+- test/ - Tests (run with ./test/run_tests.sh)
+- doc/ - Documentation (cycle/PROMPT.org is the spec of record)
 - cycle/ - Cycle process, backlog, cycle tracking
 
 ## Current Cycle

@@ -1,7 +1,12 @@
 #+TITLE: Cycle Velocity
 #+STARTUP: overview
 
-| Cycle |       Date | Planned | Delivered | Notes                                            |
+* Legacy sprint velocity (pre-cycle model)
+
+Rows 1–16 predate the =C<N>= cycle model and are kept for historical
+velocity only. The active numbering starts at =C1=.
+
+| Sprint |       Date | Planned | Delivered | Notes                                            |
 |--------+------------+---------+-----------+--------------------------------------------------|
 |      1 | 2026-04-28 |       — |         8 | Setup + Refactor                                 |
 |      2 | 2026-08-30 |       — |         8 | Quick Wins                                       |
@@ -18,13 +23,18 @@
 |     13 | 2026-10-10 |       — |        16 | Commit-driven process + doc audit                |
 |     14 | 2026-10-10 |       7 |        10 | C++ pipeline modernization + impl strategy       |
 |     15 | 2026-10-10 |       3 |         3 | Rule: no Elisp wrappers + adopt C++ workflow scripts |
-|     16 | 2026-10-10 |       3 |         3 | C++ Run, Format Hint, Build Flag, CMake Support    |
+|     16 | 2026-10-10 |       3 |         3 | C++ Run, Format Hint, Build Flag, CMake Support  |
 
-*Average*: 7.0 SP/Cycle
+*Average*: 7.0 SP/cycle
 
-* Cycle C2 - Closed on 2026-10-11 22:18:40
-------------------------------------------------------------------
-# NEXT: C2 — The Enforcer
+* C-prefixed cycles
+
+** C1 — Commit-driven process migration
+
+Status: DONE (see git history).
+
+** C2 — The Enforcer (closed 2026-10-11)
+
 Status: DONE.
 - [x] T1
 - [x] T2
@@ -32,6 +42,3 @@ Status: DONE.
 - [x] T4
 - [x] T5
 - [x] T6
-
-------------------------------------------------------------------
-
